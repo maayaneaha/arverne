@@ -11,8 +11,24 @@ struct Tank
     enum diameter top_diam;
     enum diameter down_diam;
     enum fuel_type fuel;
-    float quantity_fuel1;
-    float quantity_fuel2;
+    double quantity_fuel1;
+    double quantity_fuel2;
     int radial_fitting; // Parts can be fit on radial
     int radial_part; // Is a radial tank
+}
+
+struct Engine
+{
+    char *name;
+    double mass;
+    double cost;
+    enum fuel_type fuel;
+    int ISP_atm;
+    int ISP_vac;
+    double thrust_atm;
+    double thrust_vac;
+    double TWR_atm;
+    double TWR_vac;
+    float consumption;
+    float gimbal;
 }
