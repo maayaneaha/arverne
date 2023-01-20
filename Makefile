@@ -6,7 +6,7 @@ CFLAGS 		= -Wall -Werror -Wextra -std=c11 -Wno-unused-variable
 LDFLAGS		=
 LDLIBS		= 
 
-EXE = main
+EXE = main.out
 
 SRC	= $(wildcard *.c) $(wildcard src/*.c) $(wildcard src/*/*.c) $(wildcard test/*.c)
 OBJ	= ${SRC:.c=.o}
