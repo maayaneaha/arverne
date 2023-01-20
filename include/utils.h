@@ -1,7 +1,7 @@
 enum diameter {TINY, SMALL, MEDIUM, LARGE, EXTRALARGE, MK2, MK3, X}; // MK1 = SMALL
 enum fuel_type {FUELOX, LIQUIDFUEL, MONOPROPELLANT, SOLIDFUEL, XENON, ORE};
 
-struct Tank
+typedef struct
 {
     char *name;
     double empty_mass;
@@ -15,9 +15,9 @@ struct Tank
     double quantity_fuel2;
     int radial_fitting; // Parts can be fit on radial
     int radial_part; // Is a radial tank
-};
+} Tank;
 
-struct Engine
+typedef struct
 {
     char *name;
     double mass;
@@ -31,4 +31,14 @@ struct Engine
     double TWR_vac;
     float consumption;
     float gimbal;
-};
+} Engine;
+
+typedef struct
+{
+    int cost;
+    double mass;
+    int max_temp;
+    int toterance_ms;
+    int tolerance_g;
+    int ejection;
+} Decoupler;
