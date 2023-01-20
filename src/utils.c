@@ -1,4 +1,4 @@
-enum diameter = {TINY, SMALL, LARGE, EXTRALARGE, MK2, MK3, X}; // MK1 = SMALL and no MEDIUM
+enum diameter = {TINY, SMALL, MEDIUM, LARGE, EXTRALARGE, MK2, MK3, X}; // MK1 = SMALL
 enum fuel_type = {FUELOX, LIQUIDFUEL, MONOPROPELLANT, SOLIDFUEL, XENON, ORE};
 
 struct Tank
