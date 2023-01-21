@@ -70,10 +70,10 @@ typedef struct
     double TWR_min;
     double TWR_max;
     double consumption;
-    Part first_tank;
-    Part engine;
+    Part *first_tank;
+    Part *engine;
     int nbr_engines;
-    Part decoupler;
+    Part *decoupler;
     Stage *prev;
     Stage *next;
 } Stage;
@@ -83,5 +83,5 @@ typedef struct
     double mass_payload;
     double total_mass;
     double total_DV;
-    Stage first_stage;
+    Stage *first_stage;
 } Rocket;
