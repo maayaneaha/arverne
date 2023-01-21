@@ -29,16 +29,59 @@ typedef struct
     double thrust_vac;
     double TWR_atm;
     double TWR_vac;
-    float consumption;
-    float gimbal;
+    double consumption;
+    double gimbal;
 } Engine;
 
 typedef struct
 {
-    int cost;
+    char *name
     double mass;
+    double cost;
     int max_temp;
     int toterance_ms;
     int tolerance_g;
     int ejection;
 } Decoupler;
+
+typedef struct
+{
+    void *part_type;
+    char *name;
+    double mass;
+    double cost;
+    Part *prev;
+    Part *next;
+} Part;
+
+typedef struct
+{
+    double mass;
+    enum fuel_type fuel;
+    double quantity_fuel1;
+    double quantity_fuel2;
+    double delta_v;
+    double total_thurst_atm_min;
+    double total_thurst_atm_max;
+    double total_thrust_vac_min;
+    double total_thurst_vac_max;
+    double ISP_atm;
+    double ISP_vac;
+    double TWR_min;
+    double TWR_max;
+    double consumption;
+    Part first_tank;
+    Part engine;
+    int nbr_engines;
+    Part decoupler;
+    Stage *prev;
+    Stage *next;
+} Stage;
+
+typedef struct
+{
+    double mass_payload;
+    double total_mass;
+    double total_DV;
+    Stage first_stage;
+} Rocket;
