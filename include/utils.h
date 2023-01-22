@@ -56,11 +56,12 @@ typedef struct
 
 typedef struct
 {
-    double mass;
+    double mass_fuel;
+    double mass_dry;
     enum fuel_type fuel;
     double quantity_fuel1;
     double quantity_fuel2;
-    double delta_v;
+    double DV;
     double total_thurst_atm_min;
     double total_thurst_atm_max;
     double total_thrust_vac_min;
@@ -81,7 +82,25 @@ typedef struct
 typedef struct
 {
     double mass_payload;
-    double total_mass;
-    double total_DV;
+    double mass;
+    double DV;
+    double cost;
     Stage *first_stage;
 } Rocket;
+
+typedef struct
+{
+    double delva_v_min;
+    double mass_payload;
+    double mass_max;
+    double TWR_min;
+    double TWR_max;
+    enum diameter diameter_payload;
+    Tank **tanks;
+    size_t nbr_tanks;
+    Engine **engines;
+    size_t nbr_engines;
+    Decoupler **decouplers;
+    size_t nbr_decouplers;
+    Rocket *best_rocket;
+} Datas;
