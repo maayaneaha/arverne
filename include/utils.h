@@ -58,6 +58,7 @@ typedef struct
 {
     double mass_fuel;
     double mass_dry;
+    double cost;
     enum fuel_type fuel;
     double quantity_fuel1;
     double quantity_fuel2;
