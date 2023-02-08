@@ -1,3 +1,5 @@
+#include <stdlib.h>
+
 enum diameter {TINY, SMALL, MEDIUM, LARGE, EXTRALARGE, MK2, MK3, X}; // MK1 = SMALL
 enum fuel_type {FUELOX, LIQUIDFUEL, MONOPROPELLANT, SOLIDFUEL, XENON, ORE};
 
@@ -35,7 +37,7 @@ typedef struct
 
 typedef struct
 {
-    char *name
+    char *name;
     double mass;
     double cost;
     int max_temp;
@@ -50,8 +52,8 @@ typedef struct
     char *name;
     double mass;
     double cost;
-    Part *prev;
-    Part *next;
+    struct Part *prev;
+    struct Part *next;
 } Part;
 
 typedef struct
@@ -75,14 +77,14 @@ typedef struct
     Part *engine;
     int nbr_engines;
     Part *decoupler;
-    Stage *prev;
-    Stage *next;
+    struct Stage *prev;
+    struct Stage *next;
 } Stage;
 
 typedef struct
 {
     double mass_payload;
-    double mass;
+    double total_mass;
     double DV;
     double cost;
     Stage *first_stage;
