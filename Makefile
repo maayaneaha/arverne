@@ -2,7 +2,7 @@
 
 CC			= gcc
 CPPFLAGS	= -Iinclude/
-CFLAGS 		= -Wall -Werror -Wextra -std=c11 -Wno-unused-variable
+CFLAGS 		= -Wall -Werror -Wextra -std=gnu99 -Wno-unused-variable
 LDFLAGS		=
 LDLIBS		= 
 
@@ -18,6 +18,7 @@ release: $(EXE)
 
 debug: CFLAGS += -g -DDEBUG
 debug: LDFLAGS += -ggdb3
+debug: CPPFLAGS += -Itest/
 debug: $(EXE)
 
 $(EXE): $(OBJ)

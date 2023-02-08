@@ -1,6 +1,7 @@
 enum diameter {TINY, SMALL, MEDIUM, LARGE, EXTRALARGE, MK2, MK3, X}; // MK1 = SMALL
 enum fuel_type {FUELOX, LIQUIDFUEL, MONOPROPELLANT, SOLIDFUEL, XENON, ORE};
 
+
 typedef struct
 {
     char *name;
@@ -35,16 +36,19 @@ typedef struct
 
 typedef struct
 {
-    char *name
+    char *name;
     double mass;
     double cost;
     int max_temp;
-    int toterance_ms;
+    int tolerance_ms;
     int tolerance_g;
     int ejection;
 } Decoupler;
 
-typedef struct
+typedef struct stage Stage;
+typedef struct part Part;
+
+struct part
 {
     void *part_type;
     char *name;
@@ -52,9 +56,9 @@ typedef struct
     double cost;
     Part *prev;
     Part *next;
-} Part;
+};
 
-typedef struct
+struct stage
 {
     double mass;
     enum fuel_type fuel;
@@ -76,7 +80,7 @@ typedef struct
     Part *decoupler;
     Stage *prev;
     Stage *next;
-} Stage;
+};
 
 typedef struct
 {
@@ -85,3 +89,6 @@ typedef struct
     double total_DV;
     Stage *first_stage;
 } Rocket;
+
+
+Decoupler* load_Decoupler(char* filename);
