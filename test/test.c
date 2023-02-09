@@ -8,13 +8,94 @@
 Datas *create_datas()
 {
     Datas *d = malloc(sizeof(Datas));
+    d->delta_v_min = 2000;
+    d->mass_payload = 2000;
+    d->mass_max = 200000; // 200 000
+    d->TWR_min = 1.4;
+    d->TWR_max = 2;
+    d->diameter_payload = SMALL;
+
+    Tank *t = malloc(sizeof(Tank));
+    t->name = malloc(sizeof(char) * 18);
+    t->name = "FL-T100 Fuel Tank";
+    t->empty_mass = 62.5;
+    t->full_mass = 560;
+    t->empty_cost = 150;
+    t->full_cost = 104.1;
+    t->top_diam = SMALL;
+    t->down_diam = SMALL;
+    t->fuel = FUELOX;
+    t->quantity_fuel1 = 45;
+    t->quantity_fuel2 = 55;
+
+    d->tanks = malloc(sizeof(sizeof(Tank)));
+    d->tanks = &t;
+    d->nbr_tanks = 1;
+
+    Engine *e = malloc(sizeof(Engine));
+    e->name = malloc(sizeof(char) * 36);
+    e->name = "LV-T30 \"Reliant\" Liquid Fuel Engine";
+    e->mass = 1250;
+    e->cost = 1100;
+    e->fuel = FUELOX;
+    e->diam = SMALL;
+    e->ISP_atm = 265;
+    e->ISP_vac = 310;
+    e->thrust_atm = 205160;
+    e->thrust_vac = 240000;
+    e->consumption = 15.79;
+    e->gimbal = 0;
+
+    d->engines = malloc(sizeof(sizeof(Engine)));
+    d->engines = &e;
+    d->nbr_engines = 1;
+
+    Decoupler *s = malloc(sizeof(Decoupler));
+    s->name = malloc(sizeof(char) * 16);
+    s->name = "TD-12 Decoupler";
+    s->mass = 40;
+    s->cost = 200;
+
+    d->decouplers = malloc(sizeof(sizeof(Decoupler)));
+    d->decouplers = &s;
+    d->nbr_decouplers = 1;
+
+    d->best_rocket = NULL;
     return d;
 }
 
 
-Rocket *build_rocket()
+Rocket *build_rocket(Datas *datas, size_t nbr_stages)
 {
     Rocket *r = malloc(sizeof(Rocket));
+    r->mass_payload = datas->mass_payload;
+    Stage *prev_s = NULL;
+    for(size_t i = 0; i < nbr_stages; i++)
+    {
+        Stage *s = malloc(sizeof(Stage));
+        s->fuel = FUELOX;
+        Part *prev = create_tank(*datas->tanks);
+        s->first_tank = prev;
+        for(size_t j = 0; j < 5; j++)
+        {
+            Part *tank = create_tank(*datas->tanks);
+            tank->prev = prev;
+            prev->next = tank;
+            prev = tank;
+        }
+        s->engine = create_engine(*datas->engines);
+        s->decoupler = create_decoupler(*datas->decouplers);
+        s->prev = prev_s;
+        if (prev_s != NULL)
+        {
+            prev_s->next = s;
+        }
+        else
+        {
+            r->first_stage = s;
+        }
+        prev_s = s;
+    }
     return r;
 }
 

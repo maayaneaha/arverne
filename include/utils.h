@@ -30,12 +30,11 @@ struct engine
     double mass;
     double cost;
     enum fuel_type fuel;
+    enum diameter diam;
     int ISP_atm;
     int ISP_vac;
     double thrust_atm;
     double thrust_vac;
-    double TWR_atm;
-    double TWR_vac;
     double consumption;
     double gimbal;
 };
@@ -46,10 +45,6 @@ struct decoupler
     char *name;
     double mass;
     double cost;
-    int max_temp;
-    int toterance_ms;
-    int tolerance_g;
-    int ejection;
 };
 
 typedef struct part Part;
@@ -103,7 +98,7 @@ struct rocket
 typedef struct datas Datas;
 struct datas
 {
-    double delva_v_min;
+    double delta_v_min;
     double mass_payload;
     double mass_max;
     double TWR_min;
@@ -117,5 +112,12 @@ struct datas
     size_t nbr_decouplers;
     Rocket *best_rocket;
 };
+
+
+double calculate_mass_dry_tank(Tank *t);
+int calculate_stage_masses(Stage *s);
+Part *create_tank(Tank *t);
+Part *create_engine(Engine *e);
+Part *create_decoupler(Decoupler *d);
 
 #endif

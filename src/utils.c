@@ -1,4 +1,7 @@
+#include <string.h>
+#include <stdio.h>
 #include "utils.h"
+
 
 double calculate_mass_dry_tank(Tank *t)
 {
@@ -24,7 +27,45 @@ int calculate_stage_masses(Stage *s)
     }
     return 1;
 }
-#include "utils.h"
+
+Part *create_tank(Tank *t)
+{
+    Part *p = malloc(sizeof(Part));
+    p->part_type = t;
+    p->name = malloc(sizeof(char) * (strlen(t->name) + 1));
+    strcpy(p->name, t->name);
+    p->mass = t->full_mass;
+    p->cost = t->empty_cost;
+    p->prev = NULL;
+    p->next = NULL;
+    return p;
+}
+
+Part *create_engine(Engine *e)
+{
+    Part *p = malloc(sizeof(Part));
+    p->part_type = e;
+    p->name = malloc(sizeof(char) * (strlen(e->name) + 1));
+    strcpy(p->name, e->name);
+    p->mass = e->mass;
+    p->cost = e->cost;
+    p->prev = NULL;
+    p->next = NULL;
+    return p;
+}
+
+Part *create_decoupler(Decoupler *d)
+{
+    Part *p = malloc(sizeof(Part));
+    p->part_type = d;
+    p->name = malloc(sizeof(char) * (strlen(d->name) + 1));
+    strcpy(p->name, d->name);
+    p->mass = d->mass;
+    p->cost = d->cost;
+    p->prev = NULL;
+    p->next = NULL;
+    return p;
+}
 
 /*Decoupler loadfile_Decoupler(char* filename)
 {
