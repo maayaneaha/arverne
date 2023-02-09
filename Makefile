@@ -4,7 +4,7 @@ CC			= gcc
 CPPFLAGS	= -Iinclude/
 CFLAGS 		= -Wall -Werror -Wextra -std=c11 -Wno-unused-variable
 LDFLAGS		=
-LDLIBS		= 
+LDLIBS		=
 
 EXE = main.out
 
@@ -18,10 +18,11 @@ release: $(EXE)
 
 debug: CFLAGS += -g -DDEBUG
 debug: LDFLAGS += -ggdb3
+debug: CPPFLAGS += -Itest/
 debug: $(EXE)
 
 $(EXE): $(OBJ)
-	$(CC) $(LDFLAGS) $(LDLIBS) $(OBJ) -lm -o $@
+	$(CC) $(LDFLAGS) $(LDLIBS) $(OBJ)  -lm -o $@
 
 clean:
 	$(RM) $(OBJ) 

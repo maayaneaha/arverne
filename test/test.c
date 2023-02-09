@@ -99,3 +99,10 @@ Rocket *build_rocket(Datas *datas, size_t nbr_stages)
     return r;
 }
 
+
+void test_basic_display()
+{
+    Datas *d = create_datas();
+    Rocket *r = build_rocket(d, 2);
+    basic_display(r);
+}
