@@ -6,7 +6,8 @@
 enum diameter {TINY, SMALL, MEDIUM, LARGE, EXTRALARGE, MK2, MK3, X}; // MK1 = SMALL
 enum fuel_type {FUELOX, LIQUIDFUEL, MONOPROPELLANT, SOLIDFUEL, XENON, ORE};
 
-typedef struct
+typedef struct tank Tank;
+struct tank
 {
     char *name;
     double empty_mass;
@@ -20,9 +21,10 @@ typedef struct
     double quantity_fuel2;
     int radial_fitting; // Parts can be fit on radial
     int radial_part; // Is a radial tank
-} Tank;
+};
 
-typedef struct
+typedef struct engine Engine;
+struct engine
 {
     char *name;
     double mass;
@@ -36,9 +38,10 @@ typedef struct
     double TWR_vac;
     double consumption;
     double gimbal;
-} Engine;
+};
 
-typedef struct
+typedef struct decoupler Decoupler;
+struct decoupler
 {
     char *name;
     double mass;
@@ -47,19 +50,21 @@ typedef struct
     int toterance_ms;
     int tolerance_g;
     int ejection;
-} Decoupler;
+};
 
-typedef struct
+typedef struct part Part;
+struct part
 {
     void *part_type;
     char *name;
     double mass;
     double cost;
-    struct Part *prev;
-    struct Part *next;
-} Part;
+    Part *prev;
+    Part *next;
+};
 
-typedef struct
+typedef struct stage Stage;
+struct stage
 {
     double mass_fuel;
     double mass_dry;
@@ -83,18 +88,20 @@ typedef struct
     Part *decoupler;
     struct Stage *prev;
     struct Stage *next;
-} Stage;
+};
 
-typedef struct
+typedef struct rocket Rocket;
+struct rocket
 {
     double mass_payload;
     double total_mass;
     double DV;
     double cost;
     Stage *first_stage;
-} Rocket;
+};
 
-typedef struct
+typedef struct datas Datas;
+struct datas
 {
     double delva_v_min;
     double mass_payload;
@@ -109,6 +116,6 @@ typedef struct
     Decoupler **decouplers;
     size_t nbr_decouplers;
     Rocket *best_rocket;
-} Datas;
+};
 
 #endif

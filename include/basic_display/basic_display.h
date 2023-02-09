@@ -1,6 +1,8 @@
 #ifndef BASIC_DISPLAY
 #define BASIC_DISPLAY
 
-void basic_display(Rocket rocket);
+#include "utils.h"
+
+void basic_display(Rocket *rocket);
 
 #endif

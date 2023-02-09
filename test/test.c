@@ -1,23 +1,19 @@
-#include "algo.h"
-#include "basic_display.h"
+#include <stdlib.h>
+
+#include "algo/algo.h"
+#include "basic_display/basic_display.h"
 #include "utils.h"
 
 
 Datas *create_datas()
 {
-    Datas d = malloc(sizeof(Datas));
+    Datas *d = malloc(sizeof(Datas));
     return d;
 }
 
 
-Rocket *build_rocket(int stages, Datas datas)
+Rocket *build_rocket()
 {
-    Rocket r = malloc(sizeof(Rocket));
+    Rocket *r = malloc(sizeof(Rocket));
     return r;
-}
-
-
-int main()
-{
-    return 0;
 }

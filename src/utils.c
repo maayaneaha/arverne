@@ -12,14 +12,17 @@ int calculate_stage_masses(Stage *s)
     s->mass_dry = s->engine->mass * s->nbr_engines;
     s->cost = s->engine->cost * s->nbr_engines;
     Part *tank = s->first_tank;
-    s->fuel = tank->part_type->fuel;
-    while(fuel != NULL)
+    Tank *tmp_tank = tank->part_type;
+    s->fuel = tmp_tank->fuel;
+    while(tank != NULL)
     {
-        s->mass_fuel += tank->part_type->empty_mass;
+        tmp_tank = tank->part_type;
+        s->mass_fuel += tmp_tank->empty_mass;
         s->mass_dry += calculate_mass_dry_tank(tank->part_type);
         s->cost += tank->cost;
         tank = tank->next;
     }
+    return 1;
 }
 #include "utils.h"
 
