@@ -81,8 +81,8 @@ struct stage
     Part *engine;
     int nbr_engines;
     Part *decoupler;
-    struct Stage *prev;
-    struct Stage *next;
+    Stage *prev;
+    Stage *next;
 };
 
 typedef struct rocket Rocket;
