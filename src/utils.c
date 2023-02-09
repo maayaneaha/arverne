@@ -1,15 +1,17 @@
-double calculate_mass_dry_tank(Tank t)
+#include "utils.h"
+
+double calculate_mass_dry_tank(Tank *t)
 {
     return t->full_mass - t->empty_mass;
 }
 
 
-int calculate_stage_masses(Stage s)
+int calculate_stage_masses(Stage *s)
 {
     s->mass_fuel = 0;
-    s->mass_dry = s->engine->mass * s->nbr_engine;
-    s->cost = s->engine->cost * s->nbr_engine;
-    Part tank = s->first_tank;
+    s->mass_dry = s->engine->mass * s->nbr_engines;
+    s->cost = s->engine->cost * s->nbr_engines;
+    Part *tank = s->first_tank;
     s->fuel = tank->part_type->fuel;
     while(fuel != NULL)
     {

@@ -1,3 +1,6 @@
+#ifndef UTILS
+#define UTILS
+
 #include <stdlib.h>
 
 enum diameter {TINY, SMALL, MEDIUM, LARGE, EXTRALARGE, MK2, MK3, X}; // MK1 = SMALL
@@ -60,10 +63,7 @@ typedef struct
 {
     double mass_fuel;
     double mass_dry;
-<<<<<<< HEAD
     double cost;
-=======
->>>>>>> 56f12456bc59938cba1f84e1ce8d62a245b9c0e3
     enum fuel_type fuel;
     double quantity_fuel1;
     double quantity_fuel2;
@@ -110,3 +110,5 @@ typedef struct
     size_t nbr_decouplers;
     Rocket *best_rocket;
 } Datas;
+
+#endif
