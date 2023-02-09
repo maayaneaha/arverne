@@ -19,3 +19,10 @@ int calculate_stage_masses(Stage s)
         tank = tank->next;
     }
 }
+#include "utils.h"
+
+/*Decoupler loadfile_Decoupler(char* filename)
+{
+
+}
+*/
