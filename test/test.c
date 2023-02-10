@@ -1,4 +1,5 @@
 #include <stdlib.h>
+#include <stdio.h>
 
 #include "algo/algo.h"
 #include "basic_display/basic_display.h"
@@ -7,6 +8,9 @@
 
 Datas *create_datas()
 {
+    #if DEBUG
+        printf("create_datas\n");
+    #endif
     Datas *d = malloc(sizeof(Datas));
     d->delta_v_min = 2000;
     d->mass_payload = 2000;
@@ -15,8 +19,10 @@ Datas *create_datas()
     d->TWR_max = 2;
     d->diameter_payload = SMALL;
 
+    #if DEBUG
+        printf("  begin\n");
+    #endif
     Tank *t = malloc(sizeof(Tank));
-    t->name = malloc(sizeof(char) * 18);
     t->name = "FL-T100 Fuel Tank";
     t->empty_mass = 62.5;
     t->full_mass = 560;
@@ -28,13 +34,16 @@ Datas *create_datas()
     t->quantity_fuel1 = 45;
     t->quantity_fuel2 = 55;
 
-    d->tanks = malloc(sizeof(sizeof(Tank)));
+    d->tanks = malloc(sizeof(Tank*));
     d->tanks = &t;
     d->nbr_tanks = 1;
 
+    #if DEBUG
+        printf("  tank (name = \"%s\" %s)\n", t->name, d->tanks[0]->name);
+    #endif
     Engine *e = malloc(sizeof(Engine));
     e->name = malloc(sizeof(char) * 36);
-    e->name = "LV-T30 \"Reliant\" Liquid Fuel Engine";
+    e->name = "LV-T30 \"Reliant\" Liquid Fuel Engine\0";
     e->mass = 1250;
     e->cost = 1100;
     e->fuel = FUELOX;
@@ -46,17 +55,17 @@ Datas *create_datas()
     e->consumption = 15.79;
     e->gimbal = 0;
 
-    d->engines = malloc(sizeof(sizeof(Engine)));
+    d->engines = malloc(sizeof(Engine*));
     d->engines = &e;
     d->nbr_engines = 1;
 
     Decoupler *s = malloc(sizeof(Decoupler));
     s->name = malloc(sizeof(char) * 16);
-    s->name = "TD-12 Decoupler";
+    s->name = "TD-12 Decoupler\0";
     s->mass = 40;
     s->cost = 200;
 
-    d->decouplers = malloc(sizeof(sizeof(Decoupler)));
+    d->decouplers = malloc(sizeof(Decoupler*));
     d->decouplers = &s;
     d->nbr_decouplers = 1;
 
@@ -67,15 +76,31 @@ Datas *create_datas()
 
 Rocket *build_rocket(Datas *datas, size_t nbr_stages)
 {
+    #if DEBUG
+        printf("build_rocket(datas, %zu)\n", (size_t) datas->tanks[0]);
+    #endif
+    printf("2 %zu\n", (size_t) datas->tanks[0]);
+
     Rocket *r = malloc(sizeof(Rocket));
+    printf("2.25 %zu\n", (size_t) datas->tanks[0]);
     r->mass_payload = datas->mass_payload;
+    printf("2.37 %zu\n", (size_t) datas->tanks[0]);
     Stage *prev_s = NULL;
+    printf("2.5 %zu\n", (size_t) datas->tanks[0]);
+    #if DEBUG
+        printf("  begin\n");
+    #endif
+    printf("3 %zu\n", (size_t) datas->tanks[0]);
     for(size_t i = 0; i < nbr_stages; i++)
     {
         Stage *s = malloc(sizeof(Stage));
         s->fuel = FUELOX;
-        Part *prev = create_tank(*datas->tanks);
+        Part *prev = create_tank(datas->tanks[0]);
         s->first_tank = prev;
+
+        #if DEBUG
+                printf("  new stage\n");
+        #endif
         for(size_t j = 0; j < 5; j++)
         {
             Part *tank = create_tank(*datas->tanks);
@@ -102,7 +127,11 @@ Rocket *build_rocket(Datas *datas, size_t nbr_stages)
 
 void test_basic_display()
 {
+    #if DEBUG
+        printf("test_basic_display\n");
+    #endif
     Datas *d = create_datas();
+    printf("1 %zu\n", (size_t) d->tanks[0]);
     Rocket *r = build_rocket(d, 2);
     basic_display(r);
 }

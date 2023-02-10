@@ -30,9 +30,15 @@ int calculate_stage_masses(Stage *s)
 
 Part *create_tank(Tank *t)
 {
+
+    #if DEBUG
+        printf("create_tank(tank) (name = %zu)\n", (size_t) t);
+    #endif
     Part *p = malloc(sizeof(Part));
     p->part_type = t;
+    printf("ewew %s\n", t->name);
     p->name = malloc(sizeof(char) * (strlen(t->name) + 1));
+    printf("ewew\n");
     strcpy(p->name, t->name);
     p->mass = t->full_mass;
     p->cost = t->empty_cost;

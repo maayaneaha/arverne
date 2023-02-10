@@ -1,7 +1,7 @@
 # Makefile
 
 CC			= gcc
-CPPFLAGS	= -Iinclude/
+CPPFLAGS	= -Iinclude/ -Itest/
 CFLAGS 		= -Wall -Werror -Wextra -std=c11 -Wno-unused-variable
 LDFLAGS		=
 LDLIBS		=
