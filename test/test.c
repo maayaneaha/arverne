@@ -26,8 +26,8 @@ Datas *create_datas()
     t->name = "FL-T100 Fuel Tank";
     t->empty_mass = 62.5;
     t->full_mass = 560;
-    t->empty_cost = 150;
-    t->full_cost = 104.1;
+    t->empty_cost = 104.1;
+    t->full_cost = 150;
     t->top_diam = SMALL;
     t->down_diam = SMALL;
     t->fuel = FUELOX;
@@ -35,7 +35,7 @@ Datas *create_datas()
     t->quantity_fuel2 = 55;
 
     d->tanks = malloc(sizeof(Tank*));
-    d->tanks = &t;
+    d->tanks[0] = t;
     d->nbr_tanks = 1;
 
     #if DEBUG
@@ -56,7 +56,7 @@ Datas *create_datas()
     e->gimbal = 0;
 
     d->engines = malloc(sizeof(Engine*));
-    d->engines = &e;
+    d->engines[0] = e;
     d->nbr_engines = 1;
 
     Decoupler *s = malloc(sizeof(Decoupler));
@@ -66,7 +66,7 @@ Datas *create_datas()
     s->cost = 200;
 
     d->decouplers = malloc(sizeof(Decoupler*));
-    d->decouplers = &s;
+    d->decouplers[0] = s;
     d->nbr_decouplers = 1;
 
     d->best_rocket = NULL;
@@ -79,30 +79,24 @@ Rocket *build_rocket(Datas *datas, size_t nbr_stages)
     #if DEBUG
         printf("build_rocket(datas, %zu)\n", (size_t) datas->tanks[0]);
     #endif
-    printf("2 %zu\n", (size_t) datas->tanks[0]);
 
     Rocket *r = malloc(sizeof(Rocket));
-    printf("2.25 %zu\n", (size_t) datas->tanks[0]);
     r->mass_payload = datas->mass_payload;
-    printf("2.37 %zu\n", (size_t) datas->tanks[0]);
     Stage *prev_s = NULL;
-    printf("2.5 %zu\n", (size_t) datas->tanks[0]);
     #if DEBUG
         printf("  begin\n");
     #endif
     printf("3 %zu\n", (size_t) datas->tanks[0]);
-    for(size_t i = 0; i < nbr_stages; i++)
-    {
+    for(size_t i = 0; i < nbr_stages; i++) {
         Stage *s = malloc(sizeof(Stage));
         s->fuel = FUELOX;
         Part *prev = create_tank(datas->tanks[0]);
         s->first_tank = prev;
 
-        #if DEBUG
-                printf("  new stage\n");
-        #endif
-        for(size_t j = 0; j < 5; j++)
-        {
+#if DEBUG
+        printf("  new stage\n");
+#endif
+        for (size_t j = 0; j < 5; j++) {
             Part *tank = create_tank(*datas->tanks);
             tank->prev = prev;
             prev->next = tank;
@@ -110,17 +104,16 @@ Rocket *build_rocket(Datas *datas, size_t nbr_stages)
         }
         s->engine = create_engine(*datas->engines);
         s->decoupler = create_decoupler(*datas->decouplers);
+        s->nbr_engines = 1;
         s->prev = prev_s;
-        if (prev_s != NULL)
-        {
+        if (prev_s != NULL) {
             prev_s->next = s;
-        }
-        else
-        {
+        } else {
             r->first_stage = s;
         }
         prev_s = s;
     }
+    calculate_rocket(r);
     return r;
 }
 
@@ -131,7 +124,6 @@ void test_basic_display()
         printf("test_basic_display\n");
     #endif
     Datas *d = create_datas();
-    printf("1 %zu\n", (size_t) d->tanks[0]);
     Rocket *r = build_rocket(d, 2);
     basic_display(r);
 }

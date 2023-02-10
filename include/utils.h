@@ -61,7 +61,7 @@ struct part
 typedef struct stage Stage;
 struct stage
 {
-    double mass_fuel;
+    double mass_full;
     double mass_dry;
     double cost;
     enum fuel_type fuel;
@@ -116,6 +116,7 @@ struct datas
 
 double calculate_mass_dry_tank(Tank *t);
 int calculate_stage_masses(Stage *s);
+int calculate_rocket(Rocket *r);
 Part *create_tank(Tank *t);
 Part *create_engine(Engine *e);
 Part *create_decoupler(Decoupler *d);

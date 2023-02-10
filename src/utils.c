@@ -11,37 +11,57 @@ double calculate_mass_dry_tank(Tank *t)
 
 int calculate_stage_masses(Stage *s)
 {
-    s->mass_fuel = 0;
     s->mass_dry = s->engine->mass * s->nbr_engines;
+    s->mass_dry += s->decoupler->mass;
     s->cost = s->engine->cost * s->nbr_engines;
+    s->cost += s->decoupler->cost;
+    s->mass_full = s->mass_dry;
     Part *tank = s->first_tank;
     Tank *tmp_tank = tank->part_type;
     s->fuel = tmp_tank->fuel;
     while(tank != NULL)
     {
         tmp_tank = tank->part_type;
-        s->mass_fuel += tmp_tank->empty_mass;
-        s->mass_dry += calculate_mass_dry_tank(tank->part_type);
+        s->mass_full += tmp_tank->full_mass;
+        s->mass_dry += tmp_tank->empty_mass;
         s->cost += tank->cost;
         tank = tank->next;
     }
     return 1;
 }
 
+
+int calculate_rocket_masses(Rocket *r)
+{
+    r->total_mass = r->mass_payload;
+    for(Stage *s = r->first_stage; s != NULL; s = s->next)
+    {
+        calculate_stage_masses(s);
+        r->total_mass += s->mass_full;
+    }
+    return 1;
+}
+
+
+int calculate_rocket(Rocket *r)
+{
+    calculate_rocket_masses(r);
+    return 1;
+}
+
+
 Part *create_tank(Tank *t)
 {
 
     #if DEBUG
-        printf("create_tank(tank) (name = %zu)\n", (size_t) t);
+        printf("create_tank(tank) (name = %s)\n", t->name);
     #endif
     Part *p = malloc(sizeof(Part));
     p->part_type = t;
-    printf("ewew %s\n", t->name);
     p->name = malloc(sizeof(char) * (strlen(t->name) + 1));
-    printf("ewew\n");
     strcpy(p->name, t->name);
     p->mass = t->full_mass;
-    p->cost = t->empty_cost;
+    p->cost = t->full_cost;
     p->prev = NULL;
     p->next = NULL;
     return p;
