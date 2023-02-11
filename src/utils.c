@@ -132,6 +132,50 @@ Stage *create_stage()
     return s;
 }
 
+
+Stage *copy_stage(Stage *s)
+{
+    // core copy
+    Stage *ns = malloc(sizeof(Stage)); // new stage
+    ns->mass_full = s->mass_full;
+    ns->mass_dry = s->mass_dry;
+    ns->cost = s->cost;
+    ns->DeltaV = s->DeltaV;
+    ns->prev = NULL;
+    ns->next = NULL;
+    // Tanks copy
+    Part *prev = copy_part(s->first_tank);
+    ns->first_tank = prev;
+    Part *t = prev;
+    for(Part *t = s->first_tank->next; t != NULL; t = t->next)
+    {
+        Part *nt = copy_part(t);
+        nt->prev = prev;
+        prev->next = nt;
+        prev = nt;
+    }
+    // Engine copy
+    ns->engine = copy_part(s->engine);
+    ns->nbr_engines = s->nbr_engines;
+    // Decoupler copy
+    ns->decoupler = copy_part(s->decoupler);
+    // Values copy
+    ns->fuel = s->fuel;
+    ns->quantity_fuel1 = n->quantity_fuel1;
+    ns->quantity_fuel2 = n->quantity_fuel2;
+    ns->total_thurst_atm_min = n->total_thurst_atm_min;
+    ns->total_thurst_atm_max = n->total_thurst_atm_max;
+    ns->total_thurst_vac_min = n->total_thurst_vac_min;
+    ns->total_thurst_vac_max = n->total_thurst_vac_max;
+    ns->ISP_atm = s->ISP_atm;
+    ns->ISP_vac = s->ISP_vac;
+    ns->TWR_min = s->TWR_min;
+    ns->TWR_max = s->TWR_max;
+    ns->consumption = s->consumption;
+    return ns;
+}
+
+
 Rocket *create_rocket(Datas *d)
 {
     Rocket *r = malloc(sizeof(Rocket));
