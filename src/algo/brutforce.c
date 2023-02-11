@@ -28,12 +28,21 @@ int rocket_creator(Datas *datas, double deltaV_min, Rocket *r)
         create_tank_stack(datas, s, e->diam, mass_fuel_needed);
         calculate_rocket_infos(r);
         DeltaV_min -= s->DeltaV;
+        if (r->cost < datas->best_rocket->cost)
+            datas->best_rocket = r;
         if (deltaV_min > 0)
-            r
+        {
+            Rocket *nr = copy_rocket(Rocket *r);
+            rocket_creator(datas, deltaV_min, nr);
+        }
     }
+    return 1;
 }
 
 int brut_force(Datas datas)
 {
-
+    Rocket *r = create_rocket(datas);
+    r->cost = 999999999;
+    rocket_creator(datas, datas->DeltaV_min, r);
+    return 1;
 }

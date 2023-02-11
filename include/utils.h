@@ -122,6 +122,7 @@ Part *create_engine(Engine *e);
 Part *create_decoupler(Decoupler *d);
 Stage *create_stage();
 Rocket *create_rocket(Datas *d);
+Rocket *copy_rocket(Rocket *r);
 int create_tank_stack(Datas *d, Stage *s, diameter diam, double mass_fuel)
 
 #endif
