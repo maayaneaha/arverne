@@ -105,6 +105,21 @@ Part *create_decoupler(Decoupler *d)
     return p;
 }
 
+
+Part *copy_part(Part *p)
+{
+    Part *np = malloc(sizeof(Part));
+    np->part_type = p->part_type;
+    np->name = malloc(sizeof(char) * (strlen(p->name) + 1));
+    strcpy(np->name, p->name);
+    np->mass = p->mass;
+    np->cost = p->cost;
+    np->prev = NULL;
+    np->next = NULL;
+    return np;
+}
+
+
 Stage *create_stage()
 {
     Stage *s = malloc(sizeof(Stage));
