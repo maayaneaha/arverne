@@ -11,7 +11,7 @@ struct tank
 {
     const char *name;
     double empty_mass;
-    double full_mass;
+    double full_mass;  // full_mass = empty_mass + fuel_mass
     double empty_cost;
     double full_cost;
     enum diameter top_diam;
@@ -67,7 +67,7 @@ struct stage
     enum fuel_type fuel;
     double quantity_fuel1;
     double quantity_fuel2;
-    double DV;
+    double DeltaV;
     double total_thurst_atm_min;
     double total_thurst_atm_max;
     double total_thrust_vac_min;
@@ -90,7 +90,7 @@ struct rocket
 {
     double mass_payload;
     double total_mass;
-    double DV;
+    double DeltaV;
     double cost;
     Stage *first_stage;
 };
@@ -98,7 +98,7 @@ struct rocket
 typedef struct datas Datas;
 struct datas
 {
-    double delta_v_min;
+    double deltaV_min;
     double mass_payload;
     double mass_max;
     double TWR_min;
@@ -114,11 +114,14 @@ struct datas
 };
 
 
-double calculate_mass_dry_tank(Tank *t);
-int calculate_stage_masses(Stage *s);
-int calculate_rocket(Rocket *r);
+double calculate_mass_fuel_tank(Tank *t);
+int calculate_stage_infos(Stage *s);
+int calculate_rocket_infos(Rocket *r);
 Part *create_tank(Tank *t);
 Part *create_engine(Engine *e);
 Part *create_decoupler(Decoupler *d);
+Stage *create_stage();
+Rocket *create_rocket(Datas *d);
+int create_tank_stack(Datas *d, Stage *s, diameter diam, double mass_fuel)
 
 #endif
