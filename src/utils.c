@@ -146,7 +146,7 @@ Stage *copy_stage(Stage *s)
     // Tanks copy
     Part *prev = copy_part(s->first_tank);
     ns->first_tank = prev;
-    Part *t = prev;
+    // Part *t = prev;
     for(Part *t = s->first_tank->next; t != NULL; t = t->next)
     {
         Part *nt = copy_part(t);
@@ -184,6 +184,26 @@ Rocket *create_rocket(Datas *d)
     r->cost = 0;
     r->first_stage = NULL;
 }
+
+Rocket *copy_rocket(Rocket *r)
+{
+    Rocket *nr = malloc(Sizeof(Rocket));
+    nr->mass_payload = r->mass_payload;
+    nr->DeltaV = r->DeltaV;
+    nr->cost = r->cost;
+    Stage *prev = copy_stage(r->first_stage);
+    nr->first_stage = prev;
+    for(Stage *s = r->first_tank->next; s != NULL; s = s->next)
+    {
+        Stage *ns = copy_stage(s);
+        ns->prev = prev;
+        prev->next = ns;
+        prev = ns;
+    }
+    return nr;
+}
+
+
 
 int create_tank_stack(Datas *d, Stage *s, diameter diam, double mass_fuel)
 {
