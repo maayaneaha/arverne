@@ -289,9 +289,33 @@ cJSON* json_ParseFile(char* filename)
 }
 void free_part (Part* p);
 {
-   free(p->part_type);
    free(p->name);
    free(p);
+}
+
+void free_stage(Stage *s);
+{
+   Part* t = s->first_tank;
+   while (t != NULL)
+   {
+      t = t->next;
+      part_free(t->prev);
+   }
+   if(s->engine != NULL)
+      part_free(s->engine);
+   if(s->decoupler != NULL)
+      part_free(s->decoupler);
+   free(s);
+}
+void free_rocket(rocket *r)
+{
+   stage* s = r->first_stage;
+   while (s!=NULL)
+   {
+      s=s->next;
+      free_stage = s->prev;
+   }
+   free(r);
 }
 Decoupler* load_Decoupler(char* filename)
 {
