@@ -287,7 +287,12 @@ cJSON* json_ParseFile(char* filename)
 
     return parsed;
 }
-
+void free_part (Part* p);
+{
+   free(p->part_type);
+   free(p->name);
+   free(p);
+}
 Decoupler* load_Decoupler(char* filename)
 {
     Decoupler* obj = malloc(sizeof(Decoupler));
