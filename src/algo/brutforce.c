@@ -1,14 +1,19 @@
-#include "utils.h"
+#include <stdio.h>
+
+#include "algo/brutforce.h"
 #include "physics/physics.h"
 
 
 int rocket_creator(Datas *datas, double deltaV_min, Rocket *r)
 {
+#if DEBUG
+    printf("rocket_creator(datas, deltaV_min, r)\n");
+#endif
     if (deltaV_min <= 0)
         return 1;
     for (size_t i = 0; i < datas->nbr_engines; ++i)
     {
-        Stage *s = create_stage();
+        Stage *s = create_stage(datas);
         Engine *e = datas->engines[i];
         s->engine = create_engine(e);
         // Mass fuel max for a minimum TWR
@@ -25,6 +30,7 @@ int rocket_creator(Datas *datas, double deltaV_min, Rocket *r)
         if (mass_fuel_needed > mass_fuel_max)
             mass_fuel_needed = mass_fuel_max;
         create_tank_stack(datas, s, e->diam, mass_fuel_needed);
+        append_stage(r, s);
         calculate_rocket_infos(r);
         deltaV_min -= s->DeltaV;
         if (r->cost < datas->best_rocket->cost)
@@ -41,7 +47,9 @@ int rocket_creator(Datas *datas, double deltaV_min, Rocket *r)
 int brut_force(Datas *datas)
 {
     Rocket *r = create_rocket(datas);
-    r->cost = 999999999;
+    Rocket *er = copy_rocket(r);
+    er->cost = 999999999;
+    datas->best_rocket = er;
     rocket_creator(datas, datas->deltaV_min, r);
     return 1;
 }

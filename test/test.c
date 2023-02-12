@@ -2,6 +2,7 @@
 #include <stdio.h>
 
 #include "algo/algo.h"
+#include "algo/brutforce.h"
 #include "basic_display/basic_display.h"
 #include "utils.h"
 
@@ -128,4 +129,13 @@ void test_basic_display()
     Datas *d = create_datas();
     Rocket *r = build_rocket(d, 2);
     basic_display(r);
+}
+
+void test_brutforce()
+{
+#if DEBUG
+        printf("test_brutforce()\n");
+#endif
+    Datas *d = create_datas();
+    int r = brut_force(d);
 }

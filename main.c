@@ -7,7 +7,7 @@ int main()
 {
 #if DEBUG
     // For test functions only
-    test_basic_display();
+    test_brutforce();
     return 0;
 #endif
 

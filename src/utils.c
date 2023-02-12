@@ -13,7 +13,7 @@ double calculate_mass_fuel_tank(Tank *t)
 int calculate_stage_infos(Stage *s)
 {
 #if DEBUG
-    printf("calculate_stages_infos(s)\n");
+    printf("calculate_stages_infos(s = %zu)\n", (size_t) s);
 #endif
     s->mass_dry = s->engine->mass * s->nbr_engines;
     if (s->prev != NULL)
@@ -48,7 +48,7 @@ int calculate_rocket_infos(Rocket *r)
     r->total_mass = r->mass_payload;
     Stage *s = r->first_stage;
 #if DEBUG
-    printf("  begin\n");
+    printf("  begin: stage = %zu\n", (size_t) s);
 #endif
     Stage *prev = s;
     for(; s != NULL; s = s->next)
@@ -125,13 +125,14 @@ Part *copy_part(Part *p)
 }
 
 
-Stage *create_stage()
+Stage *create_stage(Datas *d)
 {
     Stage *s = malloc(sizeof(Stage));
     s->mass_full = 0;
     s->mass_dry = 0;
     s->cost = 0;
     s->DeltaV = 0;
+    s->decoupler = create_decoupler(d->decouplers[0]);
     s->prev = NULL;
     s->next = NULL;
     return s;
@@ -140,6 +141,8 @@ Stage *create_stage()
 
 Stage *copy_stage(Stage *s)
 {
+    if (s == NULL)
+        return NULL;
     // core copy
     Stage *ns = malloc(sizeof(Stage)); // new stage
     ns->mass_full = s->mass_full;
@@ -199,6 +202,8 @@ Rocket *copy_rocket(Rocket *r)
     nr->cost = r->cost;
     Stage *prev = copy_stage(r->first_stage);
     nr->first_stage = prev;
+    if (r->first_stage == NULL)
+        return nr;
     for(Stage *s = r->first_stage->next; s != NULL; s = s->next)
     {
         Stage *ns = copy_stage(s);
@@ -213,6 +218,9 @@ Rocket *copy_rocket(Rocket *r)
 
 int create_tank_stack(Datas *d, Stage *s, enum diameter diam, double mass_fuel)
 {
+#if DEBUG
+    printf("create_tank_stack(d, s, diam, mass_fuel = %f)\n", mass_fuel);
+#endif
     Part *prev = create_tank(d->tanks[0]);
     double mass_total = calculate_mass_fuel_tank(prev->part_type);
     Tank *t = prev->part_type;
@@ -229,6 +237,26 @@ int create_tank_stack(Datas *d, Stage *s, enum diameter diam, double mass_fuel)
     }
     return 1;
 }
+
+
+int append_stage(Rocket *r, Stage *s)
+{
+#if DEBUG
+    printf("append_stage(r = %zu, s = %zu)\n", (size_t) r, (size_t) s);
+#endif
+    if (r->first_stage == NULL)
+    {
+        r->first_stage = s;
+        return 1;
+    }
+    Stage *cur = r->first_stage;
+    while(cur->next != NULL)
+        cur = cur->next;
+    cur->next = s;
+    cur->prev = cur;
+    return 1;
+}
+
 
 /*Decoupler loadfile_Decoupler(char* filename)
 {

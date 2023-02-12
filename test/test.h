@@ -2,5 +2,6 @@
 #define BASIC_DISPLAY
 
 void test_basic_display();
+void test_brutforce();
 
 #endif
