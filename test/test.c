@@ -138,4 +138,5 @@ void test_brutforce()
 #endif
     Datas *d = create_datas();
     int r = brut_force(d);
+    basic_display(d->best_rocket);
 }

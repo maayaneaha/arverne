@@ -3,6 +3,6 @@
 
 #include "utils.h"
 
-void basic_display(Rocket *rocket);
+int basic_display(Rocket *rocket);
 
 #endif
