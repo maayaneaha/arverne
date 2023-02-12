@@ -68,10 +68,10 @@ struct stage
     double quantity_fuel1;
     double quantity_fuel2;
     double DeltaV;
-    double total_thurst_atm_min;
-    double total_thurst_atm_max;
+    double total_thrust_atm_min;
+    double total_thrust_atm_max;
     double total_thrust_vac_min;
-    double total_thurst_vac_max;
+    double total_thrust_vac_max;
     double ISP_atm;
     double ISP_vac;
     double TWR_min;
@@ -123,6 +123,6 @@ Part *create_decoupler(Decoupler *d);
 Stage *create_stage();
 Rocket *create_rocket(Datas *d);
 Rocket *copy_rocket(Rocket *r);
-int create_tank_stack(Datas *d, Stage *s, diameter diam, double mass_fuel)
+int create_tank_stack(Datas *d, Stage *s, enum diameter diam, double mass_fuel);
 
 #endif

@@ -30,8 +30,9 @@ int calculate_stage_infos(Stage *s)
         s->cost += tank->cost;
         tank = tank->next;
     }
-    s->DeltaV = calculate_DeltaV(s->engine->part_type->ISP_atm, s->mass_full, s->mass_dry, calculate_g());
-    s->TWR_min = calculate_TWR(s->mass_full, s->engine->part_type->thrust_atm * s->nbr_engines, calculate_g());
+    Engine *e = s->engine->part_type;
+    s->DeltaV = calculate_DeltaV(e->ISP_atm, s->mass_full, s->mass_dry, calculate_g());
+    s->TWR_min = calculate_TWR(s->mass_full, e->thrust_atm * s->nbr_engines, calculate_g());
     return 1;
 }
 
@@ -39,25 +40,18 @@ int calculate_stage_infos(Stage *s)
 int calculate_rocket_infos(Rocket *r)
 {
     r->total_mass = r->mass_payload;
-    Stage *s = r->first_stage
+    Stage *s = r->first_stage;
     for(; s != NULL; s = s->next)
     {
         calculate_stage_infos(s);
         if (s->prev == NULL)
         {
-            s->mass_dry += mass_payload;
-            s->mass_full += mass_payload;
+            s->mass_dry += r->mass_payload;
+            s->mass_full += r->mass_payload;
         }
         r->DeltaV += s->DeltaV;
     }
     r->total_mass = s->mass_full;
-    return 1;
-}
-
-
-int calculate_rocket(Rocket *r)
-{
-    calculate_rocket_masses(r);
     return 1;
 }
 
@@ -161,12 +155,12 @@ Stage *copy_stage(Stage *s)
     ns->decoupler = copy_part(s->decoupler);
     // Values copy
     ns->fuel = s->fuel;
-    ns->quantity_fuel1 = n->quantity_fuel1;
-    ns->quantity_fuel2 = n->quantity_fuel2;
-    ns->total_thurst_atm_min = n->total_thurst_atm_min;
-    ns->total_thurst_atm_max = n->total_thurst_atm_max;
-    ns->total_thurst_vac_min = n->total_thurst_vac_min;
-    ns->total_thurst_vac_max = n->total_thurst_vac_max;
+    ns->quantity_fuel1 = s->quantity_fuel1;
+    ns->quantity_fuel2 = s->quantity_fuel2;
+    ns->total_thrust_atm_min = s->total_thrust_atm_min;
+    ns->total_thrust_atm_max = s->total_thrust_atm_max;
+    ns->total_thrust_vac_min = s->total_thrust_vac_min;
+    ns->total_thrust_vac_max = s->total_thrust_vac_max;
     ns->ISP_atm = s->ISP_atm;
     ns->ISP_vac = s->ISP_vac;
     ns->TWR_min = s->TWR_min;
@@ -183,17 +177,18 @@ Rocket *create_rocket(Datas *d)
     r->DeltaV = 0;
     r->cost = 0;
     r->first_stage = NULL;
+    return r;
 }
 
 Rocket *copy_rocket(Rocket *r)
 {
-    Rocket *nr = malloc(Sizeof(Rocket));
+    Rocket *nr = malloc(sizeof(Rocket));
     nr->mass_payload = r->mass_payload;
     nr->DeltaV = r->DeltaV;
     nr->cost = r->cost;
     Stage *prev = copy_stage(r->first_stage);
     nr->first_stage = prev;
-    for(Stage *s = r->first_tank->next; s != NULL; s = s->next)
+    for(Stage *s = r->first_stage->next; s != NULL; s = s->next)
     {
         Stage *ns = copy_stage(s);
         ns->prev = prev;
@@ -205,11 +200,12 @@ Rocket *copy_rocket(Rocket *r)
 
 
 
-int create_tank_stack(Datas *d, Stage *s, diameter diam, double mass_fuel)
+int create_tank_stack(Datas *d, Stage *s, enum diameter diam, double mass_fuel)
 {
     Part *prev = create_tank(d->tanks[0]);
     double mass_total = calculate_mass_fuel_tank(prev->part_type);
-    if (diam != prev->part_type->top_diam) // not the corrrct diameter
+    Tank *t = prev->part_type;
+    if (diam != t->top_diam) // not the correct diameter
         return 0;
     s->first_tank = prev;
     while (mass_total < mass_fuel)
