@@ -86,7 +86,6 @@ Rocket *build_rocket(Datas *datas, size_t nbr_stages)
     #if DEBUG
         printf("  begin\n");
     #endif
-    printf("3 %zu\n", (size_t) datas->tanks[0]);
     for(size_t i = 0; i < nbr_stages; i++) {
         Stage *s = malloc(sizeof(Stage));
         s->fuel = FUELOX;
@@ -106,9 +105,12 @@ Rocket *build_rocket(Datas *datas, size_t nbr_stages)
         s->decoupler = create_decoupler(*datas->decouplers);
         s->nbr_engines = 1;
         s->prev = prev_s;
-        if (prev_s != NULL) {
+        if (prev_s != NULL)
+        {
             prev_s->next = s;
-        } else {
+        }
+        else
+        {
             r->first_stage = s;
         }
         prev_s = s;

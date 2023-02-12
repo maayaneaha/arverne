@@ -12,6 +12,9 @@ double calculate_mass_fuel_tank(Tank *t)
 
 int calculate_stage_infos(Stage *s)
 {
+#if DEBUG
+    printf("calculate_stages_infos(s)\n");
+#endif
     s->mass_dry = s->engine->mass * s->nbr_engines;
     if (s->prev != NULL)
         s->mass_dry += s->mass_full;
@@ -39,8 +42,15 @@ int calculate_stage_infos(Stage *s)
 
 int calculate_rocket_infos(Rocket *r)
 {
+#if DEBUG
+        printf("calculate_rocket_infos(r)\n");
+#endif
     r->total_mass = r->mass_payload;
     Stage *s = r->first_stage;
+#if DEBUG
+    printf("  begin\n");
+#endif
+    Stage *prev = s;
     for(; s != NULL; s = s->next)
     {
         calculate_stage_infos(s);
@@ -50,8 +60,9 @@ int calculate_rocket_infos(Rocket *r)
             s->mass_full += r->mass_payload;
         }
         r->DeltaV += s->DeltaV;
+        prev = s;
     }
-    r->total_mass = s->mass_full;
+    r->total_mass = prev->mass_full;
     return 1;
 }
 
