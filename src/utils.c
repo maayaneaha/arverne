@@ -318,45 +318,44 @@ Decoupler* load_Decoupler(char* filename)
             obj->cost = (double) tmp->valueint;
     }
 
-    tmp = cJSON_GetObjectItemCaseSensitive(part, "maxTemp");
-    if (tmp)
-    {
-        if (tmp->valueint)
-            obj->max_temp = tmp->valueint;
-    }
+    /* tmp = cJSON_GetObjectItemCaseSensitive(part, "maxTemp"); */
+    /* if (tmp) */
+    /* { */
+    /*     if (tmp->valueint) */
+    /*         obj->max_temp = tmp->valueint; */
+    /* } */
     
-    tmp = cJSON_GetObjectItemCaseSensitive(part, "crashTolerance");
-    if (tmp)
-    {
-        if (tmp->valueint)
-            obj->tolerance_ms = tmp->valueint;
-    }
+    /* tmp = cJSON_GetObjectItemCaseSensitive(part, "crashTolerance"); */
+    /* if (tmp) */
+    /* { */
+    /*     if (tmp->valueint) */
+    /*         obj->tolerance_ms = tmp->valueint; */
+    /* } */
 
-    tmp = cJSON_GetObjectItemCaseSensitive(part, "MODULE");
-    if (tmp)
-    {
-        if (cJSON_IsArray(tmp))
-        {
-            cJSON* i = NULL;
-            cJSON* j = NULL;
-            cJSON_ArrayForEach(i, tmp)
-            {
-                /* j = cJSON_GetObjectItemCaseSensitive(i, "name"); */
-                /* if (cJSON_IsString(j)) */
-                /* { */
-                j = cJSON_GetObjectItemCaseSensitive(i, "ejectionForce");
-                if (j)
-                {
-                    if (j->valueint)
-                        obj->ejection = j->valueint;
-                    break;
-                }
-                /* } */
-            }
-        }
-    }
+    /* tmp = cJSON_GetObjectItemCaseSensitive(part, "MODULE"); */
+    /* if (tmp) */
+    /* { */
+    /*     if (cJSON_IsArray(tmp)) */
+    /*     { */
+    /*         cJSON* i = NULL; */
+    /*         cJSON* j = NULL; */
+    /*         cJSON_ArrayForEach(i, tmp) */
+    /*         { */
+    /*             /1* j = cJSON_GetObjectItemCaseSensitive(i, "name"); *1/ */
+    /*             /1* if (cJSON_IsString(j)) *1/ */
+    /*             /1* { *1/ */
+    /*             j = cJSON_GetObjectItemCaseSensitive(i, "ejectionForce"); */
+    /*             if (j) */
+    /*             { */
+    /*                 if (j->valueint) */
+    /*                     obj->ejection = j->valueint; */
+    /*                 break; */
+    /*             } */
+    /*             /1* } *1/ */
+    /*         } */
+    /*     } */
+    /* } */
 
     cJSON_Delete(file);
     return obj;
 }
-*/

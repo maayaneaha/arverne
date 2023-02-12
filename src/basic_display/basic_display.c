@@ -5,7 +5,7 @@
 void basic_display(Rocket *rocket)
 {
     printf("Mass (payload): %f (%f)\n", rocket->total_mass - rocket->mass_payload, rocket->mass_payload);
-    printf("Delta V: %f\n", rocket->DV);
+    printf("Delta V: %f\n", rocket->DeltaV);
     printf("Cost: %f\n", rocket->cost);
     int i = 0;
     for(Stage *s = rocket->first_stage; s != NULL; s = s->next)
