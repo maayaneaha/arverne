@@ -6,7 +6,6 @@
 enum diameter {TINY, SMALL, MEDIUM, LARGE, EXTRALARGE, MK2, MK3, X}; // MK1 = SMALL
 enum fuel_type {FUELOX, LIQUIDFUEL, MONOPROPELLANT, SOLIDFUEL, XENON, ORE};
 
-typedef struct tank Tank;
 struct tank
 {
     const char *name;
@@ -23,7 +22,14 @@ struct tank
     int radial_part; // Is a radial tank
 };
 
+typedef struct tank Tank;
+typedef struct decoupler Decoupler;
+typedef struct rocket Rocket;
+typedef struct part Part;
+typedef struct datas Datas;
+typedef struct stage Stage;
 typedef struct engine Engine;
+
 struct engine
 {
     const char *name;
@@ -39,7 +45,7 @@ struct engine
     double gimbal;
 };
 
-typedef struct decoupler Decoupler;
+
 struct decoupler
 {
     const char *name;
@@ -47,7 +53,6 @@ struct decoupler
     double cost;
 };
 
-typedef struct part Part;
 struct part
 {
     void *part_type;
@@ -58,7 +63,6 @@ struct part
     Part *next;
 };
 
-typedef struct stage Stage;
 struct stage
 {
     double mass_full;
@@ -85,7 +89,6 @@ struct stage
     Stage *next;
 };
 
-typedef struct rocket Rocket;
 struct rocket
 {
     double mass_payload;
@@ -95,7 +98,6 @@ struct rocket
     Stage *first_stage;
 };
 
-typedef struct datas Datas;
 struct datas
 {
     double deltaV_min;
@@ -127,3 +129,5 @@ int create_tank_stack(Datas *d, Stage *s, enum diameter diam, double mass_fuel);
 int append_stage(Rocket *r, Stage *s);
 
 #endif
+
+Decoupler* load_Decoupler(char* filename);

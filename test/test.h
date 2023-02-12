@@ -3,5 +3,6 @@
 
 void test_basic_display();
 void test_brutforce();
+void coni();
 
 #endif
