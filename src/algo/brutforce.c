@@ -6,7 +6,6 @@ int rocket_creator(Datas *datas, double deltaV_min, Rocket *r)
 {
     if (deltaV_min <= 0)
         return 1;
-    double deltaV_min = datas->DeltaV_min;
     for (size_t i = 0; i < datas->nbr_engines; ++i)
     {
         Stage *s = create_stage();
@@ -27,22 +26,22 @@ int rocket_creator(Datas *datas, double deltaV_min, Rocket *r)
             mass_fuel_needed = mass_fuel_max;
         create_tank_stack(datas, s, e->diam, mass_fuel_needed);
         calculate_rocket_infos(r);
-        DeltaV_min -= s->DeltaV;
+        deltaV_min -= s->DeltaV;
         if (r->cost < datas->best_rocket->cost)
             datas->best_rocket = r;
         if (deltaV_min > 0)
         {
-            Rocket *nr = copy_rocket(Rocket *r);
+            Rocket *nr = copy_rocket(r);
             rocket_creator(datas, deltaV_min, nr);
         }
     }
     return 1;
 }
 
-int brut_force(Datas datas)
+int brut_force(Datas *datas)
 {
     Rocket *r = create_rocket(datas);
     r->cost = 999999999;
-    rocket_creator(datas, datas->DeltaV_min, r);
+    rocket_creator(datas, datas->deltaV_min, r);
     return 1;
 }

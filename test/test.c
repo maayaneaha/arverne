@@ -12,7 +12,7 @@ Datas *create_datas()
         printf("create_datas\n");
     #endif
     Datas *d = malloc(sizeof(Datas));
-    d->delta_v_min = 2000;
+    d->deltaV_min = 2000;
     d->mass_payload = 2000;
     d->mass_max = 200000; // 200 000
     d->TWR_min = 1.4;
@@ -113,7 +113,7 @@ Rocket *build_rocket(Datas *datas, size_t nbr_stages)
         }
         prev_s = s;
     }
-    calculate_rocket(r);
+    calculate_rocket_infos(r);
     return r;
 }
 
