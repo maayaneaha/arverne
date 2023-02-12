@@ -1,6 +1,5 @@
 #include <stdio.h>
 #include "utils.h"
-#include "test.h"
 
 #if DEBUG
 #include "test.h"

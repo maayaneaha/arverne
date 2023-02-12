@@ -139,6 +139,7 @@ void test_brutforce()
     Datas *d = create_datas();
     int r = brut_force(d);
     basic_display(d->best_rocket);
+}
 
 void coni()
 {
@@ -146,7 +147,7 @@ void coni()
     printf("%s\n", pute->name);
     printf("%f\n", pute->mass);
     printf("%f\n", pute->cost);
-    printf("%d\n", pute->max_temp);
-    printf("%d\n", pute->ejection);
+    /* printf("%d\n", pute->max_temp); */
+    /* printf("%d\n", pute->ejection); */
     return;
 }

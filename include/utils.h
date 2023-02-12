@@ -48,7 +48,7 @@ struct engine
 
 struct decoupler
 {
-    const char *name;
+    char *name;
     double mass;
     double cost;
 };
