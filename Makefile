@@ -2,7 +2,8 @@
 
 CC			= gcc
 CPPFLAGS	= -Iinclude/
-CFLAGS 		= -Wall -Werror -Wextra -std=gnu99 -Wno-unused-variable -Wno-unused-function
+CFLAGS 		= -Wall -Werror -Wextra -std=gnu99 -Wno-unused-variable -Wno-unused-function -Wno-unused-but-set-variable
+# CFLAGS 		= -Wall -Werror -Wextra -std=gnu11 -Wno-unused-variable -Wno-unused-function
 
 LDFLAGS		=
 LDLIBS		=
