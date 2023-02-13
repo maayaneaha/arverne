@@ -116,6 +116,7 @@ struct datas
 };
 
 
+Datas *create_datas();
 double calculate_mass_fuel_tank(Tank *t);
 int calculate_stage_infos(Stage *s);
 int calculate_rocket_infos(Rocket *r);
