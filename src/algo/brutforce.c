@@ -19,6 +19,7 @@ int rocket_creator(Datas *datas, double deltaV_min, Rocket *r)
         // Mass fuel max for a minimum TWR
         double mass_fuel_max = calculate_max_mass(datas->TWR_min, e->thrust_atm, calculate_g());
         double tmp = calculate_max_mass(datas->TWR_min, e->thrust_vac, calculate_g());
+        printf("%f %f %f\n", mass_fuel_max, tmp, datas->deltaV_min);
         if (tmp < mass_fuel_max)
             mass_fuel_max = tmp;
         // Mass fuel needed for th DeltaV
@@ -46,6 +47,7 @@ int rocket_creator(Datas *datas, double deltaV_min, Rocket *r)
 
 int brut_force(Datas *datas)
 {
+    printf("%f\n", datas->deltaV_min);
     Rocket *r = create_rocket(datas);
     Rocket *er = copy_rocket(r);
     er->cost = 999999999;
