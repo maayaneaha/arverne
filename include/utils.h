@@ -8,7 +8,7 @@ enum fuel_type {FUELOX, LIQUIDFUEL, MONOPROPELLANT, SOLIDFUEL, XENON, ORE};
 
 struct tank
 {
-    const char *name;
+    char *name;
     double empty_mass;
     double full_mass;  // full_mass = empty_mass + fuel_mass
     double empty_cost;
@@ -32,7 +32,7 @@ typedef struct engine Engine;
 
 struct engine
 {
-    const char *name;
+    char *name;
     double mass;
     double cost;
     enum fuel_type fuel;
@@ -48,7 +48,7 @@ struct engine
 
 struct decoupler
 {
-    const char *name;
+    char *name;
     double mass;
     double cost;
 };

@@ -1,6 +1,5 @@
 #include <stdio.h>
 #include "utils.h"
-#include "test.h"
 
 #if DEBUG
 #include "test.h"
@@ -12,6 +11,7 @@ int main()
 #if DEBUG
     // For test functions only
     test_brutforce();
+    multivers();
     //coni();
     return 0;
 #else

@@ -287,33 +287,33 @@ cJSON* json_ParseFile(char* filename)
 
     return parsed;
 }
-void free_part (Part* p);
+void free_part (Part* p)
 {
    free(p->name);
    free(p);
 }
 
-void free_stage(Stage *s);
+void free_stage(Stage *s)
 {
    Part* t = s->first_tank;
    while (t != NULL)
    {
       t = t->next;
-      part_free(t->prev);
+      free_part(t->prev);
    }
    if(s->engine != NULL)
-      part_free(s->engine);
+      free_part(s->engine);
    if(s->decoupler != NULL)
-      part_free(s->decoupler);
+      free_part(s->decoupler);
    free(s);
 }
-void free_rocket(rocket *r)
+	void free_rocket(Rocket *r)
 {
-   stage* s = r->first_stage;
+   Stage* s = r->first_stage;
    while (s!=NULL)
    {
       s=s->next;
-      free_stage = s->prev;
+      free_stage(s->prev);
    }
    free(r);
 }
@@ -331,6 +331,7 @@ Decoupler* load_Decoupler(char* filename)
     if (tmp)
         asprintf(&obj->name, "%s", tmp->valuestring);
 
+    
     tmp = cJSON_GetObjectItemCaseSensitive(part, "mass");
     if (tmp)
     {
@@ -346,7 +347,7 @@ Decoupler* load_Decoupler(char* filename)
         else
             obj->cost = (double) tmp->valueint;
     }
-
+/*
     tmp = cJSON_GetObjectItemCaseSensitive(part, "maxTemp");
     if (tmp)
     {
@@ -370,9 +371,9 @@ Decoupler* load_Decoupler(char* filename)
             cJSON* j = NULL;
             cJSON_ArrayForEach(i, tmp)
             {
-                /* j = cJSON_GetObjectItemCaseSensitive(i, "name"); */
-                /* if (cJSON_IsString(j)) */
-                /* { */
+                 j = cJSON_GetObjectItemCaseSensitive(i, "name");
+                 if (cJSON_IsString(j))
+                 {
                 j = cJSON_GetObjectItemCaseSensitive(i, "ejectionForce");
                 if (j)
                 {
@@ -380,12 +381,12 @@ Decoupler* load_Decoupler(char* filename)
                         obj->ejection = j->valueint;
                     break;
                 }
-                /* } */
+                 }
             }
         }
     }
+*/
 
     cJSON_Delete(file);
     return obj;
 }
-*/
