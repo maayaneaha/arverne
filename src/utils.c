@@ -9,6 +9,73 @@
 #include "utils.h"
 #include "physics/physics.h"
 
+Datas *create_datas()
+{
+#if DEBUG
+    printf("create_datas\n");
+#endif
+    Datas *d = malloc(sizeof(Datas));
+    d->deltaV_min = 2000;
+    d->mass_payload = 2000;
+    d->mass_max = 200000; // 200 000
+    d->TWR_min = 1.4;
+    d->TWR_max = 2;
+    d->diameter_payload = SMALL;
+
+#if DEBUG
+    printf("  begin\n");
+#endif
+    Tank *t = malloc(sizeof(Tank));
+    t->name = "FL-T100 Fuel Tank";
+    t->empty_mass = 62.5;
+    t->full_mass = 560;
+    t->empty_cost = 104.1;
+    t->full_cost = 150;
+    t->top_diam = SMALL;
+    t->down_diam = SMALL;
+    t->fuel = FUELOX;
+    t->quantity_fuel1 = 45;
+    t->quantity_fuel2 = 55;
+
+    d->tanks = malloc(sizeof(Tank*));
+    d->tanks[0] = t;
+    d->nbr_tanks = 1;
+
+#if DEBUG
+    printf("  tank (name = \"%s\" %s)\n", t->name, d->tanks[0]->name);
+#endif
+    Engine *e = malloc(sizeof(Engine));
+    e->name = malloc(sizeof(char) * 36);
+    e->name = "LV-T30 \"Reliant\" Liquid Fuel Engine\0";
+    e->mass = 1250;
+    e->cost = 1100;
+    e->fuel = FUELOX;
+    e->diam = SMALL;
+    e->ISP_atm = 265;
+    e->ISP_vac = 310;
+    e->thrust_atm = 205160;
+    e->thrust_vac = 240000;
+    e->consumption = 15.79;
+    e->gimbal = 0;
+
+    d->engines = malloc(sizeof(Engine*));
+    d->engines[0] = e;
+    d->nbr_engines = 1;
+
+    Decoupler *s = malloc(sizeof(Decoupler));
+    s->name = malloc(sizeof(char) * 16);
+    s->name = "TD-12 Decoupler\0";
+    s->mass = 40;
+    s->cost = 200;
+
+    d->decouplers = malloc(sizeof(Decoupler*));
+    d->decouplers[0] = s;
+    d->nbr_decouplers = 1;
+
+    d->best_rocket = NULL;
+    return d;
+}
+
 double calculate_mass_fuel_tank(Tank *t)
 {
     return t->full_mass - t->empty_mass;
