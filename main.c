@@ -24,11 +24,12 @@ int main(int argc, char* argv[])
     double twrmax = 1.8;
     if (argopt.deltav)
         deltav = atof(argopt.deltav);
-    else if (argopt.twrmin)
+    if (argopt.twrmin)
         twrmin = atof(argopt.twrmin);
-    else if (argopt.twrmax)
+    if (argopt.twrmax)
         twrmax = atof(argopt.twrmax);
     Datas *d = create_datas();
+    printf("%F\n%F\n%F\n", deltav, twrmin, twrmax);
     d->deltaV_min = deltav;
     d->TWR_min = twrmin;
     d->TWR_max = twrmax;

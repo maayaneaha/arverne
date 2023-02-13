@@ -47,7 +47,7 @@ int rocket_creator(Datas *datas, double deltaV_min, Rocket *r)
 
 int brut_force(Datas *datas)
 {
-    printf("%f\n", datas->deltaV_min);
+    printf("Dmin %f\n", datas->deltaV_min);
     Rocket *r = create_rocket(datas);
     Rocket *er = copy_rocket(r);
     er->cost = 999999999;
