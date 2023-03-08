@@ -4,9 +4,9 @@
 #include "basic_display/basic_display.h"
 #include "algo/brutforce.h"
 
-#if DEBUG
-#include "test.h"
-#endif
+#include "test/test.h"
+/* #if DEBUG */
+/* #endif */
 
 int main(int argc, char* argv[])
 {
