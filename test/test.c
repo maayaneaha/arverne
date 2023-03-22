@@ -4,6 +4,7 @@
 #include "algo/algo.h"
 #include "algo/brutforce.h"
 #include "basic_display/basic_display.h"
+#include "physics/physics.h"
 #include "utils.h"
 
 
@@ -85,4 +86,45 @@ void coni()
     /* printf("%d\n", pute->max_temp); */
     /* printf("%d\n", pute->ejection); */
     return;
+}
+
+void physic_tests()
+{
+    // calculate_DeltaV(int ISP, double mass_total, double mass_dry, double g)
+    double res = calculate_DeltaV(100, 2000, 1000, 10);
+    double res_sup = 693.14718056;
+    if (res < res_sup * 0.98 || res > res_sup * 1.02)
+    {
+        printf("ERROR: calculate_DeltaV, res = %f (693.14718056)\n", res);
+    }
+    printf("OK: calculate_DeltaV\n");
+    res = calculate_TWR(1000, 1000, 10);
+    res_sup = 0.1;
+    if (res < res_sup * 0.98 || res > res_sup * 1.02)
+    {
+        printf("ERROR: calculate_TWR, res = %f (0.1)\n", res);
+    }
+    printf("OK: calculate_TWR %f\n", res);
+    res = calculate_g();
+    res_sup = 9.81;
+    if (res < res_sup * 0.98 || res > res_sup * 1.02)
+    {
+        printf("ERROR: calculate_g, res = %f (9.81)\n", res);
+    }
+    printf("OK: calculate_g\n");
+    res = calculate_max_mass(1, 1000, 10);
+    res_sup = 100;
+    if (res < res_sup * 0.98 || res > res_sup * 1.02)
+    {
+        printf("ERROR: calculate_TWR, res = %f (100m)\n", res);
+    }
+    printf("OK: calculate_TWR %f\n", res);
+    res = calculate_mass_fuel(1000, 100, 10, 1000);
+    res_sup = 100;
+    if (res < res_sup * 0.98 || res > res_sup * 1.02)
+    {
+        printf("ERROR: calculate_TWR, res = %f (100m)\n", res);
+    }
+    printf("OK: calculate_TWR %f\n", res);
+
 }

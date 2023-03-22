@@ -27,7 +27,7 @@ $(EXE): $(OBJ)
 	$(CC) $(LDFLAGS) $(LDLIBS) $(OBJ)  -lm -o $@
 
 clean:
-	$(RM) $(OBJ) 
+	$(RM) $(OBJ)
 	$(RM) $(DEP)
 	$(RM) $(EXE)
 
