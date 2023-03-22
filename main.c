@@ -4,15 +4,15 @@
 #include "basic_display/basic_display.h"
 #include "algo/brutforce.h"
 
+#if DEBUG
 #include "test/test.h"
-/* #if DEBUG */
-/* #endif */
+#endif
 
 int main(int argc, char* argv[])
 {
 #if DEBUG
     // For test functions only
-    test_brutforce();
+    physic_tests();
     //coni();
     return 0;
 #else
