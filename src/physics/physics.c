@@ -23,9 +23,9 @@ double calculate_max_mass(double TWR_min, double thrust, double g)
 }
 
 double calculate_mass_fuel(double deltaV, int ISP, double g, double m_tank, double  m_fuel, double m_engines, double m_payload)
-{
+{ //res = calculate_mass_fuel(1000, 100, 10, 100, 1000, 1000, 1000);
     //return exp(deltaV / ISP * g) * mass_dry - mass_dry;
     double ve = ISP * g;
-    double beta = m_tank / m_fuel
+    double beta = m_tank / m_fuel;
     return ((m_payload + m_engines) * (exp(deltaV / ve) - 1))/( 1 - beta * (exp(deltaV / ve) - 1));
 }
