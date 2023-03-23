@@ -39,7 +39,7 @@ int rocket_creator(Datas *datas, double deltaV_min, Rocket *r)
         {
             Rocket *nr = copy_rocket(r);
             rocket_creator(datas, deltaV_min, nr);
-        }
+        } // TODO: fix free
     }
     return 1;
 }
