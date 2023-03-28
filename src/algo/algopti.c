@@ -6,7 +6,7 @@
 // si le dv n'est pas satisfait, on le reparti sur les autres etages
 
 // utiliser calculate_mass_fuel pour trouver la masse totale et prendre la plus faible
-Engine* search_engine(Datas* d, Rocket* r, double dv_needed, int* nbr_engines)
+Engine* search_engine(Datas* d, Rocket* r, double dv_needed, int* nbr_engines, double* ret_mass)
 {
     Engine* optimal_engine = NULL;
     double minimal_mass = INF;
@@ -29,6 +29,7 @@ Engine* search_engine(Datas* d, Rocket* r, double dv_needed, int* nbr_engines)
             minimal_mass = mass_total;
         }
     }
+    ret_mass = minimal_mass;
     return optimal_engine;
 }
 
@@ -36,12 +37,15 @@ Engine* search_engine(Datas* d, Rocket* r, double dv_needed, int* nbr_engines)
 int search_stage(Datas* d, Rocket* r, double dv_needed)
 {
     int nbr_engines;
-    Engine* optimal_engine = search_engine(d, r, dv_needed, &nbr_engines);
+    double minimal_mass;
+    Engine* optimal_engine = search_engine(d, r, dv_needed, &nbr_engines, &minimal_mass);
     // int create_tank_stack(Datas *d, Stage *s, enum diameter diam, double mass_fuel)
     Stage* s = create_stage(d);
     s->engine = create_engine(optiam_engine);
+    create_tank_stack(d, s, optimal_engine->diam, minimal_mass);
     s->nbr_engines = nbr_engines;
     append_stage(r, s);
+    //todo
     return 1;
 }
 
