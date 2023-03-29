@@ -12,17 +12,25 @@ Engine* search_engine(Datas* d, Rocket* r, double dv_needed, int* nbr_engines, d
     double minimal_mass = INF;
     for(size_t i = 0; i < nbr_engines; i++)
     {
-        int nr_engines = nbr_engines_needed();
+        int nbr_engines = 1;
         Engine* e = d->engines[i];
-        //double calculate_mass_fuel(double deltaV, int ISP, double g, beta, double m_engines, double m_payload)
-        double mass_fuel = calculate_mass_fuel(dv_needed, calculate_isp(optimal_engine),
-                                               calculate_g(), beta, nbr_engines,
-                                               r->total_mass);
+        double TWR = -1;
+        double mass_fuel, mass_total;
+        double beta = BETA;
+        while (TWR < d->TWR_min) // To be sure that the TWR is ok
+        {
+            mass_fuel = calculate_mass_fuel(dv_needed, calculate_isp(optimal_engine),
+                                                   calculate_g(), beta, nbr_engines,
+                                                   r->total_mass);
+            mass_total = r->total_mass mass_fuel + e->mass * nbr_engines;
+            TWR = calculate_TWR(mass_total);
+            if (TWR < d->TWR_min)
+                nbr_engines *= (int) ceil(TWR_min / TWR);
+        }
         if (mass_fuel < 0)
         {
             continue;
         }
-        double mass_total = r->total_mass mass_fuel + e->mass * nbr_engines;
         if (mass_total < minimal_mass)
         {
             optimal_engine = e;
