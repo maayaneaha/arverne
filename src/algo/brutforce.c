@@ -22,8 +22,8 @@ int rocket_creator(Datas *datas, double deltaV_min, Rocket *r)
         if (tmp < mass_fuel_max)
             mass_fuel_max = tmp;
         // Mass fuel needed for th DeltaV
-        double mass_fuel_needed = calculate_mass_fuel(deltaV_min, e->ISP_atm, calculate_g(), e->mass);
-        tmp = calculate_mass_fuel(deltaV_min, e->ISP_vac, calculate_g(), e->mass);
+        double mass_fuel_needed;// = calculate_mass_fuel(deltaV_min, e->ISP_atm, calculate_g(), e->mass);
+        //tmp = calculate_mass_fuel(deltaV_min, e->ISP_vac, calculate_g(), e->mass);
         if (tmp < mass_fuel_needed)
             mass_fuel_needed = tmp;
 
