@@ -119,7 +119,8 @@ void physic_tests()
         printf("ERROR: calculate_TWR, res = %f (100m)\n", res);
     }
     printf("OK: calculate_TWR %f\n", res);
-    //res = calculate_mass_fuel(1000, 100, 10, 100, 1000, 1000, 1000);
+    // double calculate_mass_fuel(double deltaV, int ISP, double g, double beta, double m_engines, double m_payload)
+    res = calculate_mass_fuel(1000, 100, 10, 0.1, 1000, 1000);
     res_sup = 4149.578;
     if (res < res_sup * 0.98 || res > res_sup * 1.02)
     {
