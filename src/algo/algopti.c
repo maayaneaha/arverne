@@ -25,7 +25,13 @@ Engine* search_engine(Datas* d, Rocket* r, double dv_needed, int* nbr_engines, d
             mass_total = r->total_mass + mass_fuel * (1 + beta) + e->mass * nbr_engines;
             TWR = calculate_TWR(mass_total, e->thrust_atm, calculate_g());
             if (TWR < d->TWR_min)
+            {
+                int prev_nbr_engines = nbr_engines;
                 nbr_engines *= (int) ceil(d->TWR_min / TWR);
+                if (prev_nbr_engines >= nbr_engines)
+                    nbr_engines++;
+
+            }
         }
         if (mass_fuel < 0)
         {
