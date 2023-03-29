@@ -29,7 +29,7 @@ Engine* search_engine(Datas* d, Rocket* r, double dv_needed, int* nbr_engines, d
                 int prev_nbr_engines = nbr_engines;
                 nbr_engines *= (int) ceil(d->TWR_min / TWR);
                 if (prev_nbr_engines >= nbr_engines)
-                    nbr_engines++;
+                    nbr_engines = prev_nbr_engines + 1;
 
             }
         }
