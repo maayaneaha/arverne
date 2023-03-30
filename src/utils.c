@@ -425,3 +425,18 @@ Decoupler* load_Decoupler(char* filename)
     cJSON_Delete(file);
     return obj;
 }
+
+void free_part(Part* p)
+{
+    
+}
+
+void free_stage(Stage* s)
+{
+
+}
+
+void free_rocket(Rocket* r)
+{
+
+}
