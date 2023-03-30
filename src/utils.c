@@ -147,8 +147,7 @@ Part *create_tank(Tank *t)
     #endif
     Part *p = malloc(sizeof(Part));
     p->part_type = t;
-    p->name = malloc(sizeof(char) * (strlen(t->name) + 1));
-    strcpy(p->name, t->name);
+    p->name = t->name;
     p->mass = t->full_mass;
     p->cost = t->full_cost;
     p->prev = NULL;
@@ -160,8 +159,7 @@ Part *create_engine(Engine *e)
 {
     Part *p = malloc(sizeof(Part));
     p->part_type = e;
-    p->name = malloc(sizeof(char) * (strlen(e->name) + 1));
-    strcpy(p->name, e->name);
+    p->name = e->name;
     p->mass = e->mass;
     p->cost = e->cost;
     p->prev = NULL;
@@ -173,8 +171,7 @@ Part *create_decoupler(Decoupler *d)
 {
     Part *p = malloc(sizeof(Part));
     p->part_type = d;
-    p->name = malloc(sizeof(char) * (strlen(d->name) + 1));
-    strcpy(p->name, d->name);
+    p->name = d->name;
     p->mass = d->mass;
     p->cost = d->cost;
     p->prev = NULL;
@@ -187,8 +184,7 @@ Part *copy_part(Part *p)
 {
     Part *np = malloc(sizeof(Part));
     np->part_type = p->part_type;
-    np->name = malloc(sizeof(char) * (strlen(p->name) + 1));
-    strcpy(np->name, p->name);
+    np->name = p->name;
     np->mass = p->mass;
     np->cost = p->cost;
     np->prev = NULL;
@@ -428,7 +424,8 @@ Decoupler* load_Decoupler(char* filename)
 
 void free_part(Part* p)
 {
-    
+    // Do not free the name or the part_type
+    free(p); // So easy
 }
 
 void free_stage(Stage* s)
