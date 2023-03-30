@@ -12,7 +12,7 @@ int main(int argc, char* argv[])
 {
 #if DEBUG
     // For test functions only
-    physic_tests();
+    printf("%i\n", SMALL);
     //coni();
     return 0;
 #else

@@ -46,7 +46,8 @@ Datas *create_datas()
 #endif
     Engine *e = malloc(sizeof(Engine));
     e->name = malloc(sizeof(char) * 36);
-    e->name = "LV-T30 \"Reliant\" Liquid Fuel Engine\0";
+    const char* name = "LV-T30 \"Reliant\" Liquid Fuel Engine\0";
+    e->name = strdup(name);
     e->mass = 1250;
     e->cost = 1100;
     e->fuel = FUELOX;
@@ -441,7 +442,7 @@ void free_stage(Stage* s)
 
 void free_rocket(Rocket* r)
 {
-    for(Part* s = r->first_stage; s != NULL; s = s->next)
+    for(Stage* s = r->first_stage; s != NULL; s = s->next)
     {
         free_stage(s);
     }
@@ -450,17 +451,17 @@ void free_rocket(Rocket* r)
 
 void free_datas(Datas* d)
 {
-    for(size_t i = 0; i < nbr_tanks; i++)
+    for(size_t i = 0; i < d->nbr_tanks; i++)
     {
         free(d->tanks[i]->name);
         free(d->tanks[i]);
     }
-    for(size_t i = 0; i < nbr_engines; i++)
+    for(size_t i = 0; i < d->nbr_engines; i++)
     {
         free(d->engines[i]->name);
         free(d->engines[i]);
     }
-    for(size_t i = 0; i < nbr_decouplers; i++)
+    for(size_t i = 0; i < d->nbr_decouplers; i++)
     {
         free(d->decouplers[i]->name);
         free(d->decouplers[i]);
