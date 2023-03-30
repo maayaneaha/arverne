@@ -447,3 +447,24 @@ void free_rocket(Rocket* r)
     }
     free(r);
 }
+
+void free_datas(Datas* d)
+{
+    for(size_t i = 0; i < nbr_tanks; i++)
+    {
+        free(d->tanks[i]->name);
+        free(d->tanks[i]);
+    }
+    for(size_t i = 0; i < nbr_engines; i++)
+    {
+        free(d->engines[i]->name);
+        free(d->engines[i]);
+    }
+    for(size_t i = 0; i < nbr_decouplers; i++)
+    {
+        free(d->decouplers[i]->name);
+        free(d->decouplers[i]);
+    }
+    if (d->best_rocket != NULL)
+        free_rocket(d->best_rocket);
+}
