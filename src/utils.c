@@ -430,10 +430,20 @@ void free_part(Part* p)
 
 void free_stage(Stage* s)
 {
-
+    free_part(s->engine);
+    free_part(s->decoupler);
+    for(Part* t = s->first_tank; t != NULL; t = t->next)
+    {
+        free_part(t);
+    }
+    free(s);
 }
 
 void free_rocket(Rocket* r)
 {
-
+    for(Part* s = r->first_stage; s != NULL; s = s->next)
+    {
+        free_stage(s);
+    }
+    free(r);
 }
