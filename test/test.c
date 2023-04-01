@@ -6,8 +6,7 @@
 #include "basic_display/basic_display.h"
 #include "physics/physics.h"
 #include "utils.h"
-
-
+#include "loader.h"
 
 
 
@@ -79,13 +78,8 @@ void test_brutforce()
 
 void coni()
 {
-    Decoupler* pute = load_Decoupler("Decoupler_0.json");    
-    printf("%s\n", pute->name);
-    printf("%f\n", pute->mass);
-    printf("%f\n", pute->cost);
-    /* printf("%d\n", pute->max_temp); */
-    /* printf("%d\n", pute->ejection); */
-    return;
+    Engine* pute = load_Engine("ionEngine.json");    
+	 printf("%d\n", pute->ISP_vac); 
 }
 
 void physic_tests()
