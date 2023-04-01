@@ -5,7 +5,7 @@
 #include "cjson/cJSON.h"
 
 enum diameter {TINY, SMALL, MEDIUM, LARGE, EXTRALARGE, MK2, MK3, X}; // MK1 = SMALL
-enum fuel_type {FUELOX, LIQUIDFUEL, MONOPROPELLANT, SOLIDFUEL, XENON, ORE};
+enum fuel_type {FUELOX, LIQUIDFUEL, MONOPROPELLANT, SOLIDFUEL, XENON, ORE, ELETRIC};
 
 
 typedef struct tank Tank;
@@ -38,7 +38,7 @@ struct engine
     double mass;
     double cost;
     enum fuel_type fuel;
-    enum diameter diam;
+    double diam;
     int ISP_atm;
     int ISP_vac;
     double thrust_atm;

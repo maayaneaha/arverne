@@ -8,10 +8,6 @@
 #include "utils.h"
 #include "loader.h"
 
-
-
-
-
 Rocket *build_rocket(Datas *datas, size_t nbr_stages)
 {
     #if DEBUG
@@ -81,8 +77,6 @@ void test_brutforce()
 void coni()
 {
     Tank* pute = load_Tank("Rockomax16.json");    
-	printf("%s\n", pute->name);
-    return;
 }
 
 void physic_tests()
