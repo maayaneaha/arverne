@@ -1,6 +1,6 @@
 #include <math.h>
-#include "../../include/physics/physics.h"
-#include "../../include/utils.h"
+#include "physics/physics.h"
+#include "utils.h"
 
 // pressure_alt : return the pressure for a given altitude (kPa)
 // parameters   : double alt = altitude (m)
