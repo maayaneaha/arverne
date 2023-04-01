@@ -129,6 +129,8 @@ Rocket *create_rocket(Datas *d);
 Rocket *copy_rocket(Rocket *r);
 int create_tank_stack(Datas *d, Stage *s, enum diameter diam, double mass_fuel);
 int append_stage(Rocket *r, Stage *s);
+void free_rocket(Rocket* r);
+void free_datas(Datas* d);
 
 #define NBR_SEARCH_STAGES 10 // number of stages for the algopti search
 #define INF 999999999
