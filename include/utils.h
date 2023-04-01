@@ -2,6 +2,7 @@
 #define UTILS
 
 #include <stdlib.h>
+#include "cjson/cJSON.h"
 
 enum diameter {TINY, SMALL, MEDIUM, LARGE, EXTRALARGE, MK2, MK3, X}; // MK1 = SMALL
 enum fuel_type {FUELOX, LIQUIDFUEL, MONOPROPELLANT, SOLIDFUEL, XENON, ORE};
@@ -137,3 +138,4 @@ int append_stage(Rocket *r, Stage *s);
 #endif
 
 Decoupler* load_Decoupler(char* filename);
+cJSON* json_ParseFile(char* filename);
