@@ -112,6 +112,7 @@ int search_rocket(Datas* d, size_t nbr_stages)
 #endif
             return 0;
         }
+        calculate_rocket_infos(r);
     }
 #if DEBUG
     printf("r->cost = %f\n", r->cost);
