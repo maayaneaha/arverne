@@ -196,6 +196,9 @@ Part *copy_part(Part *p)
 
 Stage *create_stage(Datas *d)
 {
+#if DEBUG
+    printf("create_stage()\n");
+#endif
     Stage *s = malloc(sizeof(Stage));
     s->mass_full = 0;
     s->mass_dry = 0;
@@ -310,11 +313,14 @@ int create_tank_stack(Datas *d, Stage *s, enum diameter diam, double mass_fuel)
 int append_stage(Rocket *r, Stage *s)
 {
 #if DEBUG
-    printf("append_stage(r = %zu, s = %zu)\n", (size_t) r, (size_t) s);
+    printf("append_stage(r = %zu, s = %zu)\n{\n", (size_t) r, (size_t) s);
 #endif
     if (r->first_stage == NULL)
     {
         r->first_stage = s;
+#if DEBUG
+        printf("}\n");
+#endif
         return 1;
     }
     Stage *cur = r->first_stage;
@@ -322,6 +328,9 @@ int append_stage(Rocket *r, Stage *s)
         cur = cur->next;
     cur->next = s;
     cur->prev = cur;
+#if DEBUG
+    printf("}\n");
+#endif
     return 1;
 }
 

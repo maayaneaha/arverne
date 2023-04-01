@@ -2,7 +2,7 @@
 #include "utils.h"
 #include "arguments.h"
 #include "basic_display/basic_display.h"
-#include "algo/brutforce.h"
+#include "algo/algopti.h"
 
 #if DEBUG
 #include "test/test.h"
@@ -11,13 +11,13 @@
 int main(int argc, char* argv[])
 {
 #if DEBUG
+    printf("debug\n");
 	// For test functions only
 	ArgOpt argopt = getopt_Parse(argc, argv); 
-	printf("%s\n", argopt.version);
-
-    return 0;
-#else
-    
+	//printf("%s\n", argopt.version);
+    // return 0;
+#endif
+    printf("debug2\n");
     double deltav = 2100;
     double twrmin = 1.4;
     double twrmax = 1.8;
@@ -36,9 +36,8 @@ int main(int argc, char* argv[])
     d->deltaV_min = deltav;
     d->TWR_min = twrmin;
     d->TWR_max = twrmax;
-    int r = brut_force(d);
+    int r = linear_algo(d);
     basic_display(d->best_rocket);
 
     return 0;
-#endif
 }

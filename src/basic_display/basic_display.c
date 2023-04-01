@@ -4,6 +4,9 @@
 
 void basic_display(Rocket *rocket)
 {
+#if DEBUG
+    printf("basic_display(%zu)\n", (size_t) rocket);
+#endif
     printf("Mass (payload): %f (%f)\n", rocket->total_mass - rocket->mass_payload, rocket->mass_payload);
     printf("Delta V: %f\n", rocket->DeltaV);
     printf("Cost: %f\n", rocket->cost);

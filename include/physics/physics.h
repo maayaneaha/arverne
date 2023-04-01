@@ -1,6 +1,11 @@
 #ifndef PHYSIC
 #define PHYSIC
 
+#if DEBUG
+#include <stdio.h>
+#endif
+#include "utils.h"
+
 double calculate_DeltaV(int ISP, double mass_total, double mass_dry, double g);
 double calculate_TWR(double mass, double thrust, double g);
 double calculate_g();
