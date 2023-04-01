@@ -22,7 +22,9 @@ Tank* load_Tank(char* filename)
 
    tmp = cJSON_GetObjectItemCaseSensitive(part,"name");
    if (tmp)
+   {
       asprintf(&obj->name, "%s",tmp->valuestring);
+   }
    else
       errx(1,"name is not found");
 
@@ -65,28 +67,30 @@ Tank* load_Tank(char* filename)
    {
       tmp = cJSON_GetArrayItem(tmp,6);
       if (tmp->valueint == 0)
-	 	obj->top_diam = TINY;
+	 	obj->down_diam = TINY;
       if (tmp->valueint == 1)
-	 	obj->top_diam = SMALL;
+	 	obj->down_diam = SMALL;
       if (tmp->valueint == 2)
-	 	obj->top_diam = LARGE;
+	 	obj->down_diam = LARGE;
       if (tmp->valueint == 3)
-	 	obj->top_diam = EXTRALARGE;
+	 	obj->down_diam = EXTRALARGE;
    }
    else
       errx(1,"node_stack_bottom is not found");
+
    obj->fuel = FUELOX;
-   tmp = cJSON_GetObjectItemCaseSensitive(part, "RESSOURCE");
+   tmp = cJSON_GetObjectItemCaseSensitive(part, "RESOURCE");
    if(cJSON_IsArray(tmp))
    {
       tmp = cJSON_GetArrayItem(tmp,0);
       obj->quantity_fuel1 =(cJSON_GetObjectItemCaseSensitive(tmp, "maxAmount"))->valueint;
-      cJSON* tmp = cJSON_GetObjectItemCaseSensitive(part, "RESSOURCE");
+      cJSON* tmp = cJSON_GetObjectItemCaseSensitive(part, "RESOURCE");
       tmp = cJSON_GetArrayItem(tmp,1);
       obj->quantity_fuel2 =(cJSON_GetObjectItemCaseSensitive(tmp, "maxAmount"))->valueint;
    }
    else
       errx(1,"RESOURCE is not found");
+
    tmp = cJSON_GetObjectItemCaseSensitive(part,"attachRules");
    if(cJSON_IsArray(tmp))
    {

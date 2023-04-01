@@ -12,8 +12,7 @@ int main(int argc, char* argv[])
 {
 #if DEBUG
     // For test functions only
-    printf("%i\n", SMALL);
-    //coni();
+	coni();
     return 0;
 #else
     /* ArgOpt argopt = getopt_Parse(argc, argv); */
