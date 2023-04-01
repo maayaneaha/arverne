@@ -98,10 +98,10 @@ int search_stage(Datas* d, Rocket* r, double dv_needed)
 int search_rocket(Datas* d, size_t nbr_stages)
 {
 #if DEBUG
-    printf("search_rocket()\n");
+    printf("search_rocket()\n{\n");
 #endif
     Rocket *r = create_rocket(d);
-    r->cost = INF;
+    r->cost = 0;
     int ret = 1;
     for (size_t i = nbr_stages; i > 0; i--)
     {
@@ -114,10 +114,15 @@ int search_rocket(Datas* d, size_t nbr_stages)
         }
     }
 #if DEBUG
-    printf("ret = %d\n", ret);
+    printf("r->cost = %f\n", r->cost);
 #endif
     if (r->cost < d->best_rocket->cost)
+    {
         d->best_rocket = r;
+    }
+#if DEBUG
+    printf("ret = %d\n}\n", ret);
+#endif
     return ret;
 }
 
