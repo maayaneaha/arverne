@@ -11,6 +11,8 @@
 #include "utils.h"
 #include "loader.h"
 
+#define OXFUEL_DENSITY 5
+
 void listFilesRecursively(char *basePath, char** list, int* size, int* pos)
 {
     char path[1000];
@@ -224,6 +226,9 @@ Tank* load_Tank(char* filename)
       obj->radial_fitting = (cJSON_GetArrayItem(tmp,3))->valueint; 
       obj->radial_part = (cJSON_GetArrayItem(tmp,0))->valueint;
    }
+
+   obj->full_mass = obj->empty_mass + OXFUEL_DENSITY * (obj->quantity_fuel1 + obj->quantity_fuel2);
+
    return obj;
 }
 
