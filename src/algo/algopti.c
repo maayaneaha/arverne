@@ -21,6 +21,19 @@ Engine* search_engine(Datas* d, Rocket* r, double dv_needed, int* ne, double* re
     {
         int nbr_engines = 1;
         Engine* e = d->engines[i];
+#if DEBUG
+        printf("e->fuel %u %u\n", e->fuel, FUELOX);
+#endif
+        if (e->fuel != FUELOX)
+        {
+#if DEBUG
+            printf("continue\n");
+#endif
+            continue;
+        }
+#if DEBUG
+        printf("not continue %s\n", e->name);
+#endif
         double TWR = -1;
         double mass_fuel, mass_total;
         double beta = d->beta;

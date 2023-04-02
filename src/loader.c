@@ -285,7 +285,7 @@ Engine* load_Engine(char* filename)
     if (tmp)
     {
         if (tmp->valuedouble)
-            obj->mass = tmp->valuedouble;
+            obj->mass = tmp->valuedouble * 1000;
     }
 	else
 		return NULL;
@@ -337,13 +337,17 @@ Engine* load_Engine(char* filename)
 				  if (j)
 				  {
 					  if (strcmp(j->valuestring, "LiquidFuel") == 0)
-						  obj->fuel = LIQUIDFUEL;
+						  obj->fuel = FUELOX;
+                      else
+                          return NULL;/*
 					  else if (strcmp(j->valuestring, "Eletric") == 0)
 						  obj->fuel = ELETRIC;
 					  else if (strcmp(j->valuestring, "MonoProp") == 0)
 						  obj->fuel = MONOPROPELLANT;
 					  else if (strcmp(j->valuestring, "SolidBooster") == 0)
 						  obj->fuel = SOLIDFUEL;
+                      else
+                          obj->fuel = ELETRIC;*/
 				  }
 
 				  j = cJSON_GetObjectItemCaseSensitive(i, "atmosphereCurve");
