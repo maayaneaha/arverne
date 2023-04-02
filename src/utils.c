@@ -84,21 +84,23 @@ double calculate_mass_fuel_tank(Tank *t)
 }
 
 
-int calculate_stage_infos(Stage *s)
+int calculate_stage_infos(Stage *s, Rocket *r)
 {
 #if DEBUG
     printf("calculate_stages_infos(s = %zu)\n{\n", (size_t) s);
 #endif
-    s->mass_dry = s->engine->mass * s->nbr_engines;
+    s->mass_dry = s->engine->mass * s->nbr_engines +  s->decoupler->mass;
     if (s->prev != NULL)
         s->mass_dry += s->mass_full;
-    s->mass_dry += s->decoupler->mass;
-    s->cost = s->engine->cost * s->nbr_engines;
-    s->cost += s->decoupler->cost;
+    else
+        s->mass_dry = r->mass_payload;
+    s->cost = s->engine->cost * s->nbr_engines + s->decoupler->cost;
     s->mass_full = s->mass_dry;
     Part *tank = s->first_tank;
     Tank *tmp_tank = tank->part_type;
     s->fuel = tmp_tank->fuel;
+    s->quantity_fuel1 = 0;
+    s->quantity_fuel2 = 0;
 #if DEBUG
     printf("  mass_full before tanks = %f\n  cost before tanks = %f\n", s->mass_full, s->cost);
 #endif
@@ -107,6 +109,8 @@ int calculate_stage_infos(Stage *s)
         tmp_tank = tank->part_type;
         s->mass_full += tmp_tank->full_mass;
         s->mass_dry += tmp_tank->empty_mass;
+        s->quantity_fuel1 += tmp_tank->quantity_fuel1;
+        s->quantity_fuel2 += tmp_tank->quantity_fuel2;
         s->cost += tank->cost;
         tank = tank->next;
     }
@@ -138,12 +142,7 @@ int calculate_rocket_infos(Rocket* r)
 #if DEBUG
         printf("  stage = %zu\n", (size_t) s);
 #endif
-        calculate_stage_infos(s);
-        if (s->prev == NULL)
-        {
-            s->mass_dry += r->mass_payload;
-            s->mass_full += r->mass_payload;
-        }
+        calculate_stage_infos(s, r);
         r->DeltaV += s->DeltaV;
         prev = s;
     }

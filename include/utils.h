@@ -121,7 +121,7 @@ struct datas
 
 Datas *create_datas();
 double calculate_mass_fuel_tank(Tank *t);
-int calculate_stage_infos(Stage *s);
+int calculate_stage_infos(Stage *s, Rocket* r);
 int calculate_rocket_infos(Rocket *r);
 Part *create_tank(Tank *t);
 Part *create_engine(Engine *e);
@@ -132,7 +132,7 @@ Rocket *copy_rocket(Rocket *r);
 int create_tank_stack(Datas *d, Stage *s, enum diameter diam, double mass_fuel);
 int append_stage(Rocket *r, Stage *s);
 
-#define NBR_SEARCH_STAGES 2 // number of stages for the algopti search
+#define NBR_SEARCH_STAGES 1 // number of stages for the algopti search
 #define INF 999999999
 
 #endif
