@@ -7,7 +7,7 @@
 // si le dv n'est pas satisfait, on le reparti sur les autres etages
 
 // utiliser calculate_mass_fuel pour trouver la masse totale et prendre la plus faible
-Engine* search_engine(Datas* d, Rocket* r, double dv_needed, int* nbr_engines, double* ret_mass)
+Engine* search_engine(Datas* d, Rocket* r, double dv_needed, int* ne, double* ret_mass)
 {
 #if DEBUG
     printf("search_engine(%zu)\n{\n", (size_t) d);
@@ -40,9 +40,9 @@ Engine* search_engine(Datas* d, Rocket* r, double dv_needed, int* nbr_engines, d
             printf("mass_fuel %f\n", mass_fuel);
 #endif
             mass_total = r->total_mass + mass_fuel * (1 + beta) + e->mass * nbr_engines;
-            TWR = calculate_TWR(mass_total, e->thrust_atm, calculate_g());
+            TWR = calculate_TWR(mass_total, e->thrust_atm * nbr_engines, calculate_g());
 #if DEBUG
-            printf("TWR %f\n", TWR);
+            printf("TWR %f\nnbr_engines %u\n", TWR, nbr_engines);
 #endif
             if (TWR < d->TWR_min)
             {
@@ -61,6 +61,7 @@ Engine* search_engine(Datas* d, Rocket* r, double dv_needed, int* nbr_engines, d
         {
             optimal_engine = e;
             minimal_mass = mass_total;
+            *ne = nbr_engines;
         }
     }
     *ret_mass = minimal_mass;
@@ -88,8 +89,9 @@ int search_stage(Datas* d, Rocket* r, double dv_needed)
     create_tank_stack(d, s, optimal_engine->diam, minimal_mass);
     s->nbr_engines = nbr_engines;
     append_stage(r, s);
-    //todo
+    //todo (je ne sais pas quoi)
 #if DEBUG
+    basic_display(r);
     printf("}\n");
 #endif
     return 1;

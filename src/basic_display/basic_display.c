@@ -22,7 +22,7 @@ void basic_display(Rocket *rocket)
         {
             printf("    %s (%f, %f)\n", p->name, p->mass, p->cost);
         }
-        printf("    %s (%f, %f)\n", s->engine->name, s->engine->mass, s->engine->cost);
+        printf("    %s x %u (%f, %f)\n", s->engine->name, s->nbr_engines, s->engine->mass, s->engine->cost);
         i++;
     }
 }

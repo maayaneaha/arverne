@@ -270,6 +270,7 @@ Rocket *create_rocket(Datas *d)
 {
     Rocket *r = malloc(sizeof(Rocket));
     r->mass_payload = d->mass_payload;
+    r->total_mass = d->mass_payload;
     r->DeltaV = 0;
     r->cost = 0;
     r->first_stage = NULL;
@@ -300,7 +301,7 @@ Rocket *copy_rocket(Rocket *r)
 int create_tank_stack(Datas *d, Stage *s, enum diameter diam, double mass_fuel)
 {
 #if DEBUG
-    printf("create_tank_stack(d, s, diam, mass_fuel = %f)\n", mass_fuel);
+    printf("create_tank_stack(d, s, diam, mass_fuel = %f)\n{\n", mass_fuel);
 #endif
     Part *prev = create_tank(d->tanks[0]);
     double mass_total = calculate_mass_fuel_tank(prev->part_type);
@@ -316,6 +317,7 @@ int create_tank_stack(Datas *d, Stage *s, enum diameter diam, double mass_fuel)
         prev->next = tank;
         prev = tank;
     }
+    printf("}\n");
     return 1;
 }
 

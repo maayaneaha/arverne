@@ -1,8 +1,10 @@
 #ifndef ARVERNE_ALGOPTI_H
 #define ARVERNE_ALGOPTI_H
 
+#if DEBUG
+#include "basic_display/basic_display.h"
+#endif
 #include <stdio.h>
-
 #include "utils.h"
 #include "physics/physics.h"
 #include "math.h"
