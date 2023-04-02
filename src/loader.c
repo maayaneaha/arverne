@@ -5,10 +5,128 @@
 #include <stdio.h>
 #include <err.h>
 #include <stdlib.h>
+#include <dirent.h>
 
 #include "cjson/cJSON.h"
 #include "utils.h"
+#include "loader.h"
 
+void listFilesRecursively(char *basePath, char** list, int* size, int* pos)
+{
+    char path[1000];
+    struct dirent *dp;
+    DIR *dir = opendir(basePath);
+
+    // Unable to open directory stream
+    if (!dir)
+        return;
+
+    while ((dp = readdir(dir)) != NULL)
+    {
+        if (strcmp(dp->d_name, ".") != 0 && strcmp(dp->d_name, "..") != 0)
+        {
+			if (dp->d_type == DT_REG)
+			{
+				if ((*pos) >= (*size))
+				{
+					*size += 50;
+					list = realloc(list, (*size) * sizeof(char*));
+				}
+				/*char* cur = malloc(sizeof(char) * (strlen(dp->d_name) + 1));*/
+				/*strcpy(cur, dp->d_name);*/
+				char* cur = NULL;
+				asprintf(&cur, "%s/%s", basePath, dp->d_name);
+				list[(*pos)++] = cur;
+				list[(*pos)] = NULL;
+			}
+			else
+			{
+
+				strcpy(path, basePath);
+				strcat(path, "/");
+				strcat(path, dp->d_name);
+				listFilesRecursively(path, list, size, pos);
+			}
+        }
+    }
+
+    closedir(dir);
+}
+
+Engine** load_Engines(char* path)
+{
+	int default_size = 50;
+	int position = 0;
+	char** files = malloc(sizeof(char*) * default_size);
+	files[0] = NULL;
+	listFilesRecursively(path, files, &default_size, &position);
+	Engine** engines = malloc(sizeof(Engine*) * (position + 1));
+	int cur = 0;
+
+	for (int i = 0; files[i] != NULL; i++)
+	{
+		Engine* tmp = load_Engine(files[i]);
+		if (tmp != NULL)
+		{
+			engines[cur++] = tmp;
+		}
+		free(files[i]);
+	}
+	free(files);
+	engines[cur] = NULL;
+
+	return engines;
+}
+
+Decoupler** load_Decouplers(char* path)
+{
+	int default_size = 50;
+	int position = 0;
+	char** files = malloc(sizeof(char*) * default_size);
+	files[0] = NULL;
+	listFilesRecursively(path, files, &default_size, &position);
+	Decoupler** decouplers = malloc(sizeof(Decoupler*) * (position + 1));
+	int cur = 0;
+
+	for (int i = 0; files[i] != NULL; i++)
+	{
+		Decoupler* tmp = load_Decoupler(files[i]);
+		if (tmp != NULL)
+		{
+			decouplers[cur++] = tmp;
+		}
+		free(files[i]);
+	}
+	free(files);
+	decouplers[cur] = NULL;
+
+	return decouplers;
+}
+
+Tank** load_Tanks(char* path)
+{
+	int default_size = 50;
+	int position = 0;
+	char** files = malloc(sizeof(char*) * default_size);
+	files[0] = NULL;
+	listFilesRecursively(path, files, &default_size, &position);
+	Tank** tanks = malloc(sizeof(Tank*) * (position + 1));
+	int cur = 0;
+
+	for (int i = 0; files[i] != NULL; i++)
+	{
+		Tank* tmp = load_Tank(files[i]);
+		if (tmp != NULL)
+		{
+			tanks[cur++] = tmp;
+		}
+		free(files[i]);
+	}
+	free(files);
+	tanks[cur] = NULL;
+
+	return tanks;
+}
 
 Tank* load_Tank(char* filename)
 {
@@ -18,7 +136,10 @@ Tank* load_Tank(char* filename)
    cJSON* tmp = NULL;
    
    if (!part)
-      errx(1,"Incorrect tank file");
+   {
+	   return NULL;
+      /*errx(1,"Incorrect tank file");*/
+   }
 
    tmp = cJSON_GetObjectItemCaseSensitive(part,"name");
    if (tmp)
@@ -26,7 +147,8 @@ Tank* load_Tank(char* filename)
       asprintf(&obj->name, "%s",tmp->valuestring);
    }
    else
-      errx(1,"name is not found");
+	   return NULL;
+      /*errx(1,"name is not found");*/
 
    tmp = cJSON_GetObjectItemCaseSensitive(part,"mass");
    if (tmp)
@@ -35,7 +157,8 @@ Tank* load_Tank(char* filename)
          obj->empty_mass = tmp->valuedouble;
    }
    else
-      errx(1,"mass is not found");
+	   return NULL;
+      /*errx(1,"mass is not found");*/
 
    tmp = cJSON_GetObjectItemCaseSensitive(part, "cost");
    if (tmp)
@@ -46,11 +169,12 @@ Tank* load_Tank(char* filename)
          obj->full_cost = (double) tmp->valueint;
    }
    else
-      errx(1,"cost is not found");
+	   return NULL;
+      /*errx(1,"cost is not found");*/
    tmp = cJSON_GetObjectItemCaseSensitive(part,"node_stack_top");
    if(cJSON_IsArray(tmp))
    {
-      tmp = cJSON_GetArrayItem(tmp,6);
+      tmp = cJSON_GetArrayItem(tmp,5);
       if (tmp->valueint == 0)
 		 obj->top_diam = TINY;
       if (tmp->valueint == 1)
@@ -61,11 +185,12 @@ Tank* load_Tank(char* filename)
 		 obj->top_diam = EXTRALARGE;
    }
    else
-      errx(1,"node_stack_top is not found");   
+	   return NULL;
+      /*errx(1,"node_stack_top is not found");   */
    tmp = cJSON_GetObjectItemCaseSensitive(part,"node_stack_bottom");
    if(cJSON_IsArray(tmp))
    {
-      tmp = cJSON_GetArrayItem(tmp,6);
+      tmp = cJSON_GetArrayItem(tmp,5);
       if (tmp->valueint == 0)
 	 	obj->down_diam = TINY;
       if (tmp->valueint == 1)
@@ -76,7 +201,8 @@ Tank* load_Tank(char* filename)
 	 	obj->down_diam = EXTRALARGE;
    }
    else
-      errx(1,"node_stack_bottom is not found");
+	   return NULL;
+      /*errx(1,"node_stack_bottom is not found");*/
 
    obj->fuel = FUELOX;
    tmp = cJSON_GetObjectItemCaseSensitive(part, "RESOURCE");
@@ -89,7 +215,8 @@ Tank* load_Tank(char* filename)
       obj->quantity_fuel2 =(cJSON_GetObjectItemCaseSensitive(tmp, "maxAmount"))->valueint;
    }
    else
-      errx(1,"RESOURCE is not found");
+	   return NULL;
+      /*errx(1,"RESOURCE is not found");*/
 
    tmp = cJSON_GetObjectItemCaseSensitive(part,"attachRules");
    if(cJSON_IsArray(tmp))
@@ -136,7 +263,8 @@ Engine* load_Engine(char* filename)
 	cJSON* tmp = NULL;
     if (!part)
 	{
-        errx(1, "Incorrect decoupler file");
+	   return NULL;
+        /*errx(1, "Incorrect decoupler file");*/
 	}
 
     tmp = cJSON_GetObjectItemCaseSensitive(part, "name");
@@ -144,6 +272,8 @@ Engine* load_Engine(char* filename)
 	{
         asprintf(&obj->name, "%s", tmp->valuestring);
 	}
+	else
+		return NULL;
 
     tmp = cJSON_GetObjectItemCaseSensitive(part, "mass");
     if (tmp)
@@ -151,6 +281,8 @@ Engine* load_Engine(char* filename)
         if (tmp->valuedouble)
             obj->mass = tmp->valuedouble;
     }
+	else
+		return NULL;
 
     tmp = cJSON_GetObjectItemCaseSensitive(part, "cost");
     if (tmp)
@@ -160,6 +292,8 @@ Engine* load_Engine(char* filename)
         else
             obj->cost = (double) tmp->valueint;
     }
+	else
+		return NULL;
 
     tmp = cJSON_GetObjectItemCaseSensitive(part, "node_stack_top");
     if (tmp)
@@ -168,6 +302,9 @@ Engine* load_Engine(char* filename)
 		if (tmp->valuedouble)
 			obj->diam = tmp->valuedouble;
 	}
+	else
+		return NULL;
+
 	 int max_thrust = 0;
 	 tmp = cJSON_GetObjectItemCaseSensitive(part, "MODULE"); 
 	 if (tmp) 
@@ -232,6 +369,8 @@ Engine* load_Engine(char* filename)
 		 	} 
 		 } 
 	 }
+	else
+		return NULL;
 
 	if (obj->ISP_atm > obj->ISP_vac)
 	{
@@ -257,12 +396,15 @@ Decoupler* load_Decoupler(char* filename)
     
     if (part == NULL)
 	{
-        errx(1, "Incorrect decoupler file");
+	   return NULL;
+        /*errx(1, "Incorrect decoupler file");*/
 	}
 
 	tmp = cJSON_GetObjectItemCaseSensitive(part, "name");
     if (tmp)
         asprintf(&obj->name, "%s", tmp->valuestring);
+	else
+		return NULL;
 
     tmp = cJSON_GetObjectItemCaseSensitive(part, "mass");
     if (tmp)
@@ -270,6 +412,8 @@ Decoupler* load_Decoupler(char* filename)
         if (tmp->valuedouble)
             obj->mass = tmp->valuedouble;
     }
+	else
+		return NULL;
 
     tmp = cJSON_GetObjectItemCaseSensitive(part, "cost");
     if (tmp)
@@ -279,6 +423,8 @@ Decoupler* load_Decoupler(char* filename)
         else
             obj->cost = (double) tmp->valueint;
     }
+	else
+		return NULL;
 
 
     cJSON_Delete(file);

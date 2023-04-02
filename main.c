@@ -12,6 +12,7 @@
 int main(int argc, char* argv[])
 {
 #if DEBUG
+<<<<<<< HEAD
     printf("debug\n");
 	// For test functions only
 	ArgOpt argopt = getopt_Parse(argc, argv);
