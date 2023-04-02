@@ -107,15 +107,15 @@ void physic_tests()
     res_sup = 100;
     if (res < res_sup * 0.98 || res > res_sup * 1.02)
     {
-        printf("ERROR: calculate_TWR, res = %f (100m)\n", res);
+        printf("ERROR: calculate_max_mass, res = %f (100m)\n", res);
     }
-    printf("OK: calculate_TWR %f\n", res);
+    printf("OK: calculate_max_mass %f\n", res);
     res = calculate_mass_fuel(1000, 100, 10, 0.1, 1000, 1000);
     res_sup = 4149.578;
     if (res < res_sup * 0.98 || res > res_sup * 1.02)
     {
-        printf("ERROR: calculate_TWR, res = %f (100m)\n", res);
+        printf("ERROR: calculate_mass_fuel, res = %f (100m)\n", res);
     }
-    printf("OK: calculate_TWR %f\n", res);
+    printf("OK: calculate_mass_fuel %f\n", res);
 
 }

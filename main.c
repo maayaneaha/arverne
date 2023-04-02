@@ -14,7 +14,8 @@ int main(int argc, char* argv[])
 #if DEBUG
     printf("debug\n");
 	// For test functions only
-	ArgOpt argopt = getopt_Parse(argc, argv); 
+	ArgOpt argopt = getopt_Parse(argc, argv);
+    physic_tests();
 	//printf("%s\n", argopt.version);
     // return 0;
 #endif
