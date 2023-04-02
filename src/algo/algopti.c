@@ -71,10 +71,13 @@ Engine* search_engine(Datas* d, Rocket* r, double dv_needed, int* ne, double* re
             continue;
         }
 #if DEBUG
-        printf("minimal_mass = %f, mass_total = %f\n", minimal_mass, mass_total);
+        printf("minimal_mass = %f, mass_total = %f, nbr_engines = %d\n", minimal_mass, mass_total, nbr_engines);
 #endif
-        if (mass_total < minimal_mass)
+        if (mass_total < minimal_mass && nbr_engines <= NBR_MAX_ENGINES)
         {
+#if DEBUG
+            printf("new optimal_engine\n");
+#endif
             optimal_engine = e;
             minimal_mass = mass_total;
             *ne = nbr_engines;
