@@ -1,12 +1,26 @@
+#ifndef UTILS
+#define UTILS
+
+#include <stdlib.h>
+#include "cjson/cJSON.h"
+
 enum diameter {TINY, SMALL, MEDIUM, LARGE, EXTRALARGE, MK2, MK3, X}; // MK1 = SMALL
-enum fuel_type {FUELOX, LIQUIDFUEL, MONOPROPELLANT, SOLIDFUEL, XENON, ORE};
+enum fuel_type {FUELOX, LIQUIDFUEL, MONOPROPELLANT, SOLIDFUEL, XENON, ORE, ELETRIC};
 
 
-typedef struct
+typedef struct tank Tank;
+typedef struct decoupler Decoupler;
+typedef struct rocket Rocket;
+typedef struct part Part;
+typedef struct datas Datas;
+typedef struct stage Stage;
+typedef struct engine Engine;
+
+struct tank
 {
     char *name;
     double empty_mass;
-    double full_mass;
+    double full_mass;  // full_mass = empty_mass + fuel_mass
     double empty_cost;
     double full_cost;
     enum diameter top_diam;
@@ -16,37 +30,30 @@ typedef struct
     double quantity_fuel2;
     int radial_fitting; // Parts can be fit on radial
     int radial_part; // Is a radial tank
-} Tank;
+};
 
-typedef struct
+struct engine
 {
     char *name;
     double mass;
     double cost;
     enum fuel_type fuel;
+    double diam;
     int ISP_atm;
     int ISP_vac;
     double thrust_atm;
     double thrust_vac;
-    double TWR_atm;
-    double TWR_vac;
     double consumption;
     double gimbal;
-} Engine;
+};
 
-typedef struct
+
+struct decoupler
 {
     char *name;
     double mass;
     double cost;
-    int max_temp;
-    int tolerance_ms;
-    int tolerance_g;
-    int ejection;
-} Decoupler;
-
-typedef struct stage Stage;
-typedef struct part Part;
+};
 
 struct part
 {
@@ -60,15 +67,17 @@ struct part
 
 struct stage
 {
-    double mass;
+    double mass_full;
+    double mass_dry;
+    double cost;
     enum fuel_type fuel;
     double quantity_fuel1;
     double quantity_fuel2;
-    double delta_v;
-    double total_thurst_atm_min;
-    double total_thurst_atm_max;
+    double DeltaV;
+    double total_thrust_atm_min;
+    double total_thrust_atm_max;
     double total_thrust_vac_min;
-    double total_thurst_vac_max;
+    double total_thrust_vac_max;
     double ISP_atm;
     double ISP_vac;
     double TWR_min;
@@ -82,13 +91,51 @@ struct stage
     Stage *next;
 };
 
-typedef struct
+struct rocket
 {
     double mass_payload;
     double total_mass;
-    double total_DV;
+    double DeltaV;
+    double cost;
     Stage *first_stage;
-} Rocket;
+};
 
+struct datas
+{
+    double deltaV_min;
+    double mass_payload;
+    double mass_max;
+    double TWR_min;
+    double TWR_max;
+    enum diameter diameter_payload;
+    Tank **tanks;
+    size_t nbr_tanks;
+    Engine **engines;
+    size_t nbr_engines;
+    Decoupler **decouplers;
+    size_t nbr_decouplers;
+    Rocket *best_rocket;
+};
+
+
+Datas *create_datas();
+double calculate_mass_fuel_tank(Tank *t);
+int calculate_stage_infos(Stage *s);
+int calculate_rocket_infos(Rocket *r);
+Part *create_tank(Tank *t);
+Part *create_engine(Engine *e);
+Part *create_decoupler(Decoupler *d);
+Stage *create_stage();
+Rocket *create_rocket(Datas *d);
+Rocket *copy_rocket(Rocket *r);
+int create_tank_stack(Datas *d, Stage *s, enum diameter diam, double mass_fuel);
+int append_stage(Rocket *r, Stage *s);
+
+#define NBR_SEARCH_STAGES 10 // number of stages for the algopti search
+#define INF 999999999
+#define BETA 0.1
+
+#endif
 
 Decoupler* load_Decoupler(char* filename);
+cJSON* json_ParseFile(char* filename);

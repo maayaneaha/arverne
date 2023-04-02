@@ -56,4 +56,3 @@ int altitude_isp (Engine* e,int alt)
    double p = pressure_alt ( (double) alt);
    return (int) (e->ISP_vac+(e->ISP_atm-e->ISP_vac)*p);
 }
-
