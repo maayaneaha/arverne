@@ -76,7 +76,9 @@ void test_brutforce()
 
 void coni()
 {
-    Tank* pute = load_Tank("Rockomax16.json");    
+	Tank** tanks = load_Tanks("./bdd/FuelTank");
+	Engine** engines = load_Engines("./bdd/Engine");
+	Decoupler** decouplers = load_Decouplers("./bdd/Coupling");
 }
 
 void physic_tests()
