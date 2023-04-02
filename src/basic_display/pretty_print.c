@@ -12,6 +12,8 @@ int print_engine(Engine* e)
 {
     printf(" %s:\n    mass =  %f\n    cost = %f\n",
            e->name, e->mass, e->cost);
+    printf("    ISP (atm, vac) = %d, %d\n    thrust (atm, vac) = %f, %f\n",
+           e->ISP_atm, e->ISP_vac, e->thrust_atm, e->thrust_vac);
     return 1;
 }
 

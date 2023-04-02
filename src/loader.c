@@ -325,7 +325,7 @@ Engine* load_Engine(char* filename)
 			 { 
 				  j = cJSON_GetObjectItemCaseSensitive(i, "maxThrust");
 				  if (j)
-					  max_thrust = j->valueint;
+					  max_thrust = j->valueint * 1000;
 
 				  j = cJSON_GetObjectItemCaseSensitive(i, "gimbalRange");
 				  if (j)
