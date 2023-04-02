@@ -121,7 +121,7 @@ int calculate_stage_infos(Stage *s)
 }
 
 
-int calculate_rocket_infos(Rocket *r)
+int calculate_rocket_infos(Rocket* r)
 {
 #if DEBUG
         printf("calculate_rocket_infos(r)\n");
@@ -132,6 +132,7 @@ int calculate_rocket_infos(Rocket *r)
     printf("  begin: stage = %zu\n", (size_t) s);
 #endif
     Stage *prev = s;
+    r->DeltaV = 0;
     for(; s != NULL; s = s->next)
     {
 #if DEBUG

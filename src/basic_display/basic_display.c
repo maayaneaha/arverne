@@ -15,6 +15,7 @@ void basic_display(Rocket *rocket)
     {
         printf("Stage %i:\n", i);
         printf("  Mass (empty): %f (%f)\n", s->mass_full, s->mass_dry);
+        printf("  Delta V %f\n", s->DeltaV);
         printf("  Cost: %f\n", s->cost);
         printf("  Parts (name (mass, cost)):\n");
         printf("    %s (%f, %f)\n", s->decoupler->name, s->decoupler->mass, s->decoupler->cost);

@@ -13,7 +13,7 @@ Engine* search_engine(Datas* d, Rocket* r, double dv_needed, int* ne, double* re
     printf("search_engine(%zu)\n{\n", (size_t) d);
 #endif
     Engine* optimal_engine = NULL;
-    double minimal_mass = d->beta;
+    double minimal_mass = INF;
 #if DEBUG
     printf("nbr_engines %zu\n", d->nbr_engines);
 #endif
@@ -37,12 +37,12 @@ Engine* search_engine(Datas* d, Rocket* r, double dv_needed, int* ne, double* re
                                                    calculate_g(), beta, nbr_engines,
                                                    r->total_mass);
 #if DEBUG
-            printf("mass_fuel %f\n", mass_fuel);
+            printf("mass_fuel = %f\n", mass_fuel);
 #endif
-            mass_total = r->total_mass + mass_fuel * (1 + beta) + e->mass * nbr_engines;
+            mass_total = r->total_mass + mass_fuel * (1 + beta) + e->mass * nbr_engines + d->decouplers[0]->mass;
             TWR = calculate_TWR(mass_total, e->thrust_atm * nbr_engines, calculate_g());
 #if DEBUG
-            printf("TWR %f\nnbr_engines %u\n", TWR, nbr_engines);
+            printf("mass_total = %f\nTWR %f\nnbr_engines %u\n", mass_total, TWR, nbr_engines);
 #endif
             if (TWR < d->TWR_min)
             {
@@ -57,6 +57,9 @@ Engine* search_engine(Datas* d, Rocket* r, double dv_needed, int* ne, double* re
         {
             continue;
         }
+#if DEBUG
+        printf("minimal_mass = %f, mass_total = %f\n", minimal_mass, mass_total);
+#endif
         if (mass_total < minimal_mass)
         {
             optimal_engine = e;
@@ -97,8 +100,8 @@ int search_stage(Datas* d, Rocket* r, double dv_needed)
     s->nbr_engines = nbr_engines;
     append_stage(r, s);
     //todo (je ne sais pas quoi)
-#if DEBUG
     calculate_rocket_infos(r);
+#if DEBUG
     printf("DeltaV = %f\n", calculate_DeltaV(calculate_isp(s->engine->part_type), s->mass_full, s->mass_dry,calculate_g()));
     // double calculate_DeltaV(int ISP, double mass_total, double mass_dry, double g)
     basic_display(r);
@@ -146,7 +149,7 @@ int linear_algo(Datas* d)
     Rocket *r = create_rocket(d);
     r->cost = INF;
     d->best_rocket = r;
-    for (size_t nbr_stages = 1; nbr_stages < NBR_SEARCH_STAGES; nbr_stages++)
+    for (size_t nbr_stages = 1; nbr_stages <= NBR_SEARCH_STAGES; nbr_stages++)
     {
 #if DEBUG
         printf("rocket %zu\n", nbr_stages);
