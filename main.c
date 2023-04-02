@@ -20,7 +20,7 @@ int main(int argc, char* argv[])
     // return 0;
 #endif
     printf("debug2\n");
-    double deltav = 2100;
+    double deltav = 2000;
     double twrmin = 1.4;
     double twrmax = 1.8;
     if (argc > 1)

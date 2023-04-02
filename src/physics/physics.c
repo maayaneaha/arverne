@@ -13,7 +13,7 @@ double calculate_TWR(double mass, double thrust, double g)
 
 double calculate_g()
 {
-    return 9.81;
+    return 10;
 }
 
 double calculate_max_mass(double TWR_min, double thrust, double g)
@@ -38,7 +38,8 @@ int calculate_isp(Engine* e)
 double calculate_mass_fuel(double deltaV, int ISP, double g, double beta, double m_engines, double m_payload)
 { //res = calculate_mass_fuel(1000, 100, 10, 100, 1000, 1000, 1000);
 #if DEBUG
-    printf("calculate_mass_fuel()\n");
+    printf("calculate_mass_fuel(deltaV = %f, ISP = %u, g = %f, beta = %f,  m_engines = %f, m_payload = %f)\n",
+           deltaV, ISP, g, beta, m_engines, m_payload);
 #endif
     //return exp(deltaV / ISP * g) * mass_dry - mass_dry;
     double ve = ISP * g;

@@ -34,7 +34,7 @@ Engine* search_engine(Datas* d, Rocket* r, double dv_needed, int* ne, double* re
             printf("d->TWR_min = %f\n", d->TWR_min);
 #endif
             mass_fuel = calculate_mass_fuel(dv_needed, calculate_isp(e),
-                                                   calculate_g(), beta, nbr_engines,
+                                                   calculate_g(), beta, e->mass * nbr_engines,
                                                    r->total_mass);
 #if DEBUG
             printf("mass_fuel = %f\n", mass_fuel);
@@ -78,7 +78,7 @@ Engine* search_engine(Datas* d, Rocket* r, double dv_needed, int* ne, double* re
 int search_stage(Datas* d, Rocket* r, double dv_needed)
 {
 #if DEBUG
-    printf("search_stage()\n{\n");
+    printf("search_stage(d, r, dv_needed = %f)\n{\nd->deltaV_min = %f\n", dv_needed, d->deltaV_min);
 #endif
     int nbr_engines;
     double minimal_mass;
@@ -99,7 +99,7 @@ int search_stage(Datas* d, Rocket* r, double dv_needed)
     create_tank_stack(d, s, optimal_engine->diam, minimal_mass);
     s->nbr_engines = nbr_engines;
     append_stage(r, s);
-    //todo (je ne sais pas quoi)
+    //todo gerer le DV en trop
     calculate_rocket_infos(r);
 #if DEBUG
     printf("DeltaV = %f\n", calculate_DeltaV(calculate_isp(s->engine->part_type), s->mass_full, s->mass_dry,calculate_g()));
