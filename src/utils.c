@@ -86,7 +86,7 @@ double calculate_mass_fuel_tank(Tank *t)
 int calculate_stage_infos(Stage *s)
 {
 #if DEBUG
-    printf("calculate_stages_infos(s = %zu)\n", (size_t) s);
+    printf("calculate_stages_infos(s = %zu)\n{\n", (size_t) s);
 #endif
     s->mass_dry = s->engine->mass * s->nbr_engines;
     if (s->prev != NULL)
@@ -98,6 +98,9 @@ int calculate_stage_infos(Stage *s)
     Part *tank = s->first_tank;
     Tank *tmp_tank = tank->part_type;
     s->fuel = tmp_tank->fuel;
+#if DEBUG
+    printf("  mass_full before tanks = %f\n  cost before tanks = %f\n", s->mass_full, s->cost);
+#endif
     while(tank != NULL)
     {
         tmp_tank = tank->part_type;
@@ -109,6 +112,10 @@ int calculate_stage_infos(Stage *s)
     Engine *e = s->engine->part_type;
     s->DeltaV = calculate_DeltaV(e->ISP_atm, s->mass_full, s->mass_dry, calculate_g());
     s->TWR_min = calculate_TWR(s->mass_full, e->thrust_atm * s->nbr_engines, calculate_g());
+#if DEBUG
+    printf("  s->DeltaV = %f\n  s->TWR_min = %f\n  s->cost = %f\n  s->mass_full = %f\n}\n",
+           s->DeltaV, s->TWR_min, s->cost, s->mass_full);
+#endif
     return 1;
 }
 
@@ -126,6 +133,9 @@ int calculate_rocket_infos(Rocket *r)
     Stage *prev = s;
     for(; s != NULL; s = s->next)
     {
+#if DEBUG
+        printf("  stage = %zu\n", (size_t) s);
+#endif
         calculate_stage_infos(s);
         if (s->prev == NULL)
         {

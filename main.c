@@ -3,6 +3,7 @@
 #include "arguments.h"
 #include "basic_display/basic_display.h"
 #include "algo/algopti.h"
+#include "basic_display/pretty_print.h"
 
 #if DEBUG
 #include "test/test.h"
@@ -33,6 +34,7 @@ int main(int argc, char* argv[])
     }
 
     Datas *d = create_datas();
+    print_parts(d);
     d->deltaV_min = deltav;
     d->TWR_min = twrmin;
     d->TWR_max = twrmax;
