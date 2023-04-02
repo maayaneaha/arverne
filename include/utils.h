@@ -134,6 +134,11 @@ int append_stage(Rocket *r, Stage *s);
 
 #define NBR_SEARCH_STAGES 1 // number of stages for the algopti search
 #define INF 999999999
+#define NBR_MAX_ENGINES 8
+#define MAX_TANK 20
+#define OXFUEL_DENSITY 5
+#define FUEL_COST 0.8
+#define OX_COST 0.18
 
 #endif
 

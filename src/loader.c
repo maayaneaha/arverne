@@ -154,7 +154,7 @@ Tank* load_Tank(char* filename)
    if (tmp)
    {
       if (tmp->valuedouble)
-         obj->empty_mass = tmp->valuedouble;
+         obj->empty_mass = tmp->valuedouble * 1000;
    }
    else
 	   return NULL;
@@ -224,6 +224,9 @@ Tank* load_Tank(char* filename)
       obj->radial_fitting = (cJSON_GetArrayItem(tmp,3))->valueint; 
       obj->radial_part = (cJSON_GetArrayItem(tmp,0))->valueint;
    }
+   obj->full_mass = obj->empty_mass + (obj->quantity_fuel1 + obj->quantity_fuel2) * OXFUEL_DENSITY;
+   // empty_cost = full_cost - quantity_fuel1 * FUEL_COST - quantity_fuel2 * OX_COST;
+   obj->empty_cost = obj->full_cost - obj->quantity_fuel1 * FUEL_COST - obj->quantity_fuel2 * OX_COST;
    return obj;
 }
 
@@ -429,4 +432,23 @@ Decoupler* load_Decoupler(char* filename)
 
     cJSON_Delete(file);
     return obj;
+}
+
+int load_parts(Datas *d)
+{
+    d->tanks = load_Tanks("bdd/FuelTank");
+    size_t nbr_tanks;
+    for (nbr_tanks = 0; d->tanks[nbr_tanks] != NULL; nbr_tanks++);
+    d->nbr_tanks = nbr_tanks;
+
+    d->engines = load_Engines("bdd/Engine");
+    size_t nbr_engines;
+    for (nbr_engines = 0; d->engines[nbr_engines] != NULL; nbr_engines++);
+    d->nbr_engines = nbr_engines;
+
+    d->decouplers = load_Decouplers("bdd/Coupling");
+    size_t nbr_decouplers;
+    for (nbr_decouplers = 0; d->decouplers[nbr_decouplers] != NULL; nbr_decouplers++);
+    d->nbr_decouplers = nbr_decouplers;
+    return 1;
 }

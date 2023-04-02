@@ -28,7 +28,7 @@ Engine* search_engine(Datas* d, Rocket* r, double dv_needed, int* ne, double* re
 #if DEBUG
         printf("engine %zu (%zu)\n", i, (size_t) e);
 #endif
-        while (TWR < d->TWR_min) // To be sure that the TWR is ok
+        while (TWR < d->TWR_min && nbr_engines <= NBR_MAX_ENGINES) // To be sure that the TWR is ok
         {
 #if DEBUG
             printf("d->TWR_min = %f\n", d->TWR_min);

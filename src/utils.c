@@ -25,6 +25,7 @@ Datas *create_datas()
 #if DEBUG
     printf("  begin\n");
 #endif
+    /*
     Tank *t = malloc(sizeof(Tank));
     t->name = "FL-T100 Fuel Tank";
     t->empty_mass = 62.5;
@@ -71,7 +72,7 @@ Datas *create_datas()
 
     d->decouplers = malloc(sizeof(Decoupler*));
     d->decouplers[0] = s;
-    d->nbr_decouplers = 1;
+    d->nbr_decouplers = 1;*/
 
     d->best_rocket = NULL;
     d->beta = 62.5 / 560;
@@ -310,6 +311,7 @@ int create_tank_stack(Datas *d, Stage *s, enum diameter diam, double mass_fuel)
     if (diam != t->top_diam) // not the correct diameter
         return 0;
     s->first_tank = prev;
+    size_t n = 0;
     while (mass_total < mass_fuel)
     {
         Part *tank = create_tank(d->tanks[0]);
@@ -317,8 +319,18 @@ int create_tank_stack(Datas *d, Stage *s, enum diameter diam, double mass_fuel)
         tank->prev = prev;
         prev->next = tank;
         prev = tank;
+        n++;
+        if (n > MAX_TANK)
+        {
+#if DEBUG
+            printf("}\n");
+#endif
+            return 0;
+        }
     }
+#if DEBUG
     printf("}\n");
+#endif
     return 1;
 }
 
