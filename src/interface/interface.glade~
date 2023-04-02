@@ -68,7 +68,6 @@
                         <property name="can-focus">True</property>
                         <property name="receives-default">True</property>
                         <property name="use-underline">True</property>
-                        <signal name="clicked" handler="help" swapped="no"/>
                         <child>
                           <object class="GtkImage">
                             <property name="visible">True</property>
@@ -85,7 +84,7 @@
                         <property name="visible">True</property>
                         <property name="can-focus">True</property>
                         <property name="receives-default">True</property>
-                        <signal name="clicked" handler="menu" swapped="no"/>
+                        <signal name="clicked" handler="clicked_menu" swapped="no"/>
                         <child>
                           <object class="GtkImage">
                             <property name="visible">True</property>
