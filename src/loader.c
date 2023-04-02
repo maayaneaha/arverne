@@ -11,6 +11,8 @@
 #include "utils.h"
 #include "loader.h"
 
+#define OXFUEL_DENSITY 5
+
 void listFilesRecursively(char *basePath, char** list, int* size, int* pos)
 {
     char path[1000];
@@ -227,6 +229,7 @@ Tank* load_Tank(char* filename)
    obj->full_mass = obj->empty_mass + (obj->quantity_fuel1 + obj->quantity_fuel2) * OXFUEL_DENSITY;
    // empty_cost = full_cost - quantity_fuel1 * FUEL_COST - quantity_fuel2 * OX_COST;
    obj->empty_cost = obj->full_cost - obj->quantity_fuel1 * FUEL_COST - obj->quantity_fuel2 * OX_COST;
+
    return obj;
 }
 
