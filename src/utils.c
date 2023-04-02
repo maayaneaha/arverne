@@ -74,6 +74,7 @@ Datas *create_datas()
     d->nbr_decouplers = 1;
 
     d->best_rocket = NULL;
+    d->beta = 62.5 / 560;
     return d;
 }
 

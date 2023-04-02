@@ -115,6 +115,7 @@ struct datas
     Decoupler **decouplers;
     size_t nbr_decouplers;
     Rocket *best_rocket;
+    double beta;
 };
 
 
@@ -133,7 +134,6 @@ int append_stage(Rocket *r, Stage *s);
 
 #define NBR_SEARCH_STAGES 2 // number of stages for the algopti search
 #define INF 999999999
-#define BETA 0.1
 
 #endif
 

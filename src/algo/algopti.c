@@ -13,7 +13,7 @@ Engine* search_engine(Datas* d, Rocket* r, double dv_needed, int* ne, double* re
     printf("search_engine(%zu)\n{\n", (size_t) d);
 #endif
     Engine* optimal_engine = NULL;
-    double minimal_mass = INF;
+    double minimal_mass = d->beta;
 #if DEBUG
     printf("nbr_engines %zu\n", d->nbr_engines);
 #endif
@@ -23,7 +23,7 @@ Engine* search_engine(Datas* d, Rocket* r, double dv_needed, int* ne, double* re
         Engine* e = d->engines[i];
         double TWR = -1;
         double mass_fuel, mass_total;
-        double beta = BETA;
+        double beta = d->beta;
 
 #if DEBUG
         printf("engine %zu (%zu)\n", i, (size_t) e);
@@ -80,6 +80,13 @@ int search_stage(Datas* d, Rocket* r, double dv_needed)
     int nbr_engines;
     double minimal_mass;
     Engine* optimal_engine = search_engine(d, r, dv_needed, &nbr_engines, &minimal_mass);
+    if (optimal_engine == NULL)
+    {
+#if DEBUG
+        printf("}\n");
+#endif
+        return 0;
+    }
 #if DEBUG
     printf("optimal_engine = %zu\n", (size_t) optimal_engine);
 #endif
@@ -91,6 +98,9 @@ int search_stage(Datas* d, Rocket* r, double dv_needed)
     append_stage(r, s);
     //todo (je ne sais pas quoi)
 #if DEBUG
+    calculate_rocket_infos(r);
+    printf("DeltaV = %f\n", calculate_DeltaV(calculate_isp(s->engine->part_type), s->mass_full, s->mass_dry,calculate_g()));
+    // double calculate_DeltaV(int ISP, double mass_total, double mass_dry, double g)
     basic_display(r);
     printf("}\n");
 #endif
@@ -110,11 +120,10 @@ int search_rocket(Datas* d, size_t nbr_stages)
         if (!search_stage(d, r, d->deltaV_min / i))
         { // The stage can't have enough DV, we share it between the other stages
 #if DEBUG
-            printf("search_rocket: search_stage failed\n");
+            printf("search_rocket: search_stage failed\n}\n");
 #endif
             return 0;
         }
-        calculate_rocket_infos(r);
     }
 #if DEBUG
     printf("r->cost = %f\n", r->cost);
