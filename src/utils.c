@@ -46,7 +46,8 @@ Datas *create_datas()
 #endif
     Engine *e = malloc(sizeof(Engine));
     e->name = malloc(sizeof(char) * 36);
-    e->name = "LV-T30 \"Reliant\" Liquid Fuel Engine\0";
+    const char* name = "LV-T30 \"Reliant\" Liquid Fuel Engine\0";
+    e->name = strdup(name);
     e->mass = 1250;
     e->cost = 1100;
     e->fuel = FUELOX;
@@ -147,8 +148,7 @@ Part *create_tank(Tank *t)
     #endif
     Part *p = malloc(sizeof(Part));
     p->part_type = t;
-    p->name = malloc(sizeof(char) * (strlen(t->name) + 1));
-    strcpy(p->name, t->name);
+    p->name = t->name;
     p->mass = t->full_mass;
     p->cost = t->full_cost;
     p->prev = NULL;
@@ -160,8 +160,7 @@ Part *create_engine(Engine *e)
 {
     Part *p = malloc(sizeof(Part));
     p->part_type = e;
-    p->name = malloc(sizeof(char) * (strlen(e->name) + 1));
-    strcpy(p->name, e->name);
+    p->name = e->name;
     p->mass = e->mass;
     p->cost = e->cost;
     p->prev = NULL;
@@ -173,8 +172,7 @@ Part *create_decoupler(Decoupler *d)
 {
     Part *p = malloc(sizeof(Part));
     p->part_type = d;
-    p->name = malloc(sizeof(char) * (strlen(d->name) + 1));
-    strcpy(p->name, d->name);
+    p->name = d->name;
     p->mass = d->mass;
     p->cost = d->cost;
     p->prev = NULL;
@@ -187,8 +185,7 @@ Part *copy_part(Part *p)
 {
     Part *np = malloc(sizeof(Part));
     np->part_type = p->part_type;
-    np->name = malloc(sizeof(char) * (strlen(p->name) + 1));
-    strcpy(np->name, p->name);
+    np->name = p->name;
     np->mass = p->mass;
     np->cost = p->cost;
     np->prev = NULL;
@@ -354,74 +351,49 @@ cJSON* json_ParseFile(char* filename)
     return parsed;
 }
 
-Decoupler* load_Decoupler(char* filename)
+void free_part(Part* p)
 {
-    Decoupler* obj = malloc(sizeof(Decoupler));
-    cJSON* file = json_ParseFile(filename);
-    cJSON* part = cJSON_GetObjectItemCaseSensitive(file, "PART");
-    cJSON* tmp = NULL;
-    
-    if (!part)
-        errx(1, "Incorrect decoupler file");
+    // Do not free the name or the part_type
+    free(p); // So easy
+}
 
-    tmp = cJSON_GetObjectItemCaseSensitive(part, "name");
-    if (tmp)
-        asprintf(&obj->name, "%s", tmp->valuestring);
-
-    tmp = cJSON_GetObjectItemCaseSensitive(part, "mass");
-    if (tmp)
+void free_stage(Stage* s)
+{
+    free_part(s->engine);
+    free_part(s->decoupler);
+    for(Part* t = s->first_tank; t != NULL; t = t->next)
     {
-        if (tmp->valuedouble)
-            obj->mass = tmp->valuedouble;
+        free_part(t);
     }
+    free(s);
+}
 
-    tmp = cJSON_GetObjectItemCaseSensitive(part, "cost");
-    if (tmp)
+void free_rocket(Rocket* r)
+{
+    for(Stage* s = r->first_stage; s != NULL; s = s->next)
     {
-        if (tmp->valuedouble)
-            obj->cost = tmp->valuedouble;
-        else
-            obj->cost = (double) tmp->valueint;
+        free_stage(s);
     }
+    free(r);
+}
 
-    /* tmp = cJSON_GetObjectItemCaseSensitive(part, "maxTemp"); */
-    /* if (tmp) */
-    /* { */
-    /*     if (tmp->valueint) */
-    /*         obj->max_temp = tmp->valueint; */
-    /* } */
-    
-    /* tmp = cJSON_GetObjectItemCaseSensitive(part, "crashTolerance"); */
-    /* if (tmp) */
-    /* { */
-    /*     if (tmp->valueint) */
-    /*         obj->tolerance_ms = tmp->valueint; */
-    /* } */
-
-    /* tmp = cJSON_GetObjectItemCaseSensitive(part, "MODULE"); */
-    /* if (tmp) */
-    /* { */
-    /*     if (cJSON_IsArray(tmp)) */
-    /*     { */
-    /*         cJSON* i = NULL; */
-    /*         cJSON* j = NULL; */
-    /*         cJSON_ArrayForEach(i, tmp) */
-    /*         { */
-    /*             /1* j = cJSON_GetObjectItemCaseSensitive(i, "name"); *1/ */
-    /*             /1* if (cJSON_IsString(j)) *1/ */
-    /*             /1* { *1/ */
-    /*             j = cJSON_GetObjectItemCaseSensitive(i, "ejectionForce"); */
-    /*             if (j) */
-    /*             { */
-    /*                 if (j->valueint) */
-    /*                     obj->ejection = j->valueint; */
-    /*                 break; */
-    /*             } */
-    /*             /1* } *1/ */
-    /*         } */
-    /*     } */
-    /* } */
-
-    cJSON_Delete(file);
-    return obj;
+void free_datas(Datas* d)
+{
+    for(size_t i = 0; i < d->nbr_tanks; i++)
+    {
+        free(d->tanks[i]->name);
+        free(d->tanks[i]);
+    }
+    for(size_t i = 0; i < d->nbr_engines; i++)
+    {
+        free(d->engines[i]->name);
+        free(d->engines[i]);
+    }
+    for(size_t i = 0; i < d->nbr_decouplers; i++)
+    {
+        free(d->decouplers[i]->name);
+        free(d->decouplers[i]);
+    }
+    if (d->best_rocket != NULL)
+        free_rocket(d->best_rocket);
 }

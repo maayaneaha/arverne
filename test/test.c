@@ -6,10 +6,7 @@
 #include "basic_display/basic_display.h"
 #include "physics/physics.h"
 #include "utils.h"
-
-
-
-
+#include "loader.h"
 
 Rocket *build_rocket(Datas *datas, size_t nbr_stages)
 {
@@ -79,13 +76,7 @@ void test_brutforce()
 
 void coni()
 {
-    Decoupler* pute = load_Decoupler("Decoupler_0.json");    
-    printf("%s\n", pute->name);
-    printf("%f\n", pute->mass);
-    printf("%f\n", pute->cost);
-    /* printf("%d\n", pute->max_temp); */
-    /* printf("%d\n", pute->ejection); */
-    return;
+    Tank* pute = load_Tank("Rockomax16.json");    
 }
 
 void physic_tests()
@@ -119,8 +110,8 @@ void physic_tests()
         printf("ERROR: calculate_TWR, res = %f (100m)\n", res);
     }
     printf("OK: calculate_TWR %f\n", res);
-    res = calculate_mass_fuel(1000, 100, 10, 1000);
-    res_sup = 100;
+    res = calculate_mass_fuel(1000, 100, 10, 0.1, 1000, 1000);
+    res_sup = 4149.578;
     if (res < res_sup * 0.98 || res > res_sup * 1.02)
     {
         printf("ERROR: calculate_TWR, res = %f (100m)\n", res);

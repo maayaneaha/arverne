@@ -11,12 +11,12 @@
 int main(int argc, char* argv[])
 {
 #if DEBUG
-    // For test functions only
-    physic_tests();
-    //coni();
+	// For test functions only
+	ArgOpt argopt = getopt_Parse(argc, argv); 
+	printf("%s\n", argopt.version);
+
     return 0;
 #else
-    /* ArgOpt argopt = getopt_Parse(argc, argv); */
     
     double deltav = 2100;
     double twrmin = 1.4;

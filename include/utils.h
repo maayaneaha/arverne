@@ -2,13 +2,23 @@
 #define UTILS
 
 #include <stdlib.h>
+#include "cjson/cJSON.h"
 
 enum diameter {TINY, SMALL, MEDIUM, LARGE, EXTRALARGE, MK2, MK3, X}; // MK1 = SMALL
-enum fuel_type {FUELOX, LIQUIDFUEL, MONOPROPELLANT, SOLIDFUEL, XENON, ORE};
+enum fuel_type {FUELOX, LIQUIDFUEL, MONOPROPELLANT, SOLIDFUEL, XENON, ORE, ELETRIC};
+
+
+typedef struct tank Tank;
+typedef struct decoupler Decoupler;
+typedef struct rocket Rocket;
+typedef struct part Part;
+typedef struct datas Datas;
+typedef struct stage Stage;
+typedef struct engine Engine;
 
 struct tank
 {
-    const char *name;
+    char *name;
     double empty_mass;
     double full_mass;  // full_mass = empty_mass + fuel_mass
     double empty_cost;
@@ -22,21 +32,13 @@ struct tank
     int radial_part; // Is a radial tank
 };
 
-typedef struct tank Tank;
-typedef struct decoupler Decoupler;
-typedef struct rocket Rocket;
-typedef struct part Part;
-typedef struct datas Datas;
-typedef struct stage Stage;
-typedef struct engine Engine;
-
 struct engine
 {
-    const char *name;
+    char *name;
     double mass;
     double cost;
     enum fuel_type fuel;
-    enum diameter diam;
+    double diam;
     int ISP_atm;
     int ISP_vac;
     double thrust_atm;
@@ -129,6 +131,11 @@ Rocket *copy_rocket(Rocket *r);
 int create_tank_stack(Datas *d, Stage *s, enum diameter diam, double mass_fuel);
 int append_stage(Rocket *r, Stage *s);
 
+#define NBR_SEARCH_STAGES 10 // number of stages for the algopti search
+#define INF 999999999
+#define BETA 0.1
+
 #endif
 
 Decoupler* load_Decoupler(char* filename);
+cJSON* json_ParseFile(char* filename);
