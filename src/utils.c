@@ -132,6 +132,7 @@ int calculate_rocket_infos(Rocket* r)
         printf("calculate_rocket_infos(r)\n");
 #endif
     r->total_mass = r->mass_payload;
+    r->cost = 0;
     Stage *s = r->first_stage;
 #if DEBUG
     printf("  begin: stage = %zu\n", (size_t) s);
@@ -145,6 +146,7 @@ int calculate_rocket_infos(Rocket* r)
 #endif
         calculate_stage_infos(s, r);
         r->DeltaV += s->DeltaV;
+        r->cost += s->cost;
         prev = s;
     }
     r->total_mass = prev->mass_full;

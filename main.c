@@ -19,8 +19,8 @@ int main(int argc, char* argv[])
     physic_tests();
 	//printf("%s\n", argopt.version);
     // return 0;
+    Datas *d = create_datas();
 #endif
-    printf("debug2\n");
     double deltav = 2000;
     double twrmin = 1.4;
     double twrmax = 1.8;
@@ -35,7 +35,6 @@ int main(int argc, char* argv[])
         twrmax = atof(argv[3]);
     }
 
-    Datas *d = create_datas();
     load_parts(d);
     print_parts(d);
     d->deltaV_min = deltav;
