@@ -39,9 +39,10 @@ void on_quit_clicked()
 void going_back_menu(GtkButton* b, gpointer user)
 {
 	GUI* gui = user;
-	gtk_widget_show(GTK_WIDGET(gui->load));
-	gtk_widget_hide(GTK_WIDGET(gui->help_menu));
-	gtk_widget_hide(GTK_WIDGET(gui->solution));
+    gtk_stack_set_visible_child(GTK_STACK(gui->window_pages), GTK_WIDGET(gui->load));
+	//gtk_widget_show(GTK_WIDGET(gui->load));
+	//gtk_widget_hide(GTK_WIDGET(gui->help_menu));
+	//gtk_widget_hide(GTK_WIDGET(gui->solution));
 }
 
 
@@ -178,9 +179,10 @@ void otsu_switch()
 void solution_show(GtkButton *b, gpointer user)
 {
     GUI* gui = user;
-	gtk_widget_show(GTK_WIDGET(gui->solution));
-	gtk_widget_hide(GTK_WIDGET(gui->load));
-	gtk_widget_hide(GTK_WIDGET(gui->help_menu));
+    gtk_stack_set_visible_child(GTK_STACK(gui->window_pages), GTK_WIDGET(gui->solution));
+	//gtk_widget_show(GTK_WIDGET(gui->solution));
+	//gtk_widget_hide(GTK_WIDGET(gui->load));
+	//gtk_widget_hide(GTK_WIDGET(gui->help_menu));
 }
 
 void open_help_menu(GtkButton* b, gpointer user)
@@ -281,7 +283,7 @@ int main(int argc, char *argv[])
 	g_signal_connect(StartButton, "clicked", G_CALLBACK(solution_show), &gui);
 	g_signal_connect(help_button, "clicked", G_CALLBACK(open_help_menu), &gui);
 
-	g_signal_connect(MenuButton1, "clicked", G_CALLBACK(going_back_menu), &gui);
+	g_signal_connect(MenuButton1, "clicked", G_CALLBACK(solution_show), &gui);
 
 	/*g_signal_connect(refresh_button, "clicked", G_CALLBACK(refresh), &gui);*/
 	/*g_signal_connect(menu_button, "clicked", G_CALLBACK(on_menu_clicked), &gui);*/
@@ -297,7 +299,7 @@ int main(int argc, char *argv[])
 	//g_signal_connect(conadj, "value-changed", G_CALLBACK(contrast_scale_update), &gui);
 //	g_signal_connect(rotadj, "value-changed", G_CALLBACK(rot_display), &gui);
 	//g_signal_connect(resolve_button, "clicked", G_CALLBACK(display_result), &gui);
-	/*g_signal_connect(menuback, "clicked", G_CALLBACK(going_back_menu), &gui);*/
+	g_signal_connect(menuback, "clicked", G_CALLBACK(going_back_menu), &gui);
 
 	gtk_builder_connect_signals(builder, NULL);
 
