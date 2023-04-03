@@ -2,55 +2,50 @@
 
 typedef struct GUI
 {
-    GtkWindow* interface;
-    GtkStack* window_pages;
-    GtkBox* load;
-    GtkBox* construct;
-    GtkBox* solution;
-    GtkButton* QuitButton;
-    GtkButton* StartButton;
-    gchar* filename;
-    GtkImage* image_holder;
-    GtkBox* help_menu;
-    GtkButton* help_button;
-    GtkButton* refresh_button;
-    GtkButton* menu_button;
-    GtkButton* resolve_button;
-    GdkScreen *screen;
-    gchar* result_file;
-    GtkSwitch* switch_button;
-    GtkAdjustment* deltav;
-    GtkAdjustment* rpp;
-    GtkAdjustment* masse_u;
-    GtkScale* binarise_scale;
-    GtkScale* contrast_scale;
-    GtkScale* rotation_scale;
-    int activate;
-    GtkButton* menuback;
+	GtkWindow* interface;
+	GtkStack* window_pages;
+	GtkBox* load;
+	GtkBox* solution;
+	GtkButton* QuitButton;
+	GtkButton* StartButton;
+	gchar* filename;
+	GtkImage* image_holder;
+	GtkBox* help_menu;
+	GtkButton* help_button;
+	GtkButton* refresh_button;
+	//GtkButton* menu_button;
+	GtkButton* resolve_button;
+	GdkScreen *screen;
+	gchar* result_file;
+	GtkSwitch* switch_button;
+	//GtkAdjustment* binadj;
+	//GtkAdjustment* conadj;
+	//GtkAdjustment* rotadj;
+    GtkButton* MenuButton;
+	GtkScale* binarise_scale;
+	GtkScale* contrast_scale;
+	GtkScale* rotation_scale;
+	int activate;
+	GtkButton* menuback;
 }GUI;
 
 int activate = 0;
 
-void exit_window()
+void on_quit_clicked()
 {
-    gtk_main_quit();
+	gtk_main_quit();
 }
 
-void menu(GtkButton *b, gpointer user)
+void going_back_menu(GtkButton* b, gpointer user)
 {
-    GUI *gui = user;
-    gtk_widget_hide(GTK_WIDGET(gui->help_menu));
-    gtk_widget_show(GTK_WIDGET(gui->load));
-    gtk_widget_hide(GTK_WIDGET(gui->solution));
+	GUI* gui = user;
+	gtk_widget_hide(GTK_WIDGET(gui->help_menu));
+	gtk_widget_show(GTK_WIDGET(gui->load));
+	//gtk_widget_hide(GTK_WIDGET(gui->solution));
 }
 
-void help(GtkButton *b, gpointer user)
-{
-    GUI *gui = user;
-    gtk_widget_show(GTK_WIDGET(gui->help_menu));
-    gtk_widget_hide(GTK_WIDGET(gui->load));
-    gtk_widget_hide(GTK_WIDGET(gui->solution));
-}
+
+
 
 void display_image(GtkImage* image_holder, gchar* file_name)
 {
@@ -60,17 +55,160 @@ void display_image(GtkImage* image_holder, gchar* file_name)
 	//gtk_image_set_from_file(image_holder, file_name);
 }
 
-
 void display_result(GtkImage* image_holder, gchar* result_file)
 {
 	display_image(image_holder, result_file);
+}
+
+/*
+void binarise_scale_update(GtkAdjustment* k, gpointer user)
+{
+	GUI* gui = user;
+	if (activate == 1)
+	{
+		process("output.bmp",gtk_adjustment_get_value(gui->conadj),gtk_adjustment_get_value(gui->binadj),1);
+	}
+	else
+	{
+		process("output.bmp",gtk_adjustment_get_value(gui->conadj),gtk_adjustment_get_value(gui->binadj),0);
+	}	
+	//gui->filename = "../processing/output.bmp";
+	display_image(gui->image_holder, "output_1.bmp");
+}
+
+void contrast_scale_update(GtkAdjustment* i, gpointer user)
+{
+	GUI* gui = user;
+	if (activate == 1)
+	{
+		process("output.bmp",gtk_adjustment_get_value(gui->conadj),gtk_adjustment_get_value(gui->binadj),1);
+	}
+	else
+	{
+		process("output.bmp",gtk_adjustment_get_value(gui->conadj),gtk_adjustment_get_value(gui->binadj),0);
+	}	
+	//gui->filename = "../processing/output.bmp";
+	display_image(gui->image_holder, "output_1.bmp");
+}
+*/
+
+/*void rot_display(GtkAdjustment* j, gpointer user)
+{
+	GUI* gui = user;
+	rotate(gtk_adjustment_get_value(gui->rotadj), gui->filename);
+	display_image(gui->image_holder, "output.bmp");
+
+}*/
+
+size_t my_strlen(char str[])
+{
+	size_t i = 0;
+	for (; str[i] != 0;i ++); 
+	return i;
+}
+
+char *str_concat(char str1[], char str2[])
+{
+	char *res = calloc(my_strlen(str1) + my_strlen(str2)+1, sizeof(char));
+	for (size_t i = 0; i < my_strlen(str1); i ++) {
+		res[i] = str1[i];
+	}
+	for (size_t i = 0; i < my_strlen(str2); i ++) {
+		res[i + my_strlen(str1)] = str2[i];
+	}
+	return res;
+}
+
+void resolve_clicked(GtkButton* b, gpointer user, gchar* filename)
+{
+	//GUI* gui = user;
+	//display_result(gui->image_holder, );
+}/*
+void open_files_explorer(GtkButton* b, gpointer user)
+{
+	GUI* gui = user;
+	GtkWidget *p_dialog = NULL;
+	p_dialog = gtk_file_chooser_dialog_new ("Ouvrir un fichier", NULL,
+			GTK_FILE_CHOOSER_ACTION_OPEN,
+			"document-cancel", GTK_RESPONSE_CANCEL,
+			"document-open", GTK_RESPONSE_ACCEPT,
+			NULL);
+
+	gchar *file_name = NULL;
+	if (gtk_dialog_run (GTK_DIALOG (p_dialog)) == GTK_RESPONSE_ACCEPT)
+	{
+		file_name = gtk_file_chooser_get_filename (GTK_FILE_CHOOSER (p_dialog));
+	}
+	gtk_widget_destroy (p_dialog);
+	gui->filename = file_name;
+	gtk_widget_show(GTK_WIDGET(gui->solution));
+	gtk_widget_hide(GTK_WIDGET(gui->load));
+	display_image(gui->image_holder, file_name);
+}
+
+char * convertNumberIntoArray(unsigned int number) {
+    unsigned int length = (int)(log10((float)number)) + 1;
+    char * arr = (char *) malloc(length * sizeof(char)), * curr = arr;
+    do {
+        *curr++ = number % 10;
+        number /= 10;
+    } while (number != 0);
+    return arr;
+}
+*/
+
+void solution_show(GtkButton *b, gpointer user)
+{
+    GUI* gui = user;
+	gtk_widget_show(GTK_WIDGET(gui->solution));
+	gtk_widget_hide(GTK_WIDGET(gui->load));
+	//gtk_widget_hide(GTK_WIDGET(gui->help_menu));
+
 }
 
 void refresh(GtkButton* b, gpointer user)
 {
 	GUI *gui = user;
 	display_image(gui->image_holder, gui->filename);
+	
+}
+/*
+void otsu_switch()
+{
+	if(activate == 0)
+	{
+		activate = 1;
+	}
+	else
+	{
+		activate = 0;
+	}
+}
+*/
+void open_help_menu(GtkButton* b, gpointer user)
+{
+	GUI* gui = user;
+	gtk_widget_show(GTK_WIDGET(gui->help_menu));
+	gtk_widget_hide(GTK_WIDGET(gui->load));
+	//gtk_widget_hide(GTK_WIDGET(gui->solution));
+}
 
+void on_menu_clicked(GtkButton* b, gpointer user)
+{
+	GUI* gui = user;
+	gtk_widget_hide(GTK_WIDGET(gui->help_menu));
+	gtk_widget_show(GTK_WIDGET(gui->load));
+	//gtk_widget_hide(GTK_WIDGET(gui->solution));
+}
+
+void start_button_clicked(GtkButton* b, gpointer user_data)
+{
+    // Cast the user data pointer to the GUI struct type
+    GUI* gui = (GUI*) user_data;
+
+    // Show the solution page and hide the load page
+    gtk_widget_hide(GTK_WIDGET(gui->load));
+    gtk_widget_show(GTK_WIDGET(gui->solution));
 }
 
 int main(int argc, char *argv[])
@@ -96,20 +234,21 @@ int main(int argc, char *argv[])
 	GtkButton* QuitButton = GTK_BUTTON(gtk_builder_get_object(builder, "QuitButton"));
 	GtkButton* QuitButton2 = GTK_BUTTON(gtk_builder_get_object(builder, "QuitButton2"));
 	GtkButton* StartButton = GTK_BUTTON(gtk_builder_get_object(builder, "StartButton"));
-	GtkImage* image_holder = GTK_IMAGE(gtk_builder_get_object(builder, "image_holder"));
+	//GtkImage* image_holder = GTK_IMAGE(gtk_builder_get_object(builder, "image_holder"));
 	GtkBox* help_menu = GTK_BOX(gtk_builder_get_object(builder, "help_menu"));
 	GtkButton* help_button = GTK_BUTTON(gtk_builder_get_object(builder, "HelpButton"));
 	GtkButton* QuitButton1 = GTK_BUTTON(gtk_builder_get_object(builder, "QuitButton1"));
 	GtkButton* refresh_button = GTK_BUTTON(gtk_builder_get_object(builder, "RefreshButton"));
 	GtkButton* menu_button = GTK_BUTTON(gtk_builder_get_object(builder, "MenuButton"));
+    GtkButton* MenuButton = GTK_BUTTON(gtk_builder_get_object(builder, "MenuButton"));
 	//GtkButton* resolve_button = GTK_BUTTON(gtk_builder_get_object(builder, "ResolveButton"));
-	GtkSwitch* switch_button = GTK_SWITCH(gtk_builder_get_object(builder, "switch_button"));
-	GtkAdjustment* deltav = GTK_ADJUSTMENT(gtk_builder_get_object(builder, "deltav"));
-	GtkAdjustment* masse_u = GTK_ADJUSTMENT(gtk_builder_get_object(builder, "conadj"));
-	GtkAdjustment* rpp = GTK_ADJUSTMENT(gtk_builder_get_object(builder, "masse_u"));
-	GtkButton* menuback = GTK_BUTTON(gtk_builder_get_object(builder, "rpp"));
-	GtkScale* binarise_scale = GTK_SCALE(gtk_builder_get_object(builder, "binarise_scale"));
-	GtkScale* contrast_scale = GTK_SCALE(gtk_builder_get_object(builder, "contrast_scale"));
+	//GtkSwitch* switch_button = GTK_SWITCH(gtk_builder_get_object(builder, "switch_button"));
+	//GtkAdjustment* binadj = GTK_ADJUSTMENT(gtk_builder_get_object(builder, "binadj"));
+	//GtkAdjustment* conadj = GTK_ADJUSTMENT(gtk_builder_get_object(builder, "conadj"));
+	//GtkAdjustment* rotadj = GTK_ADJUSTMENT(gtk_builder_get_object(builder, "rotadj"));
+	GtkButton* menuback = GTK_BUTTON(gtk_builder_get_object(builder, "menuback"));
+	//GtkScale* binarise_scale = GTK_SCALE(gtk_builder_get_object(builder, "binarise_scale"));
+	//GtkScale* contrast_scale = GTK_SCALE(gtk_builder_get_object(builder, "contrast_scale"));
 
 	GUI gui={
 		.interface = interface,
@@ -118,31 +257,36 @@ int main(int argc, char *argv[])
 		.solution = solution,
 		.QuitButton = QuitButton,
 		.StartButton = StartButton,
-		.filename = NULL,
-		.image_holder = image_holder,
+		//.filename = NULL,
+		//.image_holder = image_holder,
 		.help_menu = help_menu,
 		.help_button = help_button,
-		.menu_button = menu_button,
+		.MenuButton = menu_button,
 		.screen = screen,
-		.switch_button = switch_button,
+		//.switch_button = switch_button,
 		.activate = 0,
-		.deltav = deltav,
-		.masse_u = masse_u,
-		.rpp = rpp,
-		.binarise_scale = binarise_scale,
-		.contrast_scale = contrast_scale,
+		//.binadj = binadj,
+		//.conadj = conadj,
+		//.rotadj = rotadj,
+		//.binarise_scale = binarise_scale,
+		//.contrast_scale = contrast_scale,
 		.menuback = menuback,
 	};
 
 	//CONNECTION
 	g_signal_connect(interface, "destroy", G_CALLBACK(gtk_main_quit), NULL);
-	g_signal_connect(QuitButton, "clicked", G_CALLBACK(exit_window),NULL);
-	g_signal_connect(QuitButton1, "clicked", G_CALLBACK(exit_window),NULL);
-	g_signal_connect(QuitButton2, "clicked", G_CALLBACK(exit_window),NULL);
-	//g_signal_connect(StartButton, "clicked", G_CALLBACK(open_files_explorer), &gui);
-	g_signal_connect(help_button, "clicked", G_CALLBACK(help), &gui);
+	g_signal_connect(QuitButton, "clicked", G_CALLBACK(on_quit_clicked),NULL);
+	g_signal_connect(QuitButton1, "clicked", G_CALLBACK(on_quit_clicked),NULL);
+	g_signal_connect(QuitButton2, "clicked", G_CALLBACK(on_quit_clicked),NULL);
+	g_signal_connect(StartButton, "clicked", G_CALLBACK(solution_show), &gui);
+	g_signal_connect(help_button, "clicked", G_CALLBACK(open_help_menu), &gui);
 	g_signal_connect(refresh_button, "clicked", G_CALLBACK(refresh), &gui);
-	g_signal_connect(menu_button, "clicked", G_CALLBACK(menu), &gui);
+	g_signal_connect(menu_button, "clicked", G_CALLBACK(on_menu_clicked), &gui);
+    g_signal_connect(MenuButton, "clicked", G_CALLBACK(solution_show), &gui);
+    //g_signal_connect(gui->StartButton, "clicked", G_CALLBACK(start_button_clicked), (void *) gui);
+    //g_signal_connect(gui->StartButton, "clicked", G_CALLBACK(start_button_clicked), *gui);
+    g_signal_connect(StartButton, "clicked", G_CALLBACK(solution_show), &gui);
+
 	//g_signal_connect(resolve_button, "clicked", G_CALLBACK(resolve_clicked), &gui);
 	//g_signal_connect(switch_button, "state-set", G_CALLBACK(otsu_switch), NULL);
 	//g_signal_connect(switch_button, "activate", G_CALLBACK(otsu_switch), NULL);
@@ -150,7 +294,7 @@ int main(int argc, char *argv[])
 	//g_signal_connect(conadj, "value-changed", G_CALLBACK(contrast_scale_update), &gui);
 //	g_signal_connect(rotadj, "value-changed", G_CALLBACK(rot_display), &gui);
 	//g_signal_connect(resolve_button, "clicked", G_CALLBACK(display_result), &gui);
-	g_signal_connect(menuback, "clicked", G_CALLBACK(menu), &gui);
+	g_signal_connect(menuback, "clicked", G_CALLBACK(going_back_menu), &gui);
 	gtk_builder_connect_signals(builder, NULL);
 
 	gtk_widget_show(GTK_WIDGET(interface));
