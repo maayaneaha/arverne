@@ -210,7 +210,7 @@
                     <property name="margin-top">11</property>
                     <property name="spacing">10</property>
                     <child>
-                      <object class="GtkButton" id="MenuButton2">
+                      <object class="GtkButton" id="MenuButton">
                         <property name="visible">True</property>
                         <property name="can-focus">True</property>
                         <property name="receives-default">True</property>
