@@ -8,6 +8,7 @@
 
 #if DEBUG
 #include "test/test.h"
+#include "debug.h"
 #endif
 
 int main(int argc, char* argv[])
@@ -15,10 +16,9 @@ int main(int argc, char* argv[])
 #if DEBUG
     printf("debug\n");
 	// For test functions only
-	ArgOpt argopt = getopt_Parse(argc, argv);
-    physic_tests();
-	//printf("%s\n", argopt.version);
-    // return 0;
+    debug_write("BEGIN");
+    //printf("%s\n", argopt.version);
+    return 0;
 #endif
     double deltav = 2000;
     double twrmin = 1.4;

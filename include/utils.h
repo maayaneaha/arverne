@@ -4,7 +4,7 @@
 #include <stdlib.h>
 #include "cjson/cJSON.h"
 
-enum diameter {TINY, SMALL, MEDIUM, LARGE, EXTRALARGE, MK2, MK3, X}; // MK1 = SMALL
+enum diameter {TINY = 0, SMALL = 1, MEDIUM = 2, LARGE = 3, EXTRALARGE = 4, MK2 = 5, MK3 = 6, X}; // MK1 = SMALL
 enum fuel_type {FUELOX, LIQUIDFUEL, MONOPROPELLANT, SOLIDFUEL, XENON, ORE, ELETRIC};
 
 
@@ -38,7 +38,7 @@ struct engine
     double mass;
     double cost;
     enum fuel_type fuel;
-    double diam;
+    enum diameter diam;
     int ISP_atm;
     int ISP_vac;
     double thrust_atm;
@@ -53,6 +53,7 @@ struct decoupler
     char *name;
     double mass;
     double cost;
+    enum diameter diam;
 };
 
 struct part
@@ -87,6 +88,8 @@ struct stage
     Part *engine;
     int nbr_engines;
     Part *decoupler;
+    enum diameter top_diam;
+    enum diameter down_diam;
     Stage *prev;
     Stage *next;
 };
@@ -108,11 +111,11 @@ struct datas
     double TWR_min;
     double TWR_max;
     enum diameter diameter_payload;
-    Tank **tanks;
+    Tank ***tanks;
     size_t nbr_tanks;
-    Engine **engines;
+    Engine ***engines;
     size_t nbr_engines;
-    Decoupler **decouplers;
+    Decoupler ***decouplers;
     size_t nbr_decouplers;
     Rocket *best_rocket;
     double beta;

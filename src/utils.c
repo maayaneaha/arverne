@@ -302,7 +302,8 @@ Rocket *copy_rocket(Rocket *r)
 }
 
 
-int create_tank_stack(Datas *d, Stage *s, enum diameter diam, double mass_fuel)
+int create_tank_stack(Datas *d, Stage *s, enum diameter top_diam,
+        enum diameter down_diam, double mass_fuel)
 {
 #if DEBUG
     printf("create_tank_stack(d, s, diam, mass_fuel = %f)\n{\n", mass_fuel);
