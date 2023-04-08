@@ -15,6 +15,7 @@ int main(int argc, char* argv[])
 {
 #if DEBUG
     printf("debug\n");
+    int init_debug();
 	// For test functions only
     debug_write("BEGIN");
     //printf("%s\n", argopt.version);

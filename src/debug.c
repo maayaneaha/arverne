@@ -2,7 +2,7 @@
 
 int init_debug()
 {
-    File *ptr = fopen("debug_file", "w");
+    FILE *ptr = fopen("debug_file", "w");
     if (ptr == NULL)
         return 0;
     fclose(ptr);

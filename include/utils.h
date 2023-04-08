@@ -142,6 +142,7 @@ int append_stage(Rocket *r, Stage *s);
 #define OXFUEL_DENSITY 5
 #define FUEL_COST 0.8
 #define OX_COST 0.18
+#define NBR_DIAMS 8
 
 #endif
 
