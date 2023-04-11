@@ -376,47 +376,6 @@ int create_tank_stack(Datas *d, Stage *s, double mass_fuel)
         prev->next = t;
         t->prev = prev;
     }
-    /*
-    do
-    {
-        double too_much = INF;
-        for (size_t i = 0; i < d->nbr_tanks[s->down_diam][i]; i++)
-        {
-            if (d->tanks[s->down_diam][i]->top_diam == d->tanks[s->down_diam][i]->down_diam &&
-                d->tanks[s->down_diam][i]->top_diam == s->down_diam )
-            {
-                if (calculate_mass_fuel_tank(d->tanks[s->down_diam][i]) < mass_fuel)
-                {
-                }
-                else
-                {
-                    t = create_tank(d->tanks[s->down_diam][i]);
-                    mass_fuel -= calculate_mass_fuel_tank(t);
-                    prev->next = t;
-                    t->prev = prev;
-                    prev = t
-                };
-                break;
-            }
-        }
-    } while (t != NULL);*/
-    // tank to have the needed mass
-    /*
-    Part *prev = create_tank(d->tanks[0]);
-    double mass_total = calculate_mass_fuel_tank(prev->part_type);
-    Tank *t = prev->part_type;
-    if (diam != t->top_diam) // not the correct diameter
-        return 0;
-    s->first_tank = prev;
-    size_t n = 0;
-    while (mass_total < mass_fuel)
-    {
-        Part *tank = create_tank(d->tanks[0]);
-        mass_total += calculate_mass_fuel_tank(tank->part_type);
-        tank->prev = prev;
-        prev->next = tank;
-        prev = tank;
-        n++;*/
 #if DEBUG
     printf("}\n");
 #endif
