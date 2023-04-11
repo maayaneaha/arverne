@@ -456,18 +456,27 @@ Decoupler* load_Decoupler(char* filename)
 int load_parts(Datas *d)
 {
     d->tanks = load_Tanks("bdd/FuelTank");
-    size_t nbr_tanks;
-    for (nbr_tanks = 0; d->tanks[nbr_tanks] != NULL; nbr_tanks++);
-    d->nbr_tanks = nbr_tanks;
+    for (size_t i = 0; i < NBR_DIAMS; i++)
+    {
+        size_t nbr_tanks;
+        for (nbr_tanks = 0; d->tanks[i][nbr_tanks] != NULL; nbr_tanks++);
+        d->nbr_tanks[i] = nbr_tanks;
+    }
 
     d->engines = load_Engines("bdd/Engine");
-    size_t nbr_engines;
-    for (nbr_engines = 0; d->engines[nbr_engines] != NULL; nbr_engines++);
-    d->nbr_engines = nbr_engines;
+    for (size_t i = 0; i < NBR_DIAMS; i++)
+    {
+        size_t nbr_engines;
+        for (nbr_engines = 0; d->engines[i][nbr_engines] != NULL; nbr_engines++);
+        d->nbr_engines[i] = nbr_engines;
+    }
 
     d->decouplers = load_Decouplers("bdd/Coupling");
-    size_t nbr_decouplers;
-    for (nbr_decouplers = 0; d->decouplers[nbr_decouplers] != NULL; nbr_decouplers++);
-    d->nbr_decouplers = nbr_decouplers;
+    for (size_t i = 0; i < NBR_DIAMS; i++)
+    {
+        size_t nbr_decouplers;
+        for (nbr_decouplers = 0; d->decouplers[i][nbr_decouplers] != NULL; nbr_decouplers++);
+        d->nbr_decouplers[i] = nbr_decouplers;
+    }
     return 1;
 }
