@@ -23,20 +23,20 @@ Rocket *build_rocket(Datas *datas, size_t nbr_stages)
     for(size_t i = 0; i < nbr_stages; i++) {
         Stage *s = malloc(sizeof(Stage));
         s->fuel = FUELOX;
-        Part *prev = create_tank(datas->tanks[0]);
+        Part *prev = create_tank(datas->tanks[0][0]);
         s->first_tank = prev;
 
 #if DEBUG
         printf("  new stage\n");
 #endif
         for (size_t j = 0; j < 5; j++) {
-            Part *tank = create_tank(*datas->tanks);
+            Part *tank = create_tank(*datas->tanks[0]);
             tank->prev = prev;
             prev->next = tank;
             prev = tank;
         }
-        s->engine = create_engine(*datas->engines);
-        s->decoupler = create_decoupler(*datas->decouplers);
+        s->engine = create_engine(*datas->engines[0]);
+        s->decoupler = create_decoupler(*datas->decouplers[0]);
         s->nbr_engines = 1;
         s->prev = prev_s;
         if (prev_s != NULL)
@@ -76,7 +76,7 @@ void test_brutforce()
 
 void coni()
 {
-	Tank** tanks = load_Tanks("./bdd/FuelTank");
+	Tank*** tanks = load_Tanks("./bdd/FuelTank");
 	/*Engine** engines = load_Engines("./bdd/Engine");*/
 	/*Decoupler** decouplers = load_Decouplers("./bdd/Coupling");*/
 }
