@@ -7,80 +7,86 @@
 // si le dv n'est pas satisfait, on le reparti sur les autres etages
 
 // utiliser calculate_mass_fuel pour trouver la masse totale et prendre la plus faible
-Engine* search_engine(Datas* d, Rocket* r, double dv_needed, int* ne, double* ret_mass)
+Engine* search_engine(Datas* d, Rocket* r, double dv_needed, int* ne, double* ret_mass, enum diameter diam)
 {
 #if DEBUG
-    printf("search_engine(%zu)\n{\n", (size_t) d);
+    char str[1000];
+    sprintf(str, "search_engine(%zu)\n{\n", (size_t) d);
+    debug_write(str);
 #endif
     Engine* optimal_engine = NULL;
     double minimal_mass = INF;
 #if DEBUG
-    printf("nbr_engines %zu\n", d->nbr_engines);
+    sprintf(str, "nbr_engines %zu\n", d->nbr_engines[0]);
+    debug_write(str);
 #endif
-    for(size_t i = 0; i < d->nbr_engines; i++)
+    for (size_t nb_diam; nb_diam < NBR_DIAMS; nb_diam++)
     {
-        int nbr_engines = 1;
-        Engine* e = d->engines[i];
-#if DEBUG
-        printf("e->fuel %u %u\n", e->fuel, FUELOX);
-#endif
-        if (e->fuel != FUELOX)
+        for(size_t i = 0; i < d->nbr_engines[i]; i++)
         {
+            int nbr_engines = 1;
+            Engine* e = d->engines[nb_diam][i];
 #if DEBUG
-            printf("continue\n");
+            printf("e->fuel %u %u\n", e->fuel, FUELOX);
 #endif
-            continue;
-        }
-#if DEBUG
-        printf("not continue %s\n", e->name);
-#endif
-        double TWR = -1;
-        double mass_fuel, mass_total;
-        double beta = d->beta;
-
-#if DEBUG
-        printf("engine %zu (%zu)\n", i, (size_t) e);
-#endif
-        while (TWR < d->TWR_min && nbr_engines <= NBR_MAX_ENGINES) // To be sure that the TWR is ok
-        {
-#if DEBUG
-            printf("d->TWR_min = %f\n", d->TWR_min);
-#endif
-            mass_fuel = calculate_mass_fuel(dv_needed, calculate_isp(e),
-                                                   calculate_g(), beta, e->mass * nbr_engines,
-                                                   r->total_mass);
-#if DEBUG
-            printf("mass_fuel = %f\n", mass_fuel);
-#endif
-            mass_total = r->total_mass + mass_fuel * (1 + beta) + e->mass * nbr_engines + d->decouplers[0]->mass;
-            TWR = calculate_TWR(mass_total, e->thrust_atm * nbr_engines, calculate_g());
-#if DEBUG
-            printf("mass_total = %f\nTWR %f\nnbr_engines %u\n", mass_total, TWR, nbr_engines);
-#endif
-            if (TWR < d->TWR_min)
+            if (e->fuel != FUELOX)
             {
-                int prev_nbr_engines = nbr_engines;
-                nbr_engines *= (int) ceil(d->TWR_min / TWR);
-                if (prev_nbr_engines >= nbr_engines)
-                    nbr_engines = prev_nbr_engines + 1;
-
+#if DEBUG
+                printf("continue\n");
+#endif
+                continue;
             }
-        }
-        if (mass_fuel < 0)
-        {
-            continue;
-        }
 #if DEBUG
-        printf("minimal_mass = %f, mass_total = %f, nbr_engines = %d\n", minimal_mass, mass_total, nbr_engines);
+            printf("not continue %s\n", e->name);
 #endif
-        if (mass_total < minimal_mass && nbr_engines <= NBR_MAX_ENGINES)
-        {
+            double TWR = -1;
+            double mass_fuel, mass_total;
+            double beta = d->beta;
+
 #if DEBUG
-            printf("new optimal_engine\n");
+            printf("engine %zu (%zu)\n", i, (size_t) e);
 #endif
-            optimal_engine = e;
-            minimal_mass = mass_total;
-            *ne = nbr_engines;
+            while (TWR < d->TWR_min && nbr_engines <= NBR_MAX_ENGINES) // To be sure that the TWR is ok
+            {
+#if DEBUG
+                printf("d->TWR_min = %f\n", d->TWR_min);
+#endif
+                mass_fuel = calculate_mass_fuel(dv_needed, calculate_isp(e),
+                                                calculate_g(), beta, e->mass * nbr_engines,
+                                                r->total_mass);
+#if DEBUG
+                printf("mass_fuel = %f\n", mass_fuel);
+#endif
+                mass_total = r->total_mass + mass_fuel * (1 + beta) + e->mass * nbr_engines + d->decouplers[nb_diam][0]->mass;
+                TWR = calculate_TWR(mass_total, e->thrust_atm * nbr_engines, calculate_g());
+#if DEBUG
+                printf("mass_total = %f\nTWR %f\nnbr_engines %u\n", mass_total, TWR, nbr_engines);
+#endif
+                if (TWR < d->TWR_min)
+                {
+                    int prev_nbr_engines = nbr_engines;
+                    nbr_engines *= (int) ceil(d->TWR_min / TWR);
+                    if (prev_nbr_engines >= nbr_engines)
+                        nbr_engines = prev_nbr_engines + 1;
+
+                }
+            }
+            if (mass_fuel < 0)
+            {
+                continue;
+            }
+#if DEBUG
+            printf("minimal_mass = %f, mass_total = %f, nbr_engines = %d\n", minimal_mass, mass_total, nbr_engines);
+#endif
+            if (mass_total < minimal_mass && nbr_engines <= NBR_MAX_ENGINES)
+            {
+#if DEBUG
+                printf("new optimal_engine\n");
+#endif
+                optimal_engine = e;
+                minimal_mass = mass_total;
+                *ne = nbr_engines;
+            }
         }
     }
     *ret_mass = minimal_mass;
@@ -98,7 +104,17 @@ int search_stage(Datas* d, Rocket* r, double dv_needed)
 #endif
     int nbr_engines;
     double minimal_mass;
-    Engine* optimal_engine = search_engine(d, r, dv_needed, &nbr_engines, &minimal_mass);
+    enum diameter d_last_stage = d->diameter_payload;
+    if (r->first_stage != NULL)
+    {
+        Stage *s = r->first_stage;
+        while (s != NULL)
+        {
+            d_last_stage = s->down_diam;
+            s = s->next;
+        }
+    }
+    Engine* optimal_engine = search_engine(d, r, dv_needed, &nbr_engines, &minimal_mass, d_last_stage);
     if (optimal_engine == NULL)
     {
 #if DEBUG
@@ -110,9 +126,9 @@ int search_stage(Datas* d, Rocket* r, double dv_needed)
     printf("optimal_engine = %zu\n", (size_t) optimal_engine);
 #endif
     // int create_tank_stack(Datas *d, Stage *s, enum diameter diam, double mass_fuel)
-    Stage* s = create_stage(d);
+    Stage* s = create_stage(d, d_last_stage);
     s->engine = create_engine(optimal_engine);
-    create_tank_stack(d, s, optimal_engine->diam, minimal_mass);
+    create_tank_stack(d, s, minimal_mass);
     s->nbr_engines = nbr_engines;
     append_stage(r, s);
     //todo gerer le DV en trop

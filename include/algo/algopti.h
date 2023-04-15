@@ -3,6 +3,7 @@
 
 #if DEBUG
 #include "basic_display/basic_display.h"
+#include "debug.h"
 #endif
 #include <stdio.h>
 #include "utils.h"

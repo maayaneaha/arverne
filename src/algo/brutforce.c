@@ -11,10 +11,10 @@ int rocket_creator(Datas *datas, double deltaV_min, Rocket *r)
 #endif
     if (deltaV_min <= 0)
         return 1;
-    for (size_t i = 0; i < datas->nbr_engines; ++i)
+    for (size_t i = 0; i < datas->nbr_engines[0]; ++i)
     {
-        Stage *s = create_stage(datas);
-        Engine *e = datas->engines[i];
+        Stage *s = create_stage(datas, 0);
+        Engine *e = datas->engines[0][i];
         s->engine = create_engine(e);
         // Mass fuel max for a minimum TWR
         double mass_fuel_max = calculate_max_mass(datas->TWR_min, e->thrust_atm, calculate_g());
@@ -29,7 +29,7 @@ int rocket_creator(Datas *datas, double deltaV_min, Rocket *r)
 
         if (mass_fuel_needed > mass_fuel_max)
             mass_fuel_needed = mass_fuel_max;
-        create_tank_stack(datas, s, e->diam, mass_fuel_needed);
+        create_tank_stack(datas, s, mass_fuel_needed);
         append_stage(r, s);
         calculate_rocket_infos(r);
         deltaV_min -= s->DeltaV;
