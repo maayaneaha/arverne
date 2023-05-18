@@ -130,6 +130,62 @@ Tank** load_Tanks(char* path)
 	return tanks;
 }
 
+void insert_sort_Tanks(Tank** tanks, Tank* elt)
+{
+	int i = 0;
+	while (tanks[i] != NULL && elt->full_mass < tanks[i]->full_mass)
+		i++;
+
+	int j;
+	for (j = 0; tanks[j] != NULL; j++);
+	tanks[j+1] = NULL;
+	for (; j > i; j--)
+	{
+		tanks[j] = tanks[j-1];
+	}
+	tanks[i] = elt;
+}
+
+Tank*** sort_Tanks(Tank** tanks)
+{
+	int count_size[8] = {1, 1, 1, 1, 1, 1, 1, 1};
+
+	Tank*** result = malloc(sizeof(Tank**) * (8));
+	for (int i = 0; tanks[i] != NULL; i++)
+	{
+		if (tanks[i]->top_diam == tanks[i]->down_diam)
+		{
+			count_size[tanks[i]->top_diam]++;
+		}
+		else
+		{
+			count_size[tanks[i]->top_diam]++;
+			count_size[tanks[i]->down_diam]++;
+		}
+	}
+
+	for (int i = 0; i < 8; i++)
+	{
+		result[i] = malloc(sizeof(Tank*) * (count_size[i]));
+		result[i][0] = NULL;
+	}
+
+	for (int i = 0; tanks[i] != NULL; i++)
+	{
+		if (tanks[i]->top_diam == tanks[i]->down_diam)
+		{
+			insert_sort_Tanks(result[tanks[i]->top_diam], tanks[i]);
+		}
+		else
+		{
+			insert_sort_Tanks(result[tanks[i]->top_diam], tanks[i]);
+			insert_sort_Tanks(result[tanks[i]->down_diam], tanks[i]);
+		}
+	}
+
+	return result;
+}
+
 Tank* load_Tank(char* filename)
 {
    Tank* obj = malloc(sizeof(Tank));
@@ -176,7 +232,10 @@ Tank* load_Tank(char* filename)
    tmp = cJSON_GetObjectItemCaseSensitive(part,"node_stack_top");
    if(cJSON_IsArray(tmp))
    {
-      tmp = cJSON_GetArrayItem(tmp,5);
+	   if (cJSON_GetArraySize(tmp) < 7)
+		   return NULL;
+
+      tmp = cJSON_GetArrayItem(tmp, 6);
       if (tmp->valueint == 0)
 		 obj->top_diam = TINY;
       if (tmp->valueint == 1)

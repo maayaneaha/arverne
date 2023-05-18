@@ -9,3 +9,5 @@ Tank** load_Tanks(char* path);
 Engine** load_Engines(char* path);
 Decoupler** load_Decouplers(char* path);
 int load_parts(Datas *d);
+Tank*** sort_Tanks(Tank** tanks);
+void insert_sort_Tanks(Tank** tanks, Tank* elt);
