@@ -77,11 +77,12 @@ Engine*** load_Engines(char* path)
 		{
             if (tmp->diam >  X)
                 err(2, "tmp->name = %s, tmp->diam = %i", tmp->name, tmp->diam);
+
             printf("blb %i\n", tmp->diam);
 			engines[tmp->diam][cur[tmp->diam]++] = tmp;
             printf("hlhl\n");
+			free(files[i]);
 		}
-		free(files[i]);
 	}
 	free(files);
     for (size_t i = 0; i < NBR_DIAMS; i++)
@@ -193,15 +194,22 @@ Tank* load_Tank(char* filename)
    tmp = cJSON_GetObjectItemCaseSensitive(part,"node_stack_top");
    if(cJSON_IsArray(tmp))
    {
-      tmp = cJSON_GetArrayItem(tmp,5);
-      if (tmp->valueint == 0)
-		 obj->top_diam = TINY;
-      if (tmp->valueint == 1)
-		 obj->top_diam = SMALL;
-      if (tmp->valueint == 2)
-		 obj->top_diam = LARGE;
-      if (tmp->valueint == 3)
-		 obj->top_diam = EXTRALARGE;
+	   if (cJSON_GetArraySize(tmp) < 7)
+	   {
+		   obj->top_diam = 1;
+	   }
+	   else
+	   {
+		  tmp = cJSON_GetArrayItem(tmp,6);
+		  if (tmp->valueint == 0)
+			 obj->top_diam = TINY;
+		  if (tmp->valueint == 1)
+			 obj->top_diam = SMALL;
+		  if (tmp->valueint == 2)
+			 obj->top_diam = LARGE;
+		  if (tmp->valueint == 3)
+			 obj->top_diam = EXTRALARGE;
+	   }
    }
    else
 	   return NULL;
@@ -209,15 +217,22 @@ Tank* load_Tank(char* filename)
    tmp = cJSON_GetObjectItemCaseSensitive(part,"node_stack_bottom");
    if(cJSON_IsArray(tmp))
    {
-      tmp = cJSON_GetArrayItem(tmp,5);
-      if (tmp->valueint == 0)
-	 	obj->down_diam = TINY;
-      if (tmp->valueint == 1)
-	 	obj->down_diam = SMALL;
-      if (tmp->valueint == 2)
-	 	obj->down_diam = LARGE;
-      if (tmp->valueint == 3)
-	 	obj->down_diam = EXTRALARGE;
+	   if (cJSON_GetArraySize(tmp) < 7)
+	   {
+		   obj->down_diam = 1;
+	   }
+	   else
+	   {
+		  tmp = cJSON_GetArrayItem(tmp,6);
+		  if (tmp->valueint == 0)
+			obj->down_diam = TINY;
+		  if (tmp->valueint == 1)
+			obj->down_diam = SMALL;
+		  if (tmp->valueint == 2)
+			obj->down_diam = LARGE;
+		  if (tmp->valueint == 3)
+			obj->down_diam = EXTRALARGE;
+	   }
    }
    else
 	   return NULL;
@@ -321,9 +336,22 @@ Engine* load_Engine(char* filename)
     tmp = cJSON_GetObjectItemCaseSensitive(part, "node_stack_top");
     if (tmp)
 	{
-		tmp = cJSON_GetArrayItem(tmp, 5);
-		if (tmp->valuedouble)
-			obj->diam = tmp->valuedouble;
+	   if (cJSON_GetArraySize(tmp) < 7)
+	   {
+		   obj->diam = 1;
+	   }
+	   else
+	   {
+			tmp = cJSON_GetArrayItem(tmp, 6);
+			  if (tmp->valueint == 0)
+				obj->diam = TINY;
+			  if (tmp->valueint == 1)
+				obj->diam = SMALL;
+			  if (tmp->valueint == 2)
+				obj->diam = LARGE;
+			  if (tmp->valueint == 3)
+				obj->diam = EXTRALARGE;
+	   }
 	}
 	else
 		return NULL;
