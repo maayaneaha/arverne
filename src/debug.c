@@ -5,6 +5,7 @@ int init_debug()
     FILE *ptr = fopen("debug_file", "w");
     if (ptr == NULL)
         return 0;
+    fprintf(ptr, "\n");
     fclose(ptr);
     return 1;
 }

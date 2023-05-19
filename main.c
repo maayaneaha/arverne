@@ -17,9 +17,9 @@ int main(int argc, char* argv[])
     printf("debug\n");
     int init_debug();
 	// For test functions only
-    debug_write("BEGIN");
+    debug_write("BEGIN\n");
     //printf("%s\n", argopt.version);
-    return 0;
+    //return 0;
 #endif
     double deltav = 2000;
     double twrmin = 1.4;
@@ -34,7 +34,9 @@ int main(int argc, char* argv[])
     { 
         twrmax = atof(argv[3]);
     }
-
+#if DEBUG
+    debug_write("Arguments recived\n");
+#endif
     Datas *d = create_datas();
     load_parts(d);
 #if DEBUG

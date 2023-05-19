@@ -4,6 +4,9 @@
 #include <stdlib.h>
 #include "cjson/cJSON.h"
 
+#if DEBUG
+#include "debug.h"
+#endif
 
 #define NBR_SEARCH_STAGES 1 // number of stages for the algopti search
 #define INF 999999999
@@ -14,7 +17,7 @@
 #define OX_COST 0.18
 #define NBR_DIAMS 8
 
-enum diameter {TINY = 0, SMALL = 1, MEDIUM = 2, LARGE = 3, EXTRALARGE = 4, MK2 = 5, MK3 = 6, X}; // MK1 = SMALL
+enum diameter {TINY = 0, SMALL = 1, MEDIUM = 2, LARGE = 3, EXTRALARGE = 4, MK2 = 5, MK3 = 6, X = 7}; // MK1 = SMALL
 enum fuel_type {FUELOX, LIQUIDFUEL, MONOPROPELLANT, SOLIDFUEL, XENON, ORE, ELETRIC};
 
 

@@ -71,10 +71,15 @@ Engine*** load_Engines(char* path)
 
 	for (int i = 0; files[i] != NULL; i++)
 	{
+        printf("i = %i\n", i);
 		Engine* tmp = load_Engine(files[i]);
 		if (tmp != NULL)
 		{
+            if (tmp->diam >  X)
+                err(2, "tmp->name = %s, tmp->diam = %i", tmp->name, tmp->diam);
+            printf("blb %i\n", tmp->diam);
 			engines[tmp->diam][cur[tmp->diam]++] = tmp;
+            printf("hlhl\n");
 		}
 		free(files[i]);
 	}
@@ -462,7 +467,6 @@ int load_parts(Datas *d)
         for (nbr_tanks = 0; d->tanks[i][nbr_tanks] != NULL; nbr_tanks++);
         d->nbr_tanks[i] = nbr_tanks;
     }
-
     d->engines = load_Engines("bdd/Engine");
     for (size_t i = 0; i < NBR_DIAMS; i++)
     {
@@ -470,7 +474,6 @@ int load_parts(Datas *d)
         for (nbr_engines = 0; d->engines[i][nbr_engines] != NULL; nbr_engines++);
         d->nbr_engines[i] = nbr_engines;
     }
-
     d->decouplers = load_Decouplers("bdd/Coupling");
     for (size_t i = 0; i < NBR_DIAMS; i++)
     {

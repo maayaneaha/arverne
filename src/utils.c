@@ -12,7 +12,7 @@
 Datas *create_datas()
 {
 #if DEBUG
-    printf("create_datas\n");
+    debug_write("create_datas\n");
 #endif
     Datas *d = malloc(sizeof(Datas));
     d->deltaV_min = 2000;
