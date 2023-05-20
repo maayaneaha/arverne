@@ -90,6 +90,27 @@ struct stage
     Stage *prev;
     Stage *next;
 };
+/*
+datas->deltaV_min
+datas->TWR_min
+datas->TWR_max
+datas->nbr_engines
+datas->mass_payload
+
+// et pour stage
+stage[i]->total_mass
+stage[i]->DeltaV
+stage[i]->cost
+stage[i]->ISP_vac
+stage[i]->ISP_atm
+stages[i]->TWR_min
+stages[i]->TWR_max
+
+//et des liste chainées dans la struct de Stage
+engines[i]->name
+tanks[i]->name
+decouplers[i]->name
+*/
 
 struct rocket
 {
@@ -117,6 +138,7 @@ struct datas
     Rocket *best_rocket;
     double beta;
 };
+
 
 Datas *create_datas();
 double calculate_mass_fuel_tank(Tank *t);

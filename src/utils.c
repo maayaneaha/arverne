@@ -433,3 +433,48 @@ void free_datas(Datas* d)
     if (d->best_rocket != NULL)
         free_rocket(d->best_rocket);
 }
+
+void pretty_print(Datas* d)
+{
+	printf("========= DATAS =========\n");
+	printf("DeltaV_min  : %f\n", d->deltaV_min);
+	printf("TWR_min     : %f\n", d->TWR_min);
+	printf("TWR_max     : %f\n", d->TWR_max);
+	printf("nbr_engines : %ld\n", d->nbr_engines);
+	printf("mass_payload: %f",d->mass_payload);
+
+	Rocket* best_rocket = d->best_rocket;
+	int count = 0;
+	for (Stage* i = best_rocket->first_stage; i != NULL; i = i->next)
+	{
+		printf("========= STAGE %d =========\n", count);
+		printf("total_mass: %f\n", i->mass_full+i->mass_dry);
+		printf("DeltaV    : %f\n", i->DeltaV);
+		printf("cost      : %f\n", i->cost);
+		printf("ISP_vac   : %f\n", i->ISP_vac);
+		printf("ISP_atm   : %f\n", i->ISP_atm);
+		printf("TWR_min   : %f\n", i->TWR_min);
+		printf("TWR_max   : %f\n", i->TWR_max);
+		printf("Tanks : [\n");
+		for (Part* j = i->first_tank; j != NULL; j = j->next)
+		{
+			printf("%s ", j->name);
+		}
+		printf("\n]\n");
+
+		printf("Engines : [\n");
+		for (Part* j = i->engine; j != NULL; j = j->next)
+		{
+			printf("%s ", j->name);
+		}
+		printf("\n]\n");
+
+		printf("Decouplers : [\n");
+		for (Part* j = i->decoupler; j != NULL; j = j->next)
+		{
+			printf("%s ", j->name);
+		}
+		printf("\n]\n");
+		count++;
+	}
+}
