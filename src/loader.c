@@ -782,6 +782,14 @@ int generate_datas(Datas *d, char* path)
 	// faut cJSON_Print(object) et écrire le résultat dans le fichier
 
 	FILE* ptr = fopen(path,"w");
+	char* result = cJSON_Print(object);
+	if (result == NULL)
+	{
+		fclose(ptr);
+		return 1;
+	}
+
+	fprintf(fptr,"%s", result);
 	fclose(ptr);
 	return 0;
 }
