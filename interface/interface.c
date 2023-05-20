@@ -188,17 +188,19 @@ void solution_show(GtkButton *b, gpointer user)
 void open_help_menu(GtkButton* b, gpointer user)
 {
 	GUI* gui = user;
-	gtk_widget_show(GTK_WIDGET(gui->help_menu));
-	gtk_widget_hide(GTK_WIDGET(gui->load));
-	gtk_widget_hide(GTK_WIDGET(gui->solution));
+    gtk_stack_set_visible_child(GTK_STACK(gui->window_pages), GTK_WIDGET(gui->help_menu));
+	//gtk_widget_show(GTK_WIDGET(gui->help_menu));
+	//gtk_widget_hide(GTK_WIDGET(gui->load));
+	//gtk_widget_hide(GTK_WIDGET(gui->solution));
 }
 
 void on_menu_clicked(GtkButton* b, gpointer user)
 {
 	GUI* gui = user;
-	gtk_widget_hide(GTK_WIDGET(gui->help_menu));
-	gtk_widget_show(GTK_WIDGET(gui->load));
-	gtk_widget_hide(GTK_WIDGET(gui->solution));
+    gtk_stack_set_visible_child(GTK_STACK(gui->window_pages), GTK_WIDGET(gui->load));
+	//gtk_widget_hide(GTK_WIDGET(gui->help_menu));
+	//gtk_widget_show(GTK_WIDGET(gui->load));
+	//gtk_widget_hide(GTK_WIDGET(gui->solution));
 }
 
 void start_button_clicked(GtkButton* b, gpointer user_data)
@@ -283,7 +285,8 @@ int main(int argc, char *argv[])
 	g_signal_connect(StartButton, "clicked", G_CALLBACK(solution_show), &gui);
 	g_signal_connect(help_button, "clicked", G_CALLBACK(open_help_menu), &gui);
 
-	g_signal_connect(MenuButton1, "clicked", G_CALLBACK(solution_show), &gui);
+	g_signal_connect(MenuButton, "clicked", G_CALLBACK(going_back_menu), &gui);
+	g_signal_connect(MenuButton1, "clicked", G_CALLBACK(going_back_menu), &gui);
 
 	/*g_signal_connect(refresh_button, "clicked", G_CALLBACK(refresh), &gui);*/
 	/*g_signal_connect(menu_button, "clicked", G_CALLBACK(on_menu_clicked), &gui);*/
