@@ -176,7 +176,10 @@
                     <property name="visible">True</property>
                     <property name="can-focus">False</property>
                     <property name="margin-top">71</property>
-                    <property name="label" translatable="yes">TODO</property>
+                    <property name="label" translatable="yes">For more information on a particular feature, click on the "Help" menu and select "Feature Help".
+					To find answers to common questions, click on the "Help" menu and select "FAQ".
+					If you still need assistance, click on the "Help" menu and select "Contact Support" to contact our support team.
+					We hope this help window was useful! If you have any feedback or suggestions, please let us know.</property>
                     <attributes>
                       <attribute name="font-desc" value="Unifont Bold 10"/>
                       <attribute name="weight" value="semibold"/>
