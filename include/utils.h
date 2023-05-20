@@ -83,9 +83,9 @@ struct stage
     double TWR_min;
     double TWR_max;
     double consumption;
+	int nbr_engines;
     Part *first_tank;
     Part *engine;
-    int nbr_engines;
     Part *decoupler;
     Stage *prev;
     Stage *next;
@@ -117,7 +117,6 @@ struct datas
     Rocket *best_rocket;
     double beta;
 };
-
 
 Datas *create_datas();
 double calculate_mass_fuel_tank(Tank *t);
