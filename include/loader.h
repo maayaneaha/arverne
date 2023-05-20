@@ -16,3 +16,5 @@ cJSON* export_to_json_Engine(Engine* obj);
 cJSON* export_to_json_Tank(Tank* obj);
 cJSON* export_to_json_Decoupler(Decoupler* obj);
 int generate_file(Datas *d, char* path);
+Tank*** sort_Tanks(Tank** tanks);
+void insert_sort_Tanks(Tank** tanks, Tank* elt);
