@@ -250,7 +250,6 @@ Tank* load_Tank(char* filename)
       /*errx(1,"cost is not found");*/
    tmp = cJSON_GetObjectItemCaseSensitive(part,"node_stack_top");
    if(cJSON_IsArray(tmp))
-   {
 	   if (cJSON_GetArraySize(tmp) < 7)
 	   {
 		   obj->top_diam = 1;
