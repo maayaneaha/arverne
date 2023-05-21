@@ -3,6 +3,7 @@
 #include "loader.h"
 #include "algo/algopti.h"
 #include "basic_display/basic_display.h"
+
 typedef struct GUI
 {
 	GtkWindow* interface;

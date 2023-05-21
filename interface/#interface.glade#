@@ -124,85 +124,6 @@
           </packing>
         </child>
         <child>
-          <object class="GtkBox" id="help_menu">
-            <property name="visible">True</property>
-            <property name="can-focus">False</property>
-            <property name="orientation">vertical</property>
-            <child>
-              <object class="GtkHeaderBar" id="ButtonsHeader2">
-                <property name="visible">True</property>
-                <property name="can-focus">False</property>
-                <property name="margin-top">400</property>
-                <property name="spacing">10</property>
-                <child>
-                  <object class="GtkButton" id="MenuButton1">
-                    <property name="visible">True</property>
-                    <property name="can-focus">True</property>
-                    <property name="receives-default">True</property>
-                    <property name="use-underline">True</property>
-                    <signal name="clicked" handler="menu" swapped="no"/>
-                    <child>
-                      <object class="GtkImage">
-                        <property name="visible">True</property>
-                        <property name="can-focus">False</property>
-                        <property name="pixel-size">20</property>
-                        <property name="icon-name">computer</property>
-                        <property name="icon_size">1</property>
-                      </object>
-                    </child>
-                  </object>
-                </child>
-                <child>
-                  <object class="GtkButton" id="QuitButton3">
-                    <property name="label" translatable="yes">Quit</property>
-                    <property name="visible">True</property>
-                    <property name="can-focus">True</property>
-                    <property name="receives-default">True</property>
-                    <signal name="clicked" handler="exit" swapped="no"/>
-                  </object>
-                  <packing>
-                    <property name="position">2</property>
-                  </packing>
-                </child>
-              </object>
-              <packing>
-                <property name="expand">True</property>
-                <property name="fill">True</property>
-                <property name="pack-type">end</property>
-                <property name="position">0</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkLabel" id="help_text">
-                <property name="visible">True</property>
-                <property name="can-focus">False</property>
-                <property name="margin-top">71</property>
-                <property name="label" translatable="yes">For more information on a particular feature, click on the "Help" menu and select "Feature Help".
-					To find answers to common questions, click on the "Help" menu and select "FAQ".
-					If you still need assistance, click on the "Help" menu and select "Contact Support" to contact our support team.
-					We hope this help window was useful! If you have any feedback or suggestions, please let us know.</property>
-                <attributes>
-                  <attribute name="font-desc" value="Unifont Bold 10"/>
-                  <attribute name="weight" value="semibold"/>
-                  <attribute name="variant" value="normal"/>
-                  <attribute name="scale" value="1.5"/>
-                  <attribute name="foreground" value="#000000000000"/>
-                </attributes>
-              </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="fill">True</property>
-                <property name="position">1</property>
-              </packing>
-            </child>
-          </object>
-          <packing>
-            <property name="name">page3</property>
-            <property name="title" translatable="yes">page3</property>
-            <property name="position">1</property>
-          </packing>
-        </child>
-        <child>
           <object class="GtkBox" id="solution">
             <property name="visible">True</property>
             <property name="can-focus">False</property>
@@ -247,14 +168,14 @@
                 </child>
               </object>
               <packing>
-                <property name="expand">True</property>
-                <property name="fill">True</property>
+                <property name="expand">False</property>
+                <property name="fill">False</property>
                 <property name="pack-type">end</property>
                 <property name="position">1</property>
               </packing>
             </child>
             <child>
-              <!-- n-columns=2 n-rows=8 -->
+              <!-- n-columns=4 n-rows=8 -->
               <object class="GtkGrid">
                 <property name="visible">True</property>
                 <property name="can-focus">False</property>
@@ -431,12 +352,78 @@
                     <property name="can-focus">True</property>
                     <property name="adjustment">rpp_min</property>
                     <property name="round-digits">1</property>
+                    <property name="digits">5</property>
                     <property name="value-pos">right</property>
                   </object>
                   <packing>
                     <property name="left-attach">1</property>
                     <property name="top-attach">2</property>
                   </packing>
+                </child>
+                <child>
+                  <object class="GtkButton" id="id_save">
+                    <property name="label" translatable="yes">Save</property>
+                    <property name="can-focus">True</property>
+                    <property name="receives-default">True</property>
+                  </object>
+                  <packing>
+                    <property name="left-attach">2</property>
+                    <property name="top-attach">7</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkButton" id="id_load">
+                    <property name="label" translatable="yes">Load</property>
+                    <property name="visible">True</property>
+                    <property name="can-focus">True</property>
+                    <property name="receives-default">True</property>
+                  </object>
+                  <packing>
+                    <property name="left-attach">3</property>
+                    <property name="top-attach">7</property>
+                  </packing>
+                </child>
+                <child>
+                  <placeholder/>
+                </child>
+                <child>
+                  <placeholder/>
+                </child>
+                <child>
+                  <placeholder/>
+                </child>
+                <child>
+                  <placeholder/>
+                </child>
+                <child>
+                  <placeholder/>
+                </child>
+                <child>
+                  <placeholder/>
+                </child>
+                <child>
+                  <placeholder/>
+                </child>
+                <child>
+                  <placeholder/>
+                </child>
+                <child>
+                  <placeholder/>
+                </child>
+                <child>
+                  <placeholder/>
+                </child>
+                <child>
+                  <placeholder/>
+                </child>
+                <child>
+                  <placeholder/>
+                </child>
+                <child>
+                  <placeholder/>
+                </child>
+                <child>
+                  <placeholder/>
                 </child>
                 <child>
                   <placeholder/>
@@ -446,7 +433,7 @@
                 </child>
               </object>
               <packing>
-                <property name="expand">False</property>
+                <property name="expand">True</property>
                 <property name="fill">True</property>
                 <property name="position">2</property>
               </packing>
@@ -455,6 +442,85 @@
           <packing>
             <property name="name">page1</property>
             <property name="title" translatable="yes">page1</property>
+            <property name="position">1</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkBox" id="help_menu">
+            <property name="visible">True</property>
+            <property name="can-focus">False</property>
+            <property name="orientation">vertical</property>
+            <child>
+              <object class="GtkHeaderBar" id="ButtonsHeader2">
+                <property name="visible">True</property>
+                <property name="can-focus">False</property>
+                <property name="margin-top">400</property>
+                <property name="spacing">10</property>
+                <child>
+                  <object class="GtkButton" id="MenuButton1">
+                    <property name="visible">True</property>
+                    <property name="can-focus">True</property>
+                    <property name="receives-default">True</property>
+                    <property name="use-underline">True</property>
+                    <signal name="clicked" handler="menu" swapped="no"/>
+                    <child>
+                      <object class="GtkImage">
+                        <property name="visible">True</property>
+                        <property name="can-focus">False</property>
+                        <property name="pixel-size">20</property>
+                        <property name="icon-name">computer</property>
+                        <property name="icon_size">1</property>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkButton" id="QuitButton3">
+                    <property name="label" translatable="yes">Quit</property>
+                    <property name="visible">True</property>
+                    <property name="can-focus">True</property>
+                    <property name="receives-default">True</property>
+                    <signal name="clicked" handler="exit" swapped="no"/>
+                  </object>
+                  <packing>
+                    <property name="position">2</property>
+                  </packing>
+                </child>
+              </object>
+              <packing>
+                <property name="expand">True</property>
+                <property name="fill">True</property>
+                <property name="pack-type">end</property>
+                <property name="position">0</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkLabel" id="help_text">
+                <property name="visible">True</property>
+                <property name="can-focus">False</property>
+                <property name="margin-top">71</property>
+                <property name="label" translatable="yes">For more information on a particular feature, click on the "Help" menu and select "Feature Help".
+					To find answers to common questions, click on the "Help" menu and select "FAQ".
+					If you still need assistance, click on the "Help" menu and select "Contact Support" to contact our support team.
+					We hope this help window was useful! If you have any feedback or suggestions, please let us know.</property>
+                <attributes>
+                  <attribute name="font-desc" value="Unifont Bold 10"/>
+                  <attribute name="weight" value="semibold"/>
+                  <attribute name="variant" value="normal"/>
+                  <attribute name="scale" value="1.5"/>
+                  <attribute name="foreground" value="#000000000000"/>
+                </attributes>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="fill">True</property>
+                <property name="position">1</property>
+              </packing>
+            </child>
+          </object>
+          <packing>
+            <property name="name">page3</property>
+            <property name="title" translatable="yes">page3</property>
             <property name="position">2</property>
           </packing>
         </child>
