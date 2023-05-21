@@ -1110,39 +1110,69 @@ int generate_datas(Datas *d, char* path)
 	tmp_value = cJSON_CreateNumber(d->diameter_payload);
 	cJSON_AddItemToObject(object, "diameter_value", tmp_value);
     
-	tmp_value = cJSON_CreateNumber(d->nbr_tanks);
+	tmp_value = cJSON_CreateArray();
+	for (int i = 0; i < NBR_DIAMS; i++)
+	{
+		cJSON* j = cJSON_CreateNumber(d->nbr_tanks[i]);
+		cJSON_AddItemToArray(tmp_value, j);
+	}
 	cJSON_AddItemToObject(object, "nbr_tanks", tmp_value);
 
-	tmp_value = cJSON_CreateNumber(d->nbr_engines);
+	tmp_value = cJSON_CreateArray();
+	for (int i = 0; i < NBR_DIAMS; i++)
+	{
+		cJSON* j = cJSON_CreateNumber(d->nbr_engines[i]);
+		cJSON_AddItemToArray(tmp_value, j);
+	}
 	cJSON_AddItemToObject(object, "nbr_engines", tmp_value);
 
-	tmp_value = cJSON_CreateNumber(d->nbr_decouplers);
+	tmp_value = cJSON_CreateArray();
+	for (int i = 0; i < NBR_DIAMS; i++)
+	{
+		cJSON* j = cJSON_CreateNumber(d->nbr_decouplers[i]);
+		cJSON_AddItemToArray(tmp_value, j);
+	}
 	cJSON_AddItemToObject(object, "nbr_decouplers", tmp_value);
 
 	tmp_value = cJSON_CreateNumber(d->beta);
 	cJSON_AddItemToObject(object, "beta", tmp_value);
 	
 	tmp_value = cJSON_CreateArray();
-	for (size_t i = 0; i < d->nbr_decouplers; i++)
+	for (int k = 0; k < NBR_DIAMS; k++)
 	{
-		cJSON* j = export_to_json_Decoupler(d->decouplers[i]);
-		cJSON_AddItemToArray(tmp_value, j);
+		cJSON* tmp_value2 = cJSON_CreateArray();
+		for (size_t i = 0; i < d->nbr_decouplers[k]; i++)
+		{
+			cJSON* j = export_to_json_Decoupler(d->decouplers[k][i]);
+			cJSON_AddItemToArray(tmp_value2, j);
+		}
+		cJSON_AddItemToArray(tmp_value, tmp_value2);
+	}
+	cJSON_AddItemToObject(object, "decouplers", tmp_value);
+
+	tmp_value = cJSON_CreateArray();
+	for (int k = 0; k < NBR_DIAMS; k++)
+	{
+		cJSON* tmp_value2 = cJSON_CreateArray();
+		for (size_t i = 0; i < d->nbr_engines[k]; i++)
+		{
+			cJSON* j = export_to_json_Engine(d->engines[k][i]);
+			cJSON_AddItemToArray(tmp_value2, j);
+		}
+		cJSON_AddItemToArray(tmp_value, tmp_value2);
 	}
 	cJSON_AddItemToObject(object, "engines", tmp_value);
 
 	tmp_value = cJSON_CreateArray();
-	for (size_t i = 0; i < d->nbr_engines; i++)
+	for (int k = 0; k < NBR_DIAMS; k++)
 	{
-		cJSON* j = export_to_json_Engine(d->engines[i]);
-		cJSON_AddItemToArray(tmp_value, j);
-	}
-	cJSON_AddItemToObject(object, "engines", tmp_value);
-
-	tmp_value = cJSON_CreateArray();
-	for (size_t i = 0; i < d->nbr_tanks; i++)
-	{
-		cJSON* j = export_to_json_Tank(d->tanks[i]);
-		cJSON_AddItemToArray(tmp_value, j);
+		cJSON* tmp_value2 = cJSON_CreateArray();
+		for (size_t i = 0; i < d->nbr_tanks[k]; i++)
+		{
+			cJSON* j = export_to_json_Tank(d->tanks[k][i]);
+			cJSON_AddItemToArray(tmp_value2, j);
+		}
+		cJSON_AddItemToArray(tmp_value, tmp_value2);
 	}
 	cJSON_AddItemToObject(object, "tanks", tmp_value);
 

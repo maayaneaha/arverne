@@ -483,11 +483,15 @@ void free_datas(Datas* d) {
 
 void pretty_print(Datas* d)
 {
+	int nbr_engines = 0;
+	for (int i = 0; i < NBR_DIAMS; i++)
+		nbr_engines += d->nbr_engines[i];
+
 	printf("========= DATAS =========\n");
 	printf("DeltaV_min  : %f\n", d->deltaV_min);
 	printf("TWR_min     : %f\n", d->TWR_min);
 	printf("TWR_max     : %f\n", d->TWR_max);
-	printf("nbr_engines : %ld\n", d->nbr_engines);
+	printf("nbr_engines : %d\n", nbr_engines);
 	printf("mass_payload: %f",d->mass_payload);
 
 	Rocket* best_rocket = d->best_rocket;
