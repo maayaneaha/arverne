@@ -83,13 +83,34 @@ struct stage
     double TWR_min;
     double TWR_max;
     double consumption;
+	int nbr_engines;
     Part *first_tank;
     Part *engine;
-    int nbr_engines;
     Part *decoupler;
     Stage *prev;
     Stage *next;
 };
+/*
+datas->deltaV_min
+datas->TWR_min
+datas->TWR_max
+datas->nbr_engines
+datas->mass_payload
+
+// et pour stage
+stage[i]->total_mass
+stage[i]->DeltaV
+stage[i]->cost
+stage[i]->ISP_vac
+stage[i]->ISP_atm
+stages[i]->TWR_min
+stages[i]->TWR_max
+
+//et des liste chainées dans la struct de Stage
+engines[i]->name
+tanks[i]->name
+decouplers[i]->name
+*/
 
 struct rocket
 {
