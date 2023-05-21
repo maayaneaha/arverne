@@ -62,11 +62,12 @@ Engine*** load_Engines(char* path)
 	char** files = malloc(sizeof(char*) * default_size);
 	files[0] = NULL;
 	listFilesRecursively(path, files, &default_size, &position);
-	Engine*** engines = malloc(sizeof(Engine**) * NBR_DIAMS);
+	Engine*** engines = malloc(sizeof(Engine**) * (NBR_DIAMS+1));
     for (size_t i = 0; i < NBR_DIAMS; i++)
     {
         engines[i] = malloc(sizeof(Engine*) * (position + 1));
     }
+	engines[NBR_DIAMS] = NULL;
 	int cur[NBR_DIAMS] = {0};
 
 	for (int i = 0; files[i] != NULL; i++)
@@ -95,10 +96,11 @@ Decoupler*** load_Decouplers(char* path) {
     char **files = malloc(sizeof(char *) * default_size);
     files[0] = NULL;
     listFilesRecursively(path, files, &default_size, &position);
-    Decoupler ***decouplers = malloc(sizeof(Decoupler * ) * NBR_DIAMS);
+    Decoupler ***decouplers = malloc(sizeof(Decoupler * ) * (NBR_DIAMS + 1));
     for (size_t i = 0; i < NBR_DIAMS; i++) {
         decouplers[i] = malloc(sizeof(Decoupler * ) * (position + 1));
     }
+	decouplers[NBR_DIAMS] = NULL;
     int cur[NBR_DIAMS] = {0};
 
     for (int i = 0; files[i] != NULL; i++) {
@@ -123,10 +125,11 @@ Tank*** load_Tanks(char* path) {
     char **files = malloc(sizeof(char *) * default_size);
     files[0] = NULL;
     listFilesRecursively(path, files, &default_size, &position);
-    Tank ***tanks = malloc(sizeof(Tank * *) * NBR_DIAMS);
+    Tank ***tanks = malloc(sizeof(Tank * *) * (NBR_DIAMS + 1));
     for (size_t i = 0; i < NBR_DIAMS; i++) {
         tanks[i] = malloc(sizeof(Tank * ) * (position + 1));
     }
+	tanks[NBR_DIAMS] = NULL;
     int cur[NBR_DIAMS] = {0};
 
     for (int i = 0; files[i] != NULL; i++) {
