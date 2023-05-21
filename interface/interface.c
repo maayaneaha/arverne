@@ -213,15 +213,15 @@ void start_button_clicked(GtkButton* b, gpointer user_data)
     gtk_widget_show(GTK_WIDGET(gui->solution));
 }
 
-int main(int argc, char *argv[])
+int start_interface()
 {
-	gtk_init(&argc ,&argv);
+	gtk_init(0, NULL);
 
-	GtkBuilder* builder = gtk_builder_new_from_file("interface.glade");
+	GtkBuilder* builder = gtk_builder_new_from_file("./interface/interface.glade");
 
 	// Load CSS
 	GtkCssProvider *cssProvider = gtk_css_provider_new();
-	gtk_css_provider_load_from_path(cssProvider, "./interface.css", NULL);
+	gtk_css_provider_load_from_path(cssProvider, "./interface/interface.css", NULL);
 
 	// Inject CSS
 	GdkScreen *screen = gdk_screen_get_default();
