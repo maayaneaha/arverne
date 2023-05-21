@@ -5,6 +5,7 @@
 #include "algo/algopti.h"
 #include "basic_display/pretty_print.h"
 #include "loader.h"
+#include "interface/interface.h"
 
 #if DEBUG
 #include "test/test.h"
@@ -12,6 +13,7 @@
 
 int main(int argc, char* argv[])
 {
+	return start_interface();
 #if DEBUG
     printf("debug\n");
 	// For test functions only

@@ -10,9 +10,6 @@
 
 #include <gtk/gtk.h>
 
-//solutions fonctions
-
-
-//tools fonctions
+int start_interface();
 
 #endif
