@@ -1107,7 +1107,78 @@ Rocket* import_json_Rocket(cJSON* obj)
 	return result;
 }
 
-int generate_datas(Datas *d, char* path)
+Datas* load_Datas(char* path)
+{
+	cJSON* obj = json_ParseFile(path);
+
+	Datas* result = malloc(sizeof(Datas));
+	cJSON* tmp_value = NULL;
+
+	tmp_value = cJSON_GetObjectItemCaseSensitive(obj, "deltaV_min");
+	result->deltaV_min = tmp_value->valuedouble;
+
+	tmp_value = cJSON_GetObjectItemCaseSensitive(obj, "mass_payload");
+	result->mass_payload = tmp_value->valuedouble;
+
+	tmp_value = cJSON_GetObjectItemCaseSensitive(obj, "mass_max");
+	result->mass_max = tmp_value->valuedouble;
+
+	tmp_value = cJSON_GetObjectItemCaseSensitive(obj, "TWR_min");
+	result->TWR_max = tmp_value->valuedouble;
+
+	tmp_value = cJSON_GetObjectItemCaseSensitive(obj, "TWR_max");
+	result->TWR_max = tmp_value->valuedouble;
+
+	tmp_value = cJSON_GetObjectItemCaseSensitive(obj, "diameter_payload");
+	result->diameter_payload = tmp_value->valueint;
+
+	tmp_value = cJSON_GetObjectItemCaseSensitive(obj, "nbr_tanks");
+	result->nbr_tanks = tmp_value->valueint;
+
+	tmp_value = cJSON_GetObjectItemCaseSensitive(obj, "nbr_engines");
+	result->nbr_engines = tmp_value->valueint;
+
+	tmp_value = cJSON_GetObjectItemCaseSensitive(obj, "nbr_decouplers");
+	result->nbr_decouplers = tmp_value->valueint;
+
+	tmp_value = cJSON_GetObjectItemCaseSensitive(obj, "beta");
+	result->beta = tmp_value->valuedouble;
+
+	tmp_value = cJSON_GetObjectItemCaseSensitive(obj, "best_rocket");
+	result->best_rocket = import_json_Rocket(tmp_value);
+
+	tmp_value = cJSON_GetObjectItemCaseSensitive(obj, "tanks");
+	result->tanks = malloc(sizeof(Tank) * (result->nbr_tanks + 1));
+	size_t i;
+	for (i = 0; i < result->nbr_tanks; i++)
+	{
+		cJSON* j = cJSON_GetArrayItem(tmp_value, i);
+		result->tanks[i] = import_json_Tank(j);
+	}
+	result->tanks[i] = NULL;
+
+	tmp_value = cJSON_GetObjectItemCaseSensitive(obj, "engines");
+	result->engines = malloc(sizeof(Engine) * (result->nbr_engines + 1));
+	for (i = 0; i < result->nbr_engines; i++)
+	{
+		cJSON* j = cJSON_GetArrayItem(tmp_value, i);
+		result->engines[i] = import_json_Engine(j);
+	}
+	result->engines[i] = NULL;
+
+	tmp_value = cJSON_GetObjectItemCaseSensitive(obj, "decouplers");
+	result->decouplers = malloc(sizeof(Decoupler) * (result->nbr_decouplers + 1));
+	for (i = 0; i < result->nbr_decouplers; i++)
+	{
+		cJSON* j = cJSON_GetArrayItem(tmp_value, i);
+		result->decouplers[i] = import_json_Decoupler(j);
+	}
+	result->decouplers[i] = NULL;
+
+	return result;
+}
+
+int generate_Datas(Datas *d, char* path)
 {
 	cJSON* object = cJSON_CreateObject();
 	cJSON* tmp_value = NULL;
