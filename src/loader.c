@@ -537,6 +537,32 @@ Decoupler* load_Decoupler(char* filename)
 	else
 		return NULL;
 
+    tmp = cJSON_GetObjectItemCaseSensitive(part, "node_stack_top");
+    if (cJSON_IsArray(tmp))
+	{
+	   if (cJSON_GetArraySize(tmp) < 7)
+	   {
+		   obj->diam = 1;
+	   }
+	   else
+	   {
+			tmp = cJSON_GetArrayItem(tmp, 6);
+			obj->diam = tmp->valueint;
+    		cJSON* tmp2 = cJSON_GetObjectItemCaseSensitive(part, "node_stack_down");
+			if (cJSON_IsArray(tmp))
+			{
+			   if (cJSON_GetArraySize(tmp) >= 7)
+			   {
+					tmp = cJSON_GetArrayItem(tmp2, 6);
+					if ((enum diameter) tmp->valueint != obj->diam)
+						errx(1, "diameter in coupling component with different sizes");
+			   }
+			}
+	   }
+	}
+	else
+		return NULL;
+
     cJSON_Delete(file);
     return obj;
 }
