@@ -337,7 +337,7 @@
                   </packing>
                 </child>
                 <child>
-                  <object class="GtkScale">
+                  <object class="GtkScale" id="id_deltav">
                     <property name="visible">True</property>
                     <property name="can-focus">True</property>
                     <property name="adjustment">deltav</property>
@@ -412,7 +412,7 @@
                   </packing>
                 </child>
                 <child>
-                  <object class="GtkScale">
+                  <object class="GtkScale" id="id_rpp_max">
                     <property name="visible">True</property>
                     <property name="can-focus">True</property>
                     <property name="adjustment">rpp_max</property>
@@ -426,11 +426,12 @@
                   </packing>
                 </child>
                 <child>
-                  <object class="GtkScale">
+                  <object class="GtkScale" id="id_rpp_min">
                     <property name="visible">True</property>
                     <property name="can-focus">True</property>
                     <property name="adjustment">rpp_min</property>
                     <property name="round-digits">1</property>
+                    <property name="digits">5</property>
                     <property name="value-pos">right</property>
                   </object>
                   <packing>
