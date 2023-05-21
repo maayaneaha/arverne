@@ -1,5 +1,8 @@
 #include "interface.h"
-
+#include "utils.h"
+#include "loader.h"
+#include "algo/algopti.h"
+#include "basic_display/basic_display.h"
 typedef struct GUI
 {
 	GtkWindow* interface;
@@ -21,10 +24,13 @@ typedef struct GUI
 	//GtkAdjustment* binadj;
 	//GtkAdjustment* conadj;
 	//GtkAdjustment* rotadj;
+	GtkAdjustment* rpp_min;
+	GtkAdjustment* rpp_max;
+	GtkAdjustment* deltav;
     GtkButton* MenuButton;
-	GtkScale* binarise_scale;
-	GtkScale* contrast_scale;
-	GtkScale* rotation_scale;
+	GtkScale* scale_rpp_min;
+	GtkScale* scale_rpp_max;
+	GtkScale* scale_deltav;
 	int activate;
 	GtkButton* menuback;
 }GUI;
@@ -59,37 +65,37 @@ void display_result(GtkImage* image_holder, gchar* result_file)
 	display_image(image_holder, result_file);
 }
 
-/*
-void binarise_scale_update(GtkAdjustment* k, gpointer user)
-{
-	GUI* gui = user;
-	if (activate == 1)
-	{
-		process("output.bmp",gtk_adjustment_get_value(gui->conadj),gtk_adjustment_get_value(gui->binadj),1);
-	}
-	else
-	{
-		process("output.bmp",gtk_adjustment_get_value(gui->conadj),gtk_adjustment_get_value(gui->binadj),0);
-	}	
-	//gui->filename = "../processing/output.bmp";
-	display_image(gui->image_holder, "output_1.bmp");
-}
 
-void contrast_scale_update(GtkAdjustment* i, gpointer user)
-{
-	GUI* gui = user;
-	if (activate == 1)
-	{
-		process("output.bmp",gtk_adjustment_get_value(gui->conadj),gtk_adjustment_get_value(gui->binadj),1);
-	}
-	else
-	{
-		process("output.bmp",gtk_adjustment_get_value(gui->conadj),gtk_adjustment_get_value(gui->binadj),0);
-	}	
-	//gui->filename = "../processing/output.bmp";
-	display_image(gui->image_holder, "output_1.bmp");
-}
-*/
+/*void binarise_scale_update(GtkAdjustment* k, gpointer user)*/
+/*{*/
+	/*GUI* gui = user;*/
+	/*if (activate == 1)*/
+	/*{*/
+		/*process("output.bmp",gtk_adjustment_get_value(gui->conadj),gtk_adjustment_get_value(gui->binadj),1);*/
+	/*}*/
+	/*else*/
+	/*{*/
+		/*process("output.bmp",gtk_adjustment_get_value(gui->conadj),gtk_adjustment_get_value(gui->binadj),0);*/
+	/*}	*/
+	/*//gui->filename = "../processing/output.bmp";*/
+	/*display_image(gui->image_holder, "output_1.bmp");*/
+/*}*/
+
+/*void contrast_scale_update(GtkAdjustment* i, gpointer user)*/
+/*{*/
+	/*GUI* gui = user;*/
+	/*if (activate == 1)*/
+	/*{*/
+		/*process("output.bmp",gtk_adjustment_get_value(gui->conadj),gtk_adjustment_get_value(gui->binadj),1);*/
+	/*}*/
+	/*else*/
+	/*{*/
+		/*process("output.bmp",gtk_adjustment_get_value(gui->conadj),gtk_adjustment_get_value(gui->binadj),0);*/
+	/*}	*/
+	/*//gui->filename = "../processing/output.bmp";*/
+	/*display_image(gui->image_holder, "output_1.bmp");*/
+/*}*/
+
 
 /*void rot_display(GtkAdjustment* j, gpointer user)
 {
@@ -213,6 +219,35 @@ void start_button_clicked(GtkButton* b, gpointer user_data)
     gtk_widget_show(GTK_WIDGET(gui->solution));
 }
 
+void on_create_clicked(GtkButton* b, gpointer user_data)
+{
+    GUI* gui = (GUI*) user_data;
+	
+	// Utilise l'objet GtkScale
+	gdouble tmp_value = gtk_adjustment_get_value (gui->rpp_min);
+	double twrmin = (double) tmp_value;
+	
+
+	tmp_value = gtk_adjustment_get_value (gui->rpp_max);
+	double twrmax = (double) tmp_value;
+
+	tmp_value = gtk_adjustment_get_value (gui->deltav);
+	double deltav = (double) tmp_value;
+
+    Datas *d = create_datas();
+    load_parts(d);
+
+    d->deltaV_min = deltav;
+    d->TWR_min = twrmin;
+    d->TWR_max = twrmax;
+
+    int r = linear_algo(d);
+
+    basic_display(d->best_rocket);
+	/*double rpp_min = gtk_range_get_value(GTK_RANGE(gui->scale_rpp_min));*/
+	/*printf("La valeur du GtkScale est : %f\n", rpp_min);*/
+}
+
 int start_interface()
 {
 	gtk_init(0, NULL);
@@ -244,14 +279,19 @@ int start_interface()
 	GtkButton* menu_button = GTK_BUTTON(gtk_builder_get_object(builder, "MenuButton"));
     GtkButton* MenuButton = GTK_BUTTON(gtk_builder_get_object(builder, "MenuButton"));
     GtkButton* MenuButton1 = GTK_BUTTON(gtk_builder_get_object(builder, "MenuButton1"));
-	//GtkButton* resolve_button = GTK_BUTTON(gtk_builder_get_object(builder, "ResolveButton"));
+	GtkButton* resolve_button = GTK_BUTTON(gtk_builder_get_object(builder, "ResolveButton"));
 	//GtkSwitch* switch_button = GTK_SWITCH(gtk_builder_get_object(builder, "switch_button"));
 	//GtkAdjustment* binadj = GTK_ADJUSTMENT(gtk_builder_get_object(builder, "binadj"));
 	//GtkAdjustment* conadj = GTK_ADJUSTMENT(gtk_builder_get_object(builder, "conadj"));
 	//GtkAdjustment* rotadj = GTK_ADJUSTMENT(gtk_builder_get_object(builder, "rotadj"));
 	GtkButton* menuback = GTK_BUTTON(gtk_builder_get_object(builder, "menuback"));
-	//GtkScale* binarise_scale = GTK_SCALE(gtk_builder_get_object(builder, "binarise_scale"));
-	//GtkScale* contrast_scale = GTK_SCALE(gtk_builder_get_object(builder, "contrast_scale"));
+
+	GtkAdjustment* rpp_min = GTK_ADJUSTMENT(gtk_builder_get_object(builder, "rpp_min"));
+	GtkAdjustment* rpp_max = GTK_ADJUSTMENT(gtk_builder_get_object(builder, "rpp_max"));
+	GtkAdjustment* deltav = GTK_ADJUSTMENT(gtk_builder_get_object(builder, "deltav"));
+	GtkScale* scale_rpp_min = GTK_SCALE(gtk_builder_get_object(builder, "id_rpp_min"));
+	GtkScale* scale_rpp_max = GTK_SCALE(gtk_builder_get_object(builder, "id_rpp_max"));
+	GtkScale* scale_deltav = GTK_SCALE(gtk_builder_get_object(builder, "id_deltav"));
 
 	GUI gui={
 		.interface = interface,
@@ -273,6 +313,12 @@ int start_interface()
 		//.rotadj = rotadj,
 		//.binarise_scale = binarise_scale,
 		//.contrast_scale = contrast_scale,
+		.rpp_min = rpp_min,
+		.rpp_max = rpp_max,
+		.deltav = deltav,
+		.scale_rpp_min = scale_rpp_min,
+		.scale_rpp_max = scale_rpp_max,
+		.scale_deltav = scale_deltav,
 		.menuback = menuback,
 	};
 
@@ -287,6 +333,9 @@ int start_interface()
 
 	g_signal_connect(MenuButton, "clicked", G_CALLBACK(going_back_menu), &gui);
 	g_signal_connect(MenuButton1, "clicked", G_CALLBACK(going_back_menu), &gui);
+
+	// ResolveButton
+	g_signal_connect(resolve_button, "clicked", G_CALLBACK(on_create_clicked), &gui);
 
 	/*g_signal_connect(refresh_button, "clicked", G_CALLBACK(refresh), &gui);*/
 	/*g_signal_connect(menu_button, "clicked", G_CALLBACK(on_menu_clicked), &gui);*/
