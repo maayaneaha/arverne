@@ -20,7 +20,7 @@ Engine* search_engine(Datas* d, Rocket* r, double dv_needed, int* ne, double* re
     sprintf(str, "nbr_engines %zu\n", d->nbr_engines[0]);
     debug_write(str);
 #endif
-    for (size_t nb_diam; nb_diam < NBR_DIAMS; nb_diam++)
+    for (size_t nb_diam = 0; nb_diam < NBR_DIAMS; nb_diam++)
     {
         for(size_t i = 0; i < d->nbr_engines[i]; i++)
         {
