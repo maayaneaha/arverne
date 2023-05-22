@@ -162,7 +162,7 @@ int calculate_rocket_infos(Rocket *r);
 Part *create_tank(Tank *t);
 Part *create_engine(Engine *e);
 Part *create_decoupler(Decoupler *d);
-Stage *create_stage(Datas *d, enum diameter top_diam);
+Stage *create_stage(Datas *d);
 Rocket *create_rocket(Datas *d);
 Rocket *copy_rocket(Rocket *r);
 int create_tank_stack(Datas *d, Stage *s, double mass_fuel);
