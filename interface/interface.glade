@@ -237,6 +237,7 @@
                     <property name="visible">True</property>
                     <property name="can-focus">True</property>
                     <property name="adjustment">mass_u</property>
+
                     <property name="lower-stepper-sensitivity">on</property>
                     <property name="upper-stepper-sensitivity">on</property>
                     <property name="show-fill-level">True</property>
@@ -389,6 +390,7 @@
                 </child>
                 <child>
                   <object class="GtkScrolledWindow" id="scrolledresult">
+
                     <property name="visible">True</property>
                     <property name="can-focus">True</property>
                     <property name="margin-end">25</property>

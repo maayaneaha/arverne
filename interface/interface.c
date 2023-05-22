@@ -414,7 +414,6 @@ int start_interface()
 		.MenuButton = menu_button,
 		.screen = screen,
 		.scrolledresult = scrolledresult,
-		
 		.PreviousButton = PreviousButton,
 		.NextButton = NextButton,
 		.LoadButton = LoadButton,
