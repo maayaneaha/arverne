@@ -234,6 +234,7 @@ void start_button_clicked(GtkButton* b, gpointer user_data)
 Stage* get_stage_from_data(Datas* d, int n)
 {
 	Stage* s = d->best_rocket->first_stage;
+	return s;
 }
 
 void on_create_clicked(GtkButton* b, gpointer user_data)
