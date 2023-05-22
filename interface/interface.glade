@@ -11,7 +11,7 @@
     <property name="page-size">1</property>
   </object>
   <object class="GtkAdjustment" id="mass_u">
-    <property name="upper">501</property>
+    <property name="upper">10001</property>
     <property name="step-increment">1</property>
     <property name="page-increment">1</property>
     <property name="page-size">1</property>
@@ -237,7 +237,6 @@
                     <property name="visible">True</property>
                     <property name="can-focus">True</property>
                     <property name="adjustment">mass_u</property>
-
                     <property name="lower-stepper-sensitivity">on</property>
                     <property name="upper-stepper-sensitivity">on</property>
                     <property name="show-fill-level">True</property>
@@ -390,7 +389,6 @@
                 </child>
                 <child>
                   <object class="GtkScrolledWindow" id="scrolledresult">
-
                     <property name="visible">True</property>
                     <property name="can-focus">True</property>
                     <property name="margin-end">25</property>
