@@ -90,7 +90,6 @@ Engine*** load_Engines(char* path)
 }
 
 Decoupler*** load_Decouplers(char* path) {
-    printf("fwefwf\n");
     int default_size = 50;
     int position = 0;
     char **files = malloc(sizeof(char *) * default_size);
@@ -106,7 +105,6 @@ Decoupler*** load_Decouplers(char* path) {
     for (int i = 0; files[i] != NULL; i++) {
         Decoupler *tmp = load_Decoupler(files[i]);
         if (tmp != NULL) {
-            printf("tmp->diam: %u\n", tmp->diam);
             decouplers[tmp->diam][cur[tmp->diam]++] = tmp;
         }
         free(files[i]);
@@ -250,6 +248,7 @@ Tank* load_Tank(char* filename)
       /*errx(1,"cost is not found");*/
    tmp = cJSON_GetObjectItemCaseSensitive(part,"node_stack_top");
    if(cJSON_IsArray(tmp))
+   {
 	   if (cJSON_GetArraySize(tmp) < 7)
 	   {
 		   obj->top_diam = 1;
@@ -577,23 +576,19 @@ int load_parts(Datas *d)
         d->nbr_tanks[i] = nbr_tanks;
     }
     d->engines = load_Engines("bdd/Engine");
-    printf("q0\n");
     for (size_t i = 0; i < NBR_DIAMS; i++)
     {
         size_t nbr_engines;
         for (nbr_engines = 0; d->engines[i][nbr_engines] != NULL; nbr_engines++);
         d->nbr_engines[i] = nbr_engines;
     }
-    printf("q1\n");
     d->decouplers = load_Decouplers("bdd/Coupling");
     for (size_t i = 0; i < NBR_DIAMS; i++)
     {
-        printf("ewfwe%zu\n", i);
         size_t nbr_decouplers;
         for (nbr_decouplers = 0; d->decouplers[i][nbr_decouplers] != NULL; nbr_decouplers++);
         d->nbr_decouplers[i] = nbr_decouplers;
     }
-    printf("q2\n");
     return 1;
 }
 

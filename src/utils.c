@@ -221,6 +221,7 @@ Stage *create_stage(Datas *d, enum diameter top_diam)
     s->decoupler = create_decoupler(d->decouplers[top_diam][0]);
     s->prev = NULL;
     s->next = NULL;
+    s->top_diam = top_diam;
     return s;
 }
 
@@ -310,10 +311,11 @@ int create_tank_stack(Datas *d, Stage *s, double mass_fuel)
     // diam adaptater
     Part *prev = NULL;
     if (s->top_diam != s->down_diam) {
+        printf("d->tanks[s->top_diam][i] %zu\n", (size_t) s->top_diam);
         for (size_t i = 0; i < d->nbr_tanks[s->top_diam]; i++) {
             if (d->tanks[s->top_diam][i]->top_diam == s->top_diam &&
-                d->tanks[s->top_diam][i]->down_diam == s->down_diam) {
-
+                d->tanks[s->top_diam][i]->down_diam == s->down_diam)
+            {
                 prev = create_tank(d->tanks[s->top_diam][i]);
                 break;
             }
@@ -321,7 +323,8 @@ int create_tank_stack(Datas *d, Stage *s, double mass_fuel)
         if (!prev) {
             return 0;
         }
-    } else {
+    }
+    else {
         for (size_t i = 0; i < d->nbr_tanks[s->down_diam]; i++) {
             if (d->tanks[s->down_diam][i]->top_diam == d->tanks[s->down_diam][i]->down_diam &&
                 d->tanks[s->down_diam][i]->top_diam == s->down_diam &&

@@ -26,6 +26,8 @@ Engine* search_engine(Datas* d, Rocket* r, double dv_needed, int* ne, double* re
         {
             int nbr_engines = 1;
             Engine* e = d->engines[nb_diam][i];
+            if (e == 0)
+                continue;
 #if DEBUG
             printf("e->fuel %u %u\n", e->fuel, FUELOX);
 #endif
@@ -57,6 +59,8 @@ Engine* search_engine(Datas* d, Rocket* r, double dv_needed, int* ne, double* re
 #if DEBUG
                 printf("mass_fuel = %f\n", mass_fuel);
 #endif
+                if (d->decouplers[nb_diam][0] == 0)
+                    break;
                 mass_total = r->total_mass + mass_fuel * (1 + beta) + e->mass * nbr_engines + d->decouplers[nb_diam][0]->mass;
                 TWR = calculate_TWR(mass_total, e->thrust_atm * nbr_engines, calculate_g());
 #if DEBUG
@@ -128,6 +132,10 @@ int search_stage(Datas* d, Rocket* r, double dv_needed)
     // int create_tank_stack(Datas *d, Stage *s, enum diameter diam, double mass_fuel)
     Stage* s = create_stage(d, d_last_stage);
     s->engine = create_engine(optimal_engine);
+    if (s->top_diam > optimal_engine->diam)
+        s->down_diam = s->top_diam;
+    else
+        s->down_diam = optimal_engine->diam;
     create_tank_stack(d, s, minimal_mass);
     s->nbr_engines = nbr_engines;
     append_stage(r, s);
