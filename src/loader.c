@@ -663,11 +663,24 @@ cJSON* export_to_json_Engine(Engine* obj)
 {
 	if (obj == NULL)
 		return cJSON_CreateNull();
+
+	printf("yes\n");
 	
 	cJSON* result = cJSON_CreateObject();
 	cJSON* tmp_value = NULL;
 
-	tmp_value = cJSON_CreateString(obj->name);
+	printf("mid\n");
+	if (obj->name == NULL)
+	{
+		tmp_value = cJSON_CreateNull();
+	}
+	else
+	{
+		printf("a\n");
+		tmp_value = cJSON_CreateString(obj->name);
+		printf("b\n");
+	}
+
 	cJSON_AddItemToObject(result, "name", tmp_value);
 
 	tmp_value = cJSON_CreateNumber(obj->mass);
@@ -699,6 +712,7 @@ cJSON* export_to_json_Engine(Engine* obj)
 
 	tmp_value = cJSON_CreateNumber(obj->gimbal);
 	cJSON_AddItemToObject(result, "gimbal", tmp_value);
+	printf("non\n");
 
 	return result;
 }
@@ -1220,6 +1234,9 @@ int generate_Datas(Datas *d, char* path)
 	cJSON* object = cJSON_CreateObject();
 	cJSON* tmp_value = NULL;
 
+
+	printf("ouai\n");	
+
 	tmp_value = cJSON_CreateNumber(d->deltaV_min);
 	cJSON_AddItemToObject(object, "deltaV_min", tmp_value);
 
@@ -1246,6 +1263,8 @@ int generate_Datas(Datas *d, char* path)
 	}
 	cJSON_AddItemToObject(object, "nbr_tanks", tmp_value);
 
+	printf("ouai\n");	
+
 	tmp_value = cJSON_CreateArray();
 	for (int i = 0; i < NBR_DIAMS; i++)
 	{
@@ -1264,7 +1283,9 @@ int generate_Datas(Datas *d, char* path)
 
 	tmp_value = cJSON_CreateNumber(d->beta);
 	cJSON_AddItemToObject(object, "beta", tmp_value);
-	
+
+	printf("ouai\n");	
+
 	tmp_value = cJSON_CreateArray();
 	for (int k = 0; k < NBR_DIAMS; k++)
 	{
@@ -1279,6 +1300,7 @@ int generate_Datas(Datas *d, char* path)
 	cJSON_AddItemToObject(object, "decouplers", tmp_value);
 
 	tmp_value = cJSON_CreateArray();
+	printf("putain de merde\n");
 	for (int k = 0; k < NBR_DIAMS; k++)
 	{
 		cJSON* tmp_value2 = cJSON_CreateArray();
@@ -1308,6 +1330,9 @@ int generate_Datas(Datas *d, char* path)
 	cJSON_AddItemToObject(object, "best_rocket", tmp_value);
 
 	// faut cJSON_Print(object) et écrire le résultat dans le fichier
+
+
+	printf("ouai end\n");	
 
 	FILE* ptr = fopen(path,"w");
 	char* result = cJSON_Print(object);

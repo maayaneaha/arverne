@@ -3,8 +3,8 @@
 CC			= gcc
 CPPFLAGS	= -Iinclude/
 CFLAGS 		= -Wall -Werror -Wextra -std=gnu99 -Wno-unused-variable -Wno-unused-function -Wno-unused-but-set-variable -Wno-unused-parameter `pkg-config --cflags gtk+-3.0`
-LDLIBS = -lm `pkg-config --libs gtk+-3.0` -export-dynamic
-LDFLAGS = -rdynamic
+LDLIBS 		= -lm `pkg-config --libs gtk+-3.0` -export-dynamic
+LDFLAGS 	= -rdynamic
 
 EXE = main.out
 
@@ -18,7 +18,7 @@ release: $(EXE)
 
 debug: CPPFLAGS += -Itest/
 debug: CFLAGS += -g -DDEBUG
-debug: LDFLAGS += -ggdb3
+debug: LDFLAGS += -ggdb3 -g -DDEBUG
 debug: $(EXE)
 
 $(EXE): $(OBJ)

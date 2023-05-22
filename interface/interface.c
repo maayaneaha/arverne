@@ -34,10 +34,14 @@ typedef struct GUI
 	GtkButton* NextButton;
 	GtkButton* LoadButton;
 	GtkButton* SaveButton;
+	GtkButton* CancelButton;
 	GtkScale* scale_mass_u;
 	GtkScale* scale_rpp_min;
 	GtkScale* scale_rpp_max;
 	GtkScale* scale_deltav;
+
+	GtkFileChooserDialog* SaveDialog;
+
 
 	GtkTextBuffer* textbuffer_rocketinfo;
 	GtkTextView* rocketinfo;
@@ -324,10 +328,7 @@ void on_create_clicked(GtkButton* b, gpointer user_data)
 
 void on_previous_clicked(GtkButton* b, gpointer user_data)
 {
-	printf("oui\n");
-    GUI* gui = (GUI*) user_data;
-
-	gtk_text_buffer_set_text(gui->textbuffer_rocketinfo, "Nouveau texte du GtkTextView", -1);
+	return;
 }
 
 void on_next_clicked(GtkButton* b, gpointer user_data)
@@ -337,12 +338,18 @@ void on_next_clicked(GtkButton* b, gpointer user_data)
 
 void on_load_clicked(GtkButton* b, gpointer user_data)
 {
-	return;
+	printf("hihi\n");
+    GUI* gui = (GUI*) user_data;
+	gui->result_data = load_Datas("rocket.json");
+	printf("loaded!\n");
 }
 
 void on_save_clicked(GtkButton* b, gpointer user_data)
 {
-	return;
+	printf("hihi\n");
+	GUI* gui = (GUI*) user_data;
+	generate_Datas(gui->result_data, "rocket.json");
+	printf("Saved!");
 }
 
 int start_interface()
@@ -395,10 +402,13 @@ int start_interface()
 	GtkButton* PreviousButton = GTK_BUTTON(gtk_builder_get_object(builder, "PreviousButton"));
 	GtkButton* NextButton = GTK_BUTTON(gtk_builder_get_object(builder, "NextButton"));
 	GtkButton* LoadButton = GTK_BUTTON(gtk_builder_get_object(builder, "LoadButton"));
-	GtkButton* SaveButton = GTK_BUTTON(gtk_builder_get_object(builder, "SaveButton"));
+	GtkButton* SaveButton = GTK_BUTTON(gtk_builder_get_object(builder, "SaveButto"));
+	GtkButton* CancelButton = GTK_BUTTON(gtk_builder_get_object(builder, "CancelButton"));
 	GtkScrolledWindow* scrolledresult = GTK_SCROLLED_WINDOW(gtk_builder_get_object(builder, "scrolledresult"));
 	GtkTextView* rocketinfo = GTK_TEXT_VIEW(gtk_builder_get_object(builder, "textview_rocketinfo"));
 	GtkTextBuffer* textbuffer_rocketinfo = GTK_TEXT_BUFFER(gtk_builder_get_object(builder, "textbuffer_rocketinfo"));
+
+	GtkFileChooserDialog* SaveDialog = GTK_FILE_CHOOSER_DIALOG(gtk_builder_get_object(builder, "SaveDialog"));
 
 	GUI gui={
 		.interface = interface,
@@ -418,7 +428,8 @@ int start_interface()
 		.NextButton = NextButton,
 		.LoadButton = LoadButton,
 		.SaveButton = SaveButton,
-
+		.CancelButton = CancelButton,
+		.SaveDialog  = SaveDialog,
 		.rocketinfo = rocketinfo,
 		.textbuffer_rocketinfo = textbuffer_rocketinfo,
 		.activate = 0,
@@ -452,6 +463,7 @@ int start_interface()
 	g_signal_connect(NextButton, "clicked", G_CALLBACK(on_next_clicked), &gui);
 	g_signal_connect(SaveButton, "clicked", G_CALLBACK(on_save_clicked), &gui);
 	g_signal_connect(LoadButton, "clicked", G_CALLBACK(on_load_clicked), &gui);
+	g_signal_connect(CancelButton, "clicked", G_CALLBACK(on_load_clicked), &gui);
 
 	/*g_signal_connect(refresh_button, "clicked", G_CALLBACK(refresh), &gui);*/
 	/*g_signal_connect(menu_button, "clicked", G_CALLBACK(on_menu_clicked), &gui);*/
