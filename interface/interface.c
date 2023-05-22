@@ -281,7 +281,7 @@ void on_create_clicked(GtkButton* b, gpointer user_data)
 	g_string_append_printf(result, "DeltaV_min: %f\n", gui->result_data->deltaV_min);
 	g_string_append_printf(result, "TWR_min: %f\n", gui->result_data->TWR_min);
 	g_string_append_printf(result, "TWR_max: %f\n", gui->result_data->TWR_max);
-	g_string_append_printf(result, "nbr_engines: %ln\n", gui->result_data->nbr_engines);
+	g_string_append_printf(result, "nbr_engines: %ld\n", gui->result_data->nbr_engines);
 	g_string_append_printf(result, "mass_payload: %f\n", gui->result_data->mass_payload);
 	
 	Rocket* best_rocket = gui->result_data->best_rocket;
