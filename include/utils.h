@@ -15,7 +15,6 @@
 #define OXFUEL_DENSITY 5
 #define FUEL_COST 0.8
 #define OX_COST 0.18
-#define NBR_DIAMS 8
 
 enum diameter {TINY = 0, SMALL = 1, MEDIUM = 2, LARGE = 3, EXTRALARGE = 4, MK2 = 5, MK3 = 6, X = 7}; // MK1 = SMALL
 enum fuel_type {FUELOX, LIQUIDFUEL, MONOPROPELLANT, SOLIDFUEL, XENON, ORE, ELETRIC};
@@ -145,12 +144,12 @@ struct datas
     double TWR_min;
     double TWR_max;
     enum diameter diameter_payload;
-    Tank ***tanks;
-    size_t nbr_tanks[NBR_DIAMS];
-    Engine ***engines;
-    size_t nbr_engines[NBR_DIAMS];
-    Decoupler ***decouplers;
-    size_t nbr_decouplers[NBR_DIAMS];
+    Tank **tanks;
+    size_t nbr_tanks;
+    Engine **engines;
+    size_t nbr_engines;
+    Decoupler **decouplers;
+    size_t nbr_decouplers;
     Rocket *best_rocket;
     double beta;
 };
