@@ -1132,14 +1132,30 @@ Datas* load_Datas(char* path)
 	tmp_value = cJSON_GetObjectItemCaseSensitive(obj, "diameter_payload");
 	result->diameter_payload = tmp_value->valueint;
 
+	cJSON* i = NULL;
+	int count = 0;
+
 	tmp_value = cJSON_GetObjectItemCaseSensitive(obj, "nbr_tanks");
-	result->nbr_tanks = tmp_value->valueint;
+	cJSON_ArrayForEach(i, tmp_value)
+	{
+		result->nbr_tanks[count++] = i->valueint;
+	}
+	count = 0;
+
 
 	tmp_value = cJSON_GetObjectItemCaseSensitive(obj, "nbr_engines");
-	result->nbr_engines = tmp_value->valueint;
+	cJSON_ArrayForEach(i, tmp_value)
+	{
+		result->nbr_engines[count++] = i->valueint;
+	}
+	count = 0;
 
 	tmp_value = cJSON_GetObjectItemCaseSensitive(obj, "nbr_decouplers");
-	result->nbr_decouplers = tmp_value->valueint;
+	cJSON_ArrayForEach(i, tmp_value)
+	{
+		result->nbr_engines[count++] = i->valueint;
+	}
+	count = 0;
 
 	tmp_value = cJSON_GetObjectItemCaseSensitive(obj, "beta");
 	result->beta = tmp_value->valuedouble;
@@ -1148,32 +1164,53 @@ Datas* load_Datas(char* path)
 	result->best_rocket = import_json_Rocket(tmp_value);
 
 	tmp_value = cJSON_GetObjectItemCaseSensitive(obj, "tanks");
-	result->tanks = malloc(sizeof(Tank) * (result->nbr_tanks + 1));
-	size_t i;
-	for (i = 0; i < result->nbr_tanks; i++)
+	result->tanks = malloc(sizeof(Tank**) * (NBR_DIAMS + 1));
+	int count_diams;
+	for (count_diams = 0; count_diams < NBR_DIAMS; count_diams++)
 	{
-		cJSON* j = cJSON_GetArrayItem(tmp_value, i);
-		result->tanks[i] = import_json_Tank(j);
+		result->tanks[count_diams] = malloc(sizeof(Tank*) * (result->nbr_tanks[count_diams] + 1));
+		cJSON* array_diameter = cJSON_GetArrayItem(tmp_value, count_diams);
+		size_t j = 0;
+		for (j = 0; j < result->nbr_tanks[count_diams]; j++)
+		{
+			cJSON* item = cJSON_GetArrayItem(array_diameter, j);
+			result->tanks[count_diams][j] = import_json_Tank(item);
+		}
+		result->tanks[count_diams][j] = NULL;
 	}
-	result->tanks[i] = NULL;
+	result->tanks[count_diams] = NULL;
 
 	tmp_value = cJSON_GetObjectItemCaseSensitive(obj, "engines");
-	result->engines = malloc(sizeof(Engine) * (result->nbr_engines + 1));
-	for (i = 0; i < result->nbr_engines; i++)
+	result->engines = malloc(sizeof(Engine**) * (NBR_DIAMS + 1));
+	for (count_diams = 0; count_diams < NBR_DIAMS; count_diams++)
 	{
-		cJSON* j = cJSON_GetArrayItem(tmp_value, i);
-		result->engines[i] = import_json_Engine(j);
+		result->engines[count_diams] = malloc(sizeof(Engine*) * (result->nbr_engines[count_diams] + 1));
+		cJSON* array_diameter = cJSON_GetArrayItem(tmp_value, count_diams);
+		size_t j = 0;
+		for (j = 0; j < result->nbr_engines[count_diams]; j++)
+		{
+			cJSON* item = cJSON_GetArrayItem(array_diameter, j);
+			result->engines[count_diams][j] = import_json_Engine(item);
+		}
+		result->engines[count_diams][j] = NULL;
 	}
-	result->engines[i] = NULL;
+	result->engines[count_diams] = NULL;
 
 	tmp_value = cJSON_GetObjectItemCaseSensitive(obj, "decouplers");
-	result->decouplers = malloc(sizeof(Decoupler) * (result->nbr_decouplers + 1));
-	for (i = 0; i < result->nbr_decouplers; i++)
+	result->decouplers = malloc(sizeof(Decoupler**) * (NBR_DIAMS + 1));
+	for (count_diams = 0; count_diams < NBR_DIAMS; count_diams++)
 	{
-		cJSON* j = cJSON_GetArrayItem(tmp_value, i);
-		result->decouplers[i] = import_json_Decoupler(j);
+		result->decouplers[count_diams] = malloc(sizeof(Decoupler*) * (result->nbr_decouplers[count_diams] + 1));
+		cJSON* array_diameter = cJSON_GetArrayItem(tmp_value, count_diams);
+		size_t j = 0;
+		for (j = 0; j < result->nbr_decouplers[count_diams]; j++)
+		{
+			cJSON* item = cJSON_GetArrayItem(array_diameter, j);
+			result->decouplers[count_diams][j] = import_json_Decoupler(item);
+		}
+		result->decouplers[count_diams][j] = NULL;
 	}
-	result->decouplers[i] = NULL;
+	result->decouplers[count_diams] = NULL;
 
 	return result;
 }
