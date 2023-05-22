@@ -112,7 +112,7 @@ int search_stage(Datas* d, Rocket* r, double dv_needed)
     // int create_tank_stack(Datas *d, Stage *s, enum diameter diam, double mass_fuel)
     Stage* s = create_stage(d);
     s->engine = create_engine(optimal_engine);
-    create_tank_stack(d, s, optimal_engine->diam, minimal_mass);
+    create_tank_stack(d, s, minimal_mass);
     s->nbr_engines = nbr_engines;
     append_stage(r, s);
     //todo gerer le DV en trop

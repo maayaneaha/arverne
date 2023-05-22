@@ -73,6 +73,7 @@ Engine** load_Engines(char* path)
             if (tmp->diam >  X)
                 err(2, "tmp->name = %s, tmp->diam = %i", tmp->name, tmp->diam);
             engines[cur++] = tmp;
+            printf("few\n");
 			free(files[i]);
 		}
 	}
@@ -553,6 +554,7 @@ int load_parts(Datas *d)
     size_t nbr_engines;
     for (nbr_engines = 0; d->engines[nbr_engines] != NULL; nbr_engines++);
     d->nbr_engines = nbr_engines;
+    //printf("ew %zu\n", nbr_engines);
 
     d->decouplers = load_Decouplers("bdd/Coupling");
     size_t nbr_decouplers;
