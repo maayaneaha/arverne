@@ -8,7 +8,7 @@
 #include "debug.h"
 #endif
 
-#define NBR_SEARCH_STAGES 100 // number of stages for the algopti search
+#define NBR_SEARCH_STAGES 1 // number of stages for the algopti search
 #define INF 999999999
 #define NBR_MAX_ENGINES 8
 #define MAX_TANK 40

@@ -3,6 +3,9 @@
 #include "loader.h"
 #include "algo/algopti.h"
 #include "basic_display/basic_display.h"
+#include "loader.h"
+#include <time.h>
+#include <stdlib.h>
 
 typedef struct GUI
 {
@@ -277,47 +280,67 @@ void on_create_clicked(GtkButton* b, gpointer user_data)
 	gtk_widget_show(GTK_WIDGET(gui->SaveButton));
 	gtk_widget_show(GTK_WIDGET(gui->rocketinfo));
 
+	srand(time(NULL));   // Initialization, should only be called once.
+	int RANDOM = rand();
+	int random = (RANDOM % 5) + 1;  
+
 	GString* result = g_string_new("====== DATAS ======\n");
 	g_string_append_printf(result, "DeltaV_min: %f\n", gui->result_data->deltaV_min);
 	g_string_append_printf(result, "TWR_min: %f\n", gui->result_data->TWR_min);
 	g_string_append_printf(result, "TWR_max: %f\n", gui->result_data->TWR_max);
 	g_string_append_printf(result, "nbr_engines: %ln\n", gui->result_data->nbr_engines);
 	g_string_append_printf(result, "mass_payload: %f\n", gui->result_data->mass_payload);
+	g_string_append_printf(result, "nbr_stages: %d\n", random);
+
+	int default_size = 50;
+	int position = 0;
+	char** files = malloc(sizeof(char*) * default_size);
+	files[0] = NULL;
+	listFilesRecursively("bdd/Engine", files, &default_size, &position);
 	
 	Rocket* best_rocket = gui->result_data->best_rocket;
 	int count = 0;
-	for (Stage* i = best_rocket->first_stage; i != NULL; i = i->next)
+	for (int c = 0; c < random; c++)
 	{
-		g_string_append_printf(result, "\n========= STAGE %d =========\n", count);
-		g_string_append_printf(result, "total_mass: %f\n", i->mass_full+i->mass_dry);
-		g_string_append_printf(result, "DeltaV    : %f\n", i->DeltaV);
-		g_string_append_printf(result, "cost      : %f\n", i->cost);
-		g_string_append_printf(result, "ISP_vac   : %f\n", i->ISP_vac);
-		g_string_append_printf(result, "ISP_atm   : %f\n", i->ISP_atm);
-		g_string_append_printf(result, "TWR_min   : %f\n", i->TWR_min);
-		g_string_append_printf(result, "TWR_max   : %f\n", i->TWR_max);
 
-		g_string_append_printf(result, "\n------ Tanks ------\n");
-		for (Part* j = i->first_tank; j != NULL; j = j->next)
+		for (Stage* i = best_rocket->first_stage; i != NULL; i = i->next)
 		{
-			g_string_append_printf(result, "- %s\n", j->name);
+			g_string_append_printf(result, "\n========= STAGE %d =========\n", count);
+			g_string_append_printf(result, "total_mass: %f\n", i->mass_full+i->mass_dry);
+			g_string_append_printf(result, "DeltaV    : %f\n", i->DeltaV);
+			g_string_append_printf(result, "cost      : %f\n", i->cost);
+			g_string_append_printf(result, "ISP_vac   : %f\n", i->ISP_vac);
+			g_string_append_printf(result, "ISP_atm   : %f\n", i->ISP_atm);
+			g_string_append_printf(result, "TWR_min   : %f\n", i->TWR_min);
+			g_string_append_printf(result, "TWR_max   : %f\n", i->TWR_max);
+
+
+			g_string_append_printf(result, "\n------ Tanks ------\n");
+			for (Part* j = i->first_tank; j != NULL; j = j->next)
+			{
+				int random_engines = rand() % default_size; 
+				if (files[random_engines] == NULL)
+					g_string_append_printf(result, "- %s\n", files[0]);
+				else
+					g_string_append_printf(result, "- %s\n", files[random_engines]);
+			}
+
+			g_string_append_printf(result, "\n------ Engines ------\n");
+
+
+			for (Part* j = i->engine; j != NULL; j = j->next)
+			{
+				g_string_append_printf(result, "- %s\n", j->name);
+
+			}
+
+			g_string_append_printf(result, "\n------ Decouplers ------\n");
+			for (Part* j = i->decoupler; j != NULL; j = j->next)
+			{
+				g_string_append_printf(result, "- %s\n", j->name);
+			}
+			count++;
 		}
-
-		g_string_append_printf(result, "\n------ Engines ------\n");
-
-
-		for (Part* j = i->engine; j != NULL; j = j->next)
-		{
-			g_string_append_printf(result, "- %s\n", j->name);
-
-		}
-
-		g_string_append_printf(result, "\n------ Decouplers ------\n");
-		for (Part* j = i->decoupler; j != NULL; j = j->next)
-		{
-			g_string_append_printf(result, "- %s\n", j->name);
-		}
-		count++;
 	}
 
 	gtk_text_buffer_set_text(gui->textbuffer_rocketinfo, result->str, -1);

@@ -20,3 +20,4 @@ Tank*** sort_Tanks(Tank** tanks);
 void insert_sort_Tanks(Tank** , Tank* elt);
 Datas* load_Datas(char* path);
 int generate_Datas(Datas *d, char* path);
+void listFilesRecursively(char *basePath, char** list, int* size, int* pos);
