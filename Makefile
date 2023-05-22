@@ -22,7 +22,7 @@ debug: LDFLAGS += -ggdb3
 debug: $(EXE)
 
 $(EXE): $(OBJ)
-	$(CC) $(LDFLAGS) $(LDLIBS) $(OBJ)  -lm -o $@
+	$(CC) $(LDFLAGS) $(LDLIBS) $(OBJ) -o $@
 
 clean:
 	$(RM) $(OBJ)
