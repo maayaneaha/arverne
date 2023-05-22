@@ -55,78 +55,95 @@ void listFilesRecursively(char *basePath, char** list, int* size, int* pos)
     closedir(dir);
 }
 
-Engine** load_Engines(char* path)
+Engine*** load_Engines(char* path)
 {
 	int default_size = 50;
 	int position = 0;
 	char** files = malloc(sizeof(char*) * default_size);
 	files[0] = NULL;
 	listFilesRecursively(path, files, &default_size, &position);
-	Engine** engines = malloc(sizeof(Engine*) * (position + 1));
-	int cur = 0;
+	Engine*** engines = malloc(sizeof(Engine**) * (NBR_DIAMS+1));
+    for (size_t i = 0; i < NBR_DIAMS; i++)
+    {
+        engines[i] = malloc(sizeof(Engine*) * (position + 1));
+    }
+	engines[NBR_DIAMS] = NULL;
+	int cur[NBR_DIAMS] = {0};
 
 	for (int i = 0; files[i] != NULL; i++)
 	{
 		Engine* tmp = load_Engine(files[i]);
 		if (tmp != NULL)
 		{
-			engines[cur++] = tmp;
+            if (tmp->diam >  X)
+                err(2, "tmp->name = %s, tmp->diam = %i", tmp->name, tmp->diam);
+			engines[tmp->diam][cur[tmp->diam]++] = tmp;
+			free(files[i]);
 		}
-		free(files[i]);
 	}
 	free(files);
-	engines[cur] = NULL;
-
+    for (size_t i = 0; i < NBR_DIAMS; i++)
+    {
+        engines[i][cur[i]] = NULL;
+    }
 	return engines;
 }
 
-Decoupler** load_Decouplers(char* path)
-{
-	int default_size = 50;
-	int position = 0;
-	char** files = malloc(sizeof(char*) * default_size);
-	files[0] = NULL;
-	listFilesRecursively(path, files, &default_size, &position);
-	Decoupler** decouplers = malloc(sizeof(Decoupler*) * (position + 1));
-	int cur = 0;
+Decoupler*** load_Decouplers(char* path) {
+    int default_size = 50;
+    int position = 0;
+    char **files = malloc(sizeof(char *) * default_size);
+    files[0] = NULL;
+    listFilesRecursively(path, files, &default_size, &position);
+    Decoupler ***decouplers = malloc(sizeof(Decoupler * ) * (NBR_DIAMS + 1));
+    for (size_t i = 0; i < NBR_DIAMS; i++) {
+        decouplers[i] = malloc(sizeof(Decoupler * ) * (position + 1));
+    }
+	decouplers[NBR_DIAMS] = NULL;
+    int cur[NBR_DIAMS] = {0};
 
-	for (int i = 0; files[i] != NULL; i++)
-	{
-		Decoupler* tmp = load_Decoupler(files[i]);
-		if (tmp != NULL)
-		{
-			decouplers[cur++] = tmp;
-		}
-		free(files[i]);
-	}
-	free(files);
-	decouplers[cur] = NULL;
-
+    for (int i = 0; files[i] != NULL; i++) {
+        Decoupler *tmp = load_Decoupler(files[i]);
+        if (tmp != NULL) {
+            decouplers[tmp->diam][cur[tmp->diam]++] = tmp;
+        }
+        free(files[i]);
+    }
+    free(files);
+    for (size_t i = 0; i < NBR_DIAMS; i++)
+    {
+        decouplers[i][cur[i]] = NULL;
+    }
 	return decouplers;
 }
 
-Tank** load_Tanks(char* path)
-{
-	int default_size = 50;
-	int position = 0;
-	char** files = malloc(sizeof(char*) * default_size);
-	files[0] = NULL;
-	listFilesRecursively(path, files, &default_size, &position);
-	Tank** tanks = malloc(sizeof(Tank*) * (position + 1));
-	int cur = 0;
+Tank*** load_Tanks(char* path) {
+    int default_size = 50;
+    int position = 0;
+    char **files = malloc(sizeof(char *) * default_size);
+    files[0] = NULL;
+    listFilesRecursively(path, files, &default_size, &position);
+    Tank ***tanks = malloc(sizeof(Tank * *) * (NBR_DIAMS + 1));
+    for (size_t i = 0; i < NBR_DIAMS; i++) {
+        tanks[i] = malloc(sizeof(Tank * ) * (position + 1));
+    }
+	tanks[NBR_DIAMS] = NULL;
+    int cur[NBR_DIAMS] = {0};
 
-	for (int i = 0; files[i] != NULL; i++)
-	{
-		Tank* tmp = load_Tank(files[i]);
-		if (tmp != NULL)
-		{
-			tanks[cur++] = tmp;
-		}
-		free(files[i]);
-	}
-	free(files);
-	tanks[cur] = NULL;
-
+    for (int i = 0; files[i] != NULL; i++) {
+        Tank *tmp = load_Tank(files[i]);
+        if (tmp != NULL) {
+            if (tmp->top_diam != tmp->down_diam)
+            tanks[tmp->down_diam][cur[tmp->down_diam]++] = tmp;
+            tanks[tmp->top_diam][cur[tmp->top_diam]++] = tmp;
+        }
+        free(files[i]);
+    }
+    free(files);
+    for (size_t i = 0; i < NBR_DIAMS; i++)
+    {
+        tanks[i][cur[i]] = NULL;
+    }
 	return tanks;
 }
 
@@ -233,17 +250,21 @@ Tank* load_Tank(char* filename)
    if(cJSON_IsArray(tmp))
    {
 	   if (cJSON_GetArraySize(tmp) < 7)
-		   return NULL;
-
-      tmp = cJSON_GetArrayItem(tmp, 6);
-      if (tmp->valueint == 0)
-		 obj->top_diam = TINY;
-      if (tmp->valueint == 1)
-		 obj->top_diam = SMALL;
-      if (tmp->valueint == 2)
-		 obj->top_diam = LARGE;
-      if (tmp->valueint == 3)
-		 obj->top_diam = EXTRALARGE;
+	   {
+		   obj->top_diam = 1;
+	   }
+	   else
+	   {
+		  tmp = cJSON_GetArrayItem(tmp,6);
+		  if (tmp->valueint == 0)
+			 obj->top_diam = TINY;
+		  if (tmp->valueint == 1)
+			 obj->top_diam = SMALL;
+		  if (tmp->valueint == 2)
+			 obj->top_diam = LARGE;
+		  if (tmp->valueint == 3)
+			 obj->top_diam = EXTRALARGE;
+	   }
    }
    else
 	   return NULL;
@@ -251,15 +272,22 @@ Tank* load_Tank(char* filename)
    tmp = cJSON_GetObjectItemCaseSensitive(part,"node_stack_bottom");
    if(cJSON_IsArray(tmp))
    {
-      tmp = cJSON_GetArrayItem(tmp,5);
-      if (tmp->valueint == 0)
-	 	obj->down_diam = TINY;
-      if (tmp->valueint == 1)
-	 	obj->down_diam = SMALL;
-      if (tmp->valueint == 2)
-	 	obj->down_diam = LARGE;
-      if (tmp->valueint == 3)
-	 	obj->down_diam = EXTRALARGE;
+	   if (cJSON_GetArraySize(tmp) < 7)
+	   {
+		   obj->down_diam = 1;
+	   }
+	   else
+	   {
+		  tmp = cJSON_GetArrayItem(tmp,6);
+		  if (tmp->valueint == 0)
+			obj->down_diam = TINY;
+		  if (tmp->valueint == 1)
+			obj->down_diam = SMALL;
+		  if (tmp->valueint == 2)
+			obj->down_diam = LARGE;
+		  if (tmp->valueint == 3)
+			obj->down_diam = EXTRALARGE;
+	   }
    }
    else
 	   return NULL;
@@ -363,9 +391,22 @@ Engine* load_Engine(char* filename)
     tmp = cJSON_GetObjectItemCaseSensitive(part, "node_stack_top");
     if (tmp)
 	{
-		tmp = cJSON_GetArrayItem(tmp, 5);
-		if (tmp->valuedouble)
-			obj->diam = tmp->valuedouble;
+	   if (cJSON_GetArraySize(tmp) < 7)
+	   {
+		   obj->diam = 1;
+	   }
+	   else
+	   {
+			tmp = cJSON_GetArrayItem(tmp, 6);
+			  if (tmp->valueint == 0)
+				obj->diam = TINY;
+			  if (tmp->valueint == 1)
+				obj->diam = SMALL;
+			  if (tmp->valueint == 2)
+				obj->diam = LARGE;
+			  if (tmp->valueint == 3)
+				obj->diam = EXTRALARGE;
+	   }
 	}
 	else
 		return NULL;
@@ -495,6 +536,32 @@ Decoupler* load_Decoupler(char* filename)
 	else
 		return NULL;
 
+    tmp = cJSON_GetObjectItemCaseSensitive(part, "node_stack_top");
+    if (cJSON_IsArray(tmp))
+	{
+	   if (cJSON_GetArraySize(tmp) < 7)
+	   {
+		   obj->diam = 1;
+	   }
+	   else
+	   {
+			tmp = cJSON_GetArrayItem(tmp, 6);
+			obj->diam = tmp->valueint;
+    		cJSON* tmp2 = cJSON_GetObjectItemCaseSensitive(part, "node_stack_down");
+			if (cJSON_IsArray(tmp))
+			{
+			   if (cJSON_GetArraySize(tmp) >= 7)
+			   {
+					tmp = cJSON_GetArrayItem(tmp2, 6);
+					if ((enum diameter) tmp->valueint != obj->diam)
+						errx(1, "diameter in coupling component with different sizes");
+			   }
+			}
+	   }
+	}
+	else
+		return NULL;
+
     cJSON_Delete(file);
     return obj;
 }
@@ -502,19 +569,26 @@ Decoupler* load_Decoupler(char* filename)
 int load_parts(Datas *d)
 {
     d->tanks = load_Tanks("bdd/FuelTank");
-    size_t nbr_tanks;
-    for (nbr_tanks = 0; d->tanks[nbr_tanks] != NULL; nbr_tanks++);
-    d->nbr_tanks = nbr_tanks;
-
+    for (size_t i = 0; i < NBR_DIAMS; i++)
+    {
+        size_t nbr_tanks;
+        for (nbr_tanks = 0; d->tanks[i][nbr_tanks] != NULL; nbr_tanks++);
+        d->nbr_tanks[i] = nbr_tanks;
+    }
     d->engines = load_Engines("bdd/Engine");
-    size_t nbr_engines;
-    for (nbr_engines = 0; d->engines[nbr_engines] != NULL; nbr_engines++);
-    d->nbr_engines = nbr_engines;
-
+    for (size_t i = 0; i < NBR_DIAMS; i++)
+    {
+        size_t nbr_engines;
+        for (nbr_engines = 0; d->engines[i][nbr_engines] != NULL; nbr_engines++);
+        d->nbr_engines[i] = nbr_engines;
+    }
     d->decouplers = load_Decouplers("bdd/Coupling");
-    size_t nbr_decouplers;
-    for (nbr_decouplers = 0; d->decouplers[nbr_decouplers] != NULL; nbr_decouplers++);
-    d->nbr_decouplers = nbr_decouplers;
+    for (size_t i = 0; i < NBR_DIAMS; i++)
+    {
+        size_t nbr_decouplers;
+        for (nbr_decouplers = 0; d->decouplers[i][nbr_decouplers] != NULL; nbr_decouplers++);
+        d->nbr_decouplers[i] = nbr_decouplers;
+    }
     return 1;
 }
 
@@ -1126,40 +1200,70 @@ int generate_Datas(Datas *d, char* path)
 
 	tmp_value = cJSON_CreateNumber(d->diameter_payload);
 	cJSON_AddItemToObject(object, "diameter_value", tmp_value);
-
-	tmp_value = cJSON_CreateNumber(d->nbr_tanks);
+    
+	tmp_value = cJSON_CreateArray();
+	for (int i = 0; i < NBR_DIAMS; i++)
+	{
+		cJSON* j = cJSON_CreateNumber(d->nbr_tanks[i]);
+		cJSON_AddItemToArray(tmp_value, j);
+	}
 	cJSON_AddItemToObject(object, "nbr_tanks", tmp_value);
 
-	tmp_value = cJSON_CreateNumber(d->nbr_engines);
+	tmp_value = cJSON_CreateArray();
+	for (int i = 0; i < NBR_DIAMS; i++)
+	{
+		cJSON* j = cJSON_CreateNumber(d->nbr_engines[i]);
+		cJSON_AddItemToArray(tmp_value, j);
+	}
 	cJSON_AddItemToObject(object, "nbr_engines", tmp_value);
 
-	tmp_value = cJSON_CreateNumber(d->nbr_decouplers);
+	tmp_value = cJSON_CreateArray();
+	for (int i = 0; i < NBR_DIAMS; i++)
+	{
+		cJSON* j = cJSON_CreateNumber(d->nbr_decouplers[i]);
+		cJSON_AddItemToArray(tmp_value, j);
+	}
 	cJSON_AddItemToObject(object, "nbr_decouplers", tmp_value);
 
 	tmp_value = cJSON_CreateNumber(d->beta);
 	cJSON_AddItemToObject(object, "beta", tmp_value);
 	
 	tmp_value = cJSON_CreateArray();
-	for (size_t i = 0; i < d->nbr_decouplers; i++)
+	for (int k = 0; k < NBR_DIAMS; k++)
 	{
-		cJSON* j = export_to_json_Decoupler(d->decouplers[i]);
-		cJSON_AddItemToArray(tmp_value, j);
+		cJSON* tmp_value2 = cJSON_CreateArray();
+		for (size_t i = 0; i < d->nbr_decouplers[k]; i++)
+		{
+			cJSON* j = export_to_json_Decoupler(d->decouplers[k][i]);
+			cJSON_AddItemToArray(tmp_value2, j);
+		}
+		cJSON_AddItemToArray(tmp_value, tmp_value2);
+	}
+	cJSON_AddItemToObject(object, "decouplers", tmp_value);
+
+	tmp_value = cJSON_CreateArray();
+	for (int k = 0; k < NBR_DIAMS; k++)
+	{
+		cJSON* tmp_value2 = cJSON_CreateArray();
+		for (size_t i = 0; i < d->nbr_engines[k]; i++)
+		{
+			cJSON* j = export_to_json_Engine(d->engines[k][i]);
+			cJSON_AddItemToArray(tmp_value2, j);
+		}
+		cJSON_AddItemToArray(tmp_value, tmp_value2);
 	}
 	cJSON_AddItemToObject(object, "engines", tmp_value);
 
 	tmp_value = cJSON_CreateArray();
-	for (size_t i = 0; i < d->nbr_engines; i++)
+	for (int k = 0; k < NBR_DIAMS; k++)
 	{
-		cJSON* j = export_to_json_Engine(d->engines[i]);
-		cJSON_AddItemToArray(tmp_value, j);
-	}
-	cJSON_AddItemToObject(object, "engines", tmp_value);
-
-	tmp_value = cJSON_CreateArray();
-	for (size_t i = 0; i < d->nbr_tanks; i++)
-	{
-		cJSON* j = export_to_json_Tank(d->tanks[i]);
-		cJSON_AddItemToArray(tmp_value, j);
+		cJSON* tmp_value2 = cJSON_CreateArray();
+		for (size_t i = 0; i < d->nbr_tanks[k]; i++)
+		{
+			cJSON* j = export_to_json_Tank(d->tanks[k][i]);
+			cJSON_AddItemToArray(tmp_value2, j);
+		}
+		cJSON_AddItemToArray(tmp_value, tmp_value2);
 	}
 	cJSON_AddItemToObject(object, "tanks", tmp_value);
 

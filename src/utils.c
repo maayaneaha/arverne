@@ -12,7 +12,7 @@
 Datas *create_datas()
 {
 #if DEBUG
-    printf("create_datas\n");
+    debug_write("create_datas\n");
 #endif
     Datas *d = malloc(sizeof(Datas));
     d->deltaV_min = 2000;
@@ -81,7 +81,7 @@ Datas *create_datas()
 
 double calculate_mass_fuel_tank(Tank *t)
 {
-    return t->full_mass - t->empty_mass;
+    return OXFUEL_DENSITY * (t->quantity_fuel1 + t->quantity_fuel2);
 }
 
 
@@ -208,7 +208,7 @@ Part *copy_part(Part *p)
 }
 
 
-Stage *create_stage(Datas *d)
+Stage *create_stage(Datas *d, enum diameter top_diam)
 {
 #if DEBUG
     printf("create_stage()\n");
@@ -218,9 +218,10 @@ Stage *create_stage(Datas *d)
     s->mass_dry = 0;
     s->cost = 0;
     s->DeltaV = 0;
-    s->decoupler = create_decoupler(d->decouplers[0]);
+    s->decoupler = create_decoupler(d->decouplers[top_diam][0]);
     s->prev = NULL;
     s->next = NULL;
+    s->top_diam = top_diam;
     return s;
 }
 
@@ -302,33 +303,81 @@ Rocket *copy_rocket(Rocket *r)
 }
 
 
-int create_tank_stack(Datas *d, Stage *s, enum diameter diam, double mass_fuel)
+int create_tank_stack(Datas *d, Stage *s, double mass_fuel)
 {
 #if DEBUG
     printf("create_tank_stack(d, s, diam, mass_fuel = %f)\n{\n", mass_fuel);
 #endif
-    Part *prev = create_tank(d->tanks[0]);
-    double mass_total = calculate_mass_fuel_tank(prev->part_type);
-    Tank *t = prev->part_type;
-    if (diam != t->top_diam) // not the correct diameter
-        return 0;
-    s->first_tank = prev;
-    size_t n = 0;
-    while (mass_total < mass_fuel)
-    {
-        Part *tank = create_tank(d->tanks[0]);
-        mass_total += calculate_mass_fuel_tank(tank->part_type);
-        tank->prev = prev;
-        prev->next = tank;
-        prev = tank;
-        n++;
-        if (n > MAX_TANK)
-        {
-#if DEBUG
-            printf("}\n");
-#endif
+    // diam adaptater
+    Part *prev = NULL;
+    if (s->top_diam != s->down_diam) {
+        printf("d->tanks[s->top_diam][i] %zu\n", (size_t) s->top_diam);
+        for (size_t i = 0; i < d->nbr_tanks[s->top_diam]; i++) {
+            if (d->tanks[s->top_diam][i]->top_diam == s->top_diam &&
+                d->tanks[s->top_diam][i]->down_diam == s->down_diam)
+            {
+                prev = create_tank(d->tanks[s->top_diam][i]);
+                break;
+            }
+        }
+        if (!prev) {
             return 0;
         }
+    }
+    else {
+        for (size_t i = 0; i < d->nbr_tanks[s->down_diam]; i++) {
+            if (d->tanks[s->down_diam][i]->top_diam == d->tanks[s->down_diam][i]->down_diam &&
+                d->tanks[s->down_diam][i]->top_diam == s->down_diam &&
+                calculate_mass_fuel_tank(d->tanks[s->down_diam][i]) < mass_fuel) {
+                prev = create_tank(d->tanks[s->down_diam][i]);
+                break;
+            }
+        }
+    }
+    s->first_tank = prev;
+    mass_fuel -= calculate_mass_fuel_tank(prev->part_type);
+    // middle tanks with but not too much
+    Part *t = NULL;
+    do {
+        t = NULL;
+        for (size_t i = 0; i < d->nbr_tanks[s->down_diam]; i++)
+        {
+            if (d->tanks[s->down_diam][i]->top_diam == d->tanks[s->down_diam][i]->down_diam &&
+                d->tanks[s->down_diam][i]->top_diam == s->down_diam)
+            {
+                double mf = calculate_mass_fuel_tank(d->tanks[s->down_diam][i]);
+                int nbr_tanks = mass_fuel / mf;
+                for (int j = 0; j < nbr_tanks; j++) {
+                    t = create_tank(d->tanks[s->down_diam][i]);
+                    mass_fuel -= mf;
+                    prev->next = t;
+                    t->prev = prev;
+                    prev = t;
+                }
+                break;
+            }
+        }
+    } while (t != NULL);
+    // potential last middle tank
+    Tank* pt = NULL; // last good tank
+    if (mass_fuel > 0)
+    {
+        double mf;
+        size_t i = 0;
+        for (; i < d->nbr_tanks[s->down_diam]; i++)
+        {
+            mf = calculate_mass_fuel_tank(d->tanks[s->down_diam][i]);
+            if (d->tanks[s->down_diam][i]->top_diam == d->tanks[s->down_diam][i]->down_diam &&
+                d->tanks[s->down_diam][i]->top_diam == s->down_diam &&
+                mf > mass_fuel)
+            {
+                pt = d->tanks[s->down_diam][i];
+            }
+        }
+        t = create_tank(pt);
+        mass_fuel -= mf;
+        prev->next = t;
+        t->prev = prev;
     }
 #if DEBUG
     printf("}\n");
@@ -413,22 +462,23 @@ void free_rocket(Rocket* r)
     free(r);
 }
 
-void free_datas(Datas* d)
-{
-    for(size_t i = 0; i < d->nbr_tanks; i++)
-    {
-        free(d->tanks[i]->name);
-        free(d->tanks[i]);
-    }
-    for(size_t i = 0; i < d->nbr_engines; i++)
-    {
-        free(d->engines[i]->name);
-        free(d->engines[i]);
-    }
-    for(size_t i = 0; i < d->nbr_decouplers; i++)
-    {
-        free(d->decouplers[i]->name);
-        free(d->decouplers[i]);
+void free_datas(Datas* d) {
+    for (size_t j = 0; j < NBR_DIAMS; j++) {
+        for (size_t i = 0; i < d->nbr_tanks[j]; i++) {
+            free(d->tanks[j][i]->name);
+            free(d->tanks[j][i]);
+        }
+        for (size_t i = 0; i < d->nbr_engines[j]; i++) {
+            free(d->engines[j][i]->name);
+            free(d->engines[j][i]);
+        }
+        for (size_t i = 0; i < d->nbr_decouplers[j]; i++) {
+            free(d->decouplers[j][i]->name);
+            free(d->decouplers[j][i]);
+        }
+        free(d->tanks[j]);
+        free(d->engines[j]);
+        free(d->decouplers[j]);
     }
     if (d->best_rocket != NULL)
         free_rocket(d->best_rocket);
@@ -436,11 +486,15 @@ void free_datas(Datas* d)
 
 void pretty_print(Datas* d)
 {
+	int nbr_engines = 0;
+	for (int i = 0; i < NBR_DIAMS; i++)
+		nbr_engines += d->nbr_engines[i];
+
 	printf("========= DATAS =========\n");
 	printf("DeltaV_min  : %f\n", d->deltaV_min);
 	printf("TWR_min     : %f\n", d->TWR_min);
 	printf("TWR_max     : %f\n", d->TWR_max);
-	printf("nbr_engines : %ld\n", d->nbr_engines);
+	printf("nbr_engines : %d\n", nbr_engines);
 	printf("mass_payload: %f",d->mass_payload);
 
 	Rocket* best_rocket = d->best_rocket;

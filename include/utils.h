@@ -4,7 +4,20 @@
 #include <stdlib.h>
 #include "cjson/cJSON.h"
 
-enum diameter {TINY, SMALL, MEDIUM, LARGE, EXTRALARGE, MK2, MK3, X}; // MK1 = SMALL
+#if DEBUG
+#include "debug.h"
+#endif
+
+#define NBR_SEARCH_STAGES 1 // number of stages for the algopti search
+#define INF 999999999
+#define NBR_MAX_ENGINES 8
+#define MAX_TANK 40
+#define OXFUEL_DENSITY 5
+#define FUEL_COST 0.8
+#define OX_COST 0.18
+#define NBR_DIAMS 8
+
+enum diameter {TINY = 0, SMALL = 1, MEDIUM = 2, LARGE = 3, EXTRALARGE = 4, MK2 = 5, MK3 = 6, X = 7}; // MK1 = SMALL
 enum fuel_type {FUELOX, LIQUIDFUEL, MONOPROPELLANT, SOLIDFUEL, XENON, ORE, ELETRIC};
 
 
@@ -38,7 +51,7 @@ struct engine
     double mass;
     double cost;
     enum fuel_type fuel;
-    double diam;
+    enum diameter diam;
     int ISP_atm;
     int ISP_vac;
     double thrust_atm;
@@ -53,6 +66,7 @@ struct decoupler
     char *name;
     double mass;
     double cost;
+    enum diameter diam;
 };
 
 struct part
@@ -87,6 +101,8 @@ struct stage
     Part *first_tank;
     Part *engine;
     Part *decoupler;
+    enum diameter top_diam;
+    enum diameter down_diam;
     Stage *prev;
     Stage *next;
 };
@@ -129,12 +145,12 @@ struct datas
     double TWR_min;
     double TWR_max;
     enum diameter diameter_payload;
-    Tank **tanks;
-    size_t nbr_tanks;
-    Engine **engines;
-    size_t nbr_engines;
-    Decoupler **decouplers;
-    size_t nbr_decouplers;
+    Tank ***tanks;
+    size_t nbr_tanks[NBR_DIAMS];
+    Engine ***engines;
+    size_t nbr_engines[NBR_DIAMS];
+    Decoupler ***decouplers;
+    size_t nbr_decouplers[NBR_DIAMS];
     Rocket *best_rocket;
     double beta;
 };
@@ -147,19 +163,12 @@ int calculate_rocket_infos(Rocket *r);
 Part *create_tank(Tank *t);
 Part *create_engine(Engine *e);
 Part *create_decoupler(Decoupler *d);
-Stage *create_stage();
+Stage *create_stage(Datas *d, enum diameter top_diam);
 Rocket *create_rocket(Datas *d);
 Rocket *copy_rocket(Rocket *r);
-int create_tank_stack(Datas *d, Stage *s, enum diameter diam, double mass_fuel);
+int create_tank_stack(Datas *d, Stage *s, double mass_fuel);
 int append_stage(Rocket *r, Stage *s);
 
-#define NBR_SEARCH_STAGES 1 // number of stages for the algopti search
-#define INF 999999999
-#define NBR_MAX_ENGINES 8
-#define MAX_TANK 40
-#define OXFUEL_DENSITY 5
-#define FUEL_COST 0.8
-#define OX_COST 0.18
 
 #endif
 
