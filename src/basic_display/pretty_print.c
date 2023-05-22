@@ -27,17 +27,17 @@ int print_decoupler(Decoupler* d)
 int print_parts(Datas* d)
 {
     printf("Print_parts\n{\nTanks:\n");
-    for (size_t j = 0; j < NBR_DIAMS; j++) {
-        for (size_t i = 0; i < d->nbr_tanks[j]; i++) {
-            print_tank(d->tanks[j][i]);
+    for (size_t j = 0; j < 1; j++) {
+        for (size_t i = 0; i < d->nbr_tanks; i++) {
+            print_tank(d->tanks[i]);
         }
         printf("Engines:\n");
-        for (size_t i = 0; i < d->nbr_engines[j]; i++) {
-            print_engine(d->engines[j][i]);
+        for (size_t i = 0; i < d->nbr_engines; i++) {
+            print_engine(d->engines[i]);
         }
         printf("Decouplers:\n");
-        for (size_t i = 0; i < d->nbr_decouplers[j]; i++) {
-            print_decoupler(d->decouplers[j][i]);
+        for (size_t i = 0; i < d->nbr_decouplers; i++) {
+            print_decoupler(d->decouplers[i]);
         }
     }
     return 1;

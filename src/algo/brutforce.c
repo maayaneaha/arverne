@@ -6,6 +6,7 @@
 
 int rocket_creator(Datas *datas, double deltaV_min, Rocket *r)
 {
+    /*
 #if DEBUG
     printf("rocket_creator(datas, deltaV_min, r)\n");
 #endif
@@ -41,6 +42,7 @@ int rocket_creator(Datas *datas, double deltaV_min, Rocket *r)
             rocket_creator(datas, deltaV_min, nr);
         } // TODO: fix free
     }
+     */
     return 1;
 }
 
