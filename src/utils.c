@@ -85,7 +85,7 @@ double calculate_mass_fuel_tank(Tank *t)
 }
 
 
-int calculate_stage_infos(Stage *s, Rocket *r)
+int calculate_stage_infos(Datas *d, Stage *s, Rocket *r)
 {
 #if DEBUG
     printf("calculate_stages_infos(s = %zu)\n{\n", (size_t) s);
@@ -98,7 +98,7 @@ int calculate_stage_infos(Stage *s, Rocket *r)
     s->cost = s->engine->cost * s->nbr_engines + s->decoupler->cost;
     s->mass_full = s->mass_dry;
     Part *tank = s->first_tank;
-    Tank *tmp_tank = tank->part_type;
+    Tank *tmp_tank = d->tanks[0];
     s->fuel = tmp_tank->fuel;
     s->quantity_fuel1 = 0;
     s->quantity_fuel2 = 0;
@@ -126,7 +126,7 @@ int calculate_stage_infos(Stage *s, Rocket *r)
 }
 
 
-int calculate_rocket_infos(Rocket* r)
+int calculate_rocket_infos(Datas *d, Rocket* r)
 {
 #if DEBUG
         printf("calculate_rocket_infos(r)\n");
@@ -144,7 +144,7 @@ int calculate_rocket_infos(Rocket* r)
 #if DEBUG
         printf("  stage = %zu\n", (size_t) s);
 #endif
-        calculate_stage_infos(s, r);
+        calculate_stage_infos(d, s, r);
         r->DeltaV += s->DeltaV;
         r->cost += s->cost;
         prev = s;
@@ -305,7 +305,7 @@ Rocket *copy_rocket(Rocket *r)
 int create_tank_stack(Datas *d, Stage *s, double mass_fuel)
 {
 #if DEBUG
-    printf("create_tank_stack(d, s, diam, mass_fuel = %f)\n{\n", mass_fuel);
+    printf("create_tank_stack(d, s, mass_fuel = %f)\n{\n", mass_fuel);
 #endif
     // diam adaptater
     Part *prev = NULL;

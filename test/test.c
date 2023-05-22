@@ -49,7 +49,7 @@ Rocket *build_rocket(Datas *datas, size_t nbr_stages)
         }
         prev_s = s;
     }
-    calculate_rocket_infos(r);
+    calculate_rocket_infos(datas, r);
     return r;
 }
 

@@ -157,8 +157,8 @@ struct datas
 
 Datas *create_datas();
 double calculate_mass_fuel_tank(Tank *t);
-int calculate_stage_infos(Stage *s, Rocket* r);
-int calculate_rocket_infos(Rocket *r);
+int calculate_stage_infos(Datas *d, Stage *s, Rocket* r);
+int calculate_rocket_infos(Datas *d, Rocket *r);
 Part *create_tank(Tank *t);
 Part *create_engine(Engine *e);
 Part *create_decoupler(Decoupler *d);

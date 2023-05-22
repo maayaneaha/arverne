@@ -116,7 +116,7 @@ int search_stage(Datas* d, Rocket* r, double dv_needed)
     s->nbr_engines = nbr_engines;
     append_stage(r, s);
     //todo gerer le DV en trop
-    calculate_rocket_infos(r);
+    calculate_rocket_infos(d, r);
 #if DEBUG
     printf("DeltaV = %f\n", calculate_DeltaV(calculate_isp(s->engine->part_type), s->mass_full, s->mass_dry,calculate_g()));
     // double calculate_DeltaV(int ISP, double mass_total, double mass_dry, double g)
