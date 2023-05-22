@@ -29,9 +29,20 @@ typedef struct GUI
 	GtkAdjustment* rpp_max;
 	GtkAdjustment* deltav;
     GtkButton* MenuButton;
+	GtkButton* PreviousButton;
+	GtkButton* NextButton;
+	GtkButton* LoadButton;
+	GtkButton* SaveButton;
 	GtkScale* scale_rpp_min;
 	GtkScale* scale_rpp_max;
 	GtkScale* scale_deltav;
+
+	GtkTextBuffer* textbuffer_rocketinfo;
+	GtkTextView* rocketinfo;
+
+	Datas* result_data;
+	int current_stage;
+
 	int activate;
 	GtkButton* menuback;
 }GUI;
@@ -220,6 +231,11 @@ void start_button_clicked(GtkButton* b, gpointer user_data)
     gtk_widget_show(GTK_WIDGET(gui->solution));
 }
 
+Stage* get_stage_from_data(Datas* d, int n)
+{
+	Stage* s = d->best_rocket->first_stage;
+}
+
 void on_create_clicked(GtkButton* b, gpointer user_data)
 {
     GUI* gui = (GUI*) user_data;
@@ -235,18 +251,43 @@ void on_create_clicked(GtkButton* b, gpointer user_data)
 	tmp_value = gtk_adjustment_get_value (gui->deltav);
 	double deltav = (double) tmp_value;
 
-    Datas *d = create_datas();
-    load_parts(d);
+    gui->result_data = create_datas();
+    load_parts(gui->result_data);
 
-    d->deltaV_min = deltav;
-    d->TWR_min = twrmin;
-    d->TWR_max = twrmax;
+    gui->result_data->deltaV_min = deltav;
+    gui->result_data->TWR_min = twrmin;
+    gui->result_data->TWR_max = twrmax;
 
-    int r = linear_algo(d);
+    int r = linear_algo(gui->result_data);
 
-    basic_display(d->best_rocket);
+	gui->current_stage = 0;
+
+    basic_display(gui->result_data->best_rocket);
 	/*double rpp_min = gtk_range_get_value(GTK_RANGE(gui->scale_rpp_min));*/
 	/*printf("La valeur du GtkScale est : %f\n", rpp_min);*/
+}
+
+void on_previous_clicked(GtkButton* b, gpointer user_data)
+{
+	printf("oui\n");
+    GUI* gui = (GUI*) user_data;
+
+	gtk_text_buffer_set_text(gui->textbuffer_rocketinfo, "Nouveau texte du GtkTextView", -1);
+}
+
+void on_next_clicked(GtkButton* b, gpointer user_data)
+{
+	return;
+}
+
+void on_load_clicked(GtkButton* b, gpointer user_data)
+{
+	return;
+}
+
+void on_save_clicked(GtkButton* b, gpointer user_data)
+{
+	return;
 }
 
 int start_interface()
@@ -294,6 +335,14 @@ int start_interface()
 	GtkScale* scale_rpp_max = GTK_SCALE(gtk_builder_get_object(builder, "id_rpp_max"));
 	GtkScale* scale_deltav = GTK_SCALE(gtk_builder_get_object(builder, "id_deltav"));
 
+	GtkButton* PreviousButton = GTK_BUTTON(gtk_builder_get_object(builder, "PreviousButton"));
+	GtkButton* NextButton = GTK_BUTTON(gtk_builder_get_object(builder, "NextButton"));
+	GtkButton* LoadButton = GTK_BUTTON(gtk_builder_get_object(builder, "LoadButton"));
+	GtkButton* SaveButton = GTK_BUTTON(gtk_builder_get_object(builder, "SaveButton"));
+
+	GtkTextView* rocketinfo = GTK_TEXT_VIEW(gtk_builder_get_object(builder, "textview_rocketinfo"));
+	GtkTextBuffer* textbuffer_rocketinfo = GTK_TEXT_BUFFER(gtk_builder_get_object(builder, "textbuffer_rocketinfo"));
+
 	GUI gui={
 		.interface = interface,
 		.window_pages = window_pages,
@@ -307,13 +356,15 @@ int start_interface()
 		.help_button = help_button,
 		.MenuButton = menu_button,
 		.screen = screen,
-		//.switch_button = switch_button,
+		
+		.PreviousButton = PreviousButton,
+		.NextButton = NextButton,
+		.LoadButton = LoadButton,
+		.SaveButton = SaveButton,
+
+		.rocketinfo = rocketinfo,
+		.textbuffer_rocketinfo = textbuffer_rocketinfo,
 		.activate = 0,
-		//.binadj = binadj,
-		//.conadj = conadj,
-		//.rotadj = rotadj,
-		//.binarise_scale = binarise_scale,
-		//.contrast_scale = contrast_scale,
 		.rpp_min = rpp_min,
 		.rpp_max = rpp_max,
 		.deltav = deltav,
@@ -337,6 +388,11 @@ int start_interface()
 
 	// ResolveButton
 	g_signal_connect(resolve_button, "clicked", G_CALLBACK(on_create_clicked), &gui);
+
+	g_signal_connect(PreviousButton, "clicked", G_CALLBACK(on_previous_clicked), &gui);
+	g_signal_connect(NextButton, "clicked", G_CALLBACK(on_next_clicked), &gui);
+	g_signal_connect(SaveButton, "clicked", G_CALLBACK(on_save_clicked), &gui);
+	g_signal_connect(LoadButton, "clicked", G_CALLBACK(on_load_clicked), &gui);
 
 	/*g_signal_connect(refresh_button, "clicked", G_CALLBACK(refresh), &gui);*/
 	/*g_signal_connect(menu_button, "clicked", G_CALLBACK(on_menu_clicked), &gui);*/
