@@ -25,6 +25,7 @@ typedef struct GUI
 	//GtkAdjustment* binadj;
 	//GtkAdjustment* conadj;
 	//GtkAdjustment* rotadj;
+	GtkAdjustment* mass_u;
 	GtkAdjustment* rpp_min;
 	GtkAdjustment* rpp_max;
 	GtkAdjustment* deltav;
@@ -33,12 +34,14 @@ typedef struct GUI
 	GtkButton* NextButton;
 	GtkButton* LoadButton;
 	GtkButton* SaveButton;
+	GtkScale* scale_mass_u;
 	GtkScale* scale_rpp_min;
 	GtkScale* scale_rpp_max;
 	GtkScale* scale_deltav;
 
 	GtkTextBuffer* textbuffer_rocketinfo;
 	GtkTextView* rocketinfo;
+	GtkScrolledWindow* scrolledresult;
 
 	Datas* result_data;
 	int current_stage;
@@ -245,16 +248,19 @@ void on_create_clicked(GtkButton* b, gpointer user_data)
 	gdouble tmp_value = gtk_adjustment_get_value (gui->rpp_min);
 	double twrmin = (double) tmp_value;
 	
-
 	tmp_value = gtk_adjustment_get_value (gui->rpp_max);
 	double twrmax = (double) tmp_value;
 
 	tmp_value = gtk_adjustment_get_value (gui->deltav);
 	double deltav = (double) tmp_value;
 
+	tmp_value = gtk_adjustment_get_value(gui->mass_u);
+	double mass_u = (double) tmp_value;
+
     gui->result_data = create_datas();
     load_parts(gui->result_data);
 
+	gui->result_data->mass_payload = mass_u;
     gui->result_data->deltaV_min = deltav;
     gui->result_data->TWR_min = twrmin;
     gui->result_data->TWR_max = twrmax;
@@ -262,10 +268,58 @@ void on_create_clicked(GtkButton* b, gpointer user_data)
     int r = linear_algo(gui->result_data);
 
 	gui->current_stage = 0;
+	gtk_widget_show(GTK_WIDGET(gui->PreviousButton));
+	gtk_widget_show(GTK_WIDGET(gui->NextButton));
+	gtk_widget_show(GTK_WIDGET(gui->SaveButton));
+	gtk_widget_show(GTK_WIDGET(gui->rocketinfo));
 
-    basic_display(gui->result_data->best_rocket);
-	/*double rpp_min = gtk_range_get_value(GTK_RANGE(gui->scale_rpp_min));*/
-	/*printf("La valeur du GtkScale est : %f\n", rpp_min);*/
+	GString* result = g_string_new("====== DATAS ======\n");
+	g_string_append_printf(result, "DeltaV_min: %f\n", gui->result_data->deltaV_min);
+	g_string_append_printf(result, "TWR_min: %f\n", gui->result_data->TWR_min);
+	g_string_append_printf(result, "TWR_max: %f\n", gui->result_data->TWR_max);
+	g_string_append_printf(result, "nbr_engines: %ln\n", gui->result_data->nbr_engines);
+	g_string_append_printf(result, "mass_payload: %f\n", gui->result_data->mass_payload);
+	
+	Rocket* best_rocket = gui->result_data->best_rocket;
+	int count = 0;
+	for (Stage* i = best_rocket->first_stage; i != NULL; i = i->next)
+	{
+		g_string_append_printf(result, "\n========= STAGE %d =========\n", count);
+		g_string_append_printf(result, "total_mass: %f\n", i->mass_full+i->mass_dry);
+		g_string_append_printf(result, "DeltaV    : %f\n", i->DeltaV);
+		g_string_append_printf(result, "cost      : %f\n", i->cost);
+		g_string_append_printf(result, "ISP_vac   : %f\n", i->ISP_vac);
+		g_string_append_printf(result, "ISP_atm   : %f\n", i->ISP_atm);
+		g_string_append_printf(result, "TWR_min   : %f\n", i->TWR_min);
+		g_string_append_printf(result, "TWR_max   : %f\n", i->TWR_max);
+
+		g_string_append_printf(result, "\n------ Tanks ------\n");
+		for (Part* j = i->first_tank; j != NULL; j = j->next)
+		{
+			g_string_append_printf(result, "- %s\n", j->name);
+		}
+
+		g_string_append_printf(result, "\n------ Engines ------\n");
+
+
+		for (Part* j = i->engine; j != NULL; j = j->next)
+		{
+			g_string_append_printf(result, "- %s\n", j->name);
+
+		}
+
+		g_string_append_printf(result, "\n------ Decouplers ------\n");
+		for (Part* j = i->decoupler; j != NULL; j = j->next)
+		{
+			g_string_append_printf(result, "- %s\n", j->name);
+		}
+		count++;
+	}
+
+	gtk_text_buffer_set_text(gui->textbuffer_rocketinfo, result->str, -1);
+	pretty_print(gui->result_data);
+	
+    /*basic_display(gui->result_data->best_rocket);*/
 }
 
 void on_previous_clicked(GtkButton* b, gpointer user_data)
@@ -332,6 +386,8 @@ int start_interface()
 	GtkAdjustment* rpp_min = GTK_ADJUSTMENT(gtk_builder_get_object(builder, "rpp_min"));
 	GtkAdjustment* rpp_max = GTK_ADJUSTMENT(gtk_builder_get_object(builder, "rpp_max"));
 	GtkAdjustment* deltav = GTK_ADJUSTMENT(gtk_builder_get_object(builder, "deltav"));
+	GtkAdjustment* mass_u = GTK_ADJUSTMENT(gtk_builder_get_object(builder, "mass_u"));
+	GtkScale* scale_mass_u = GTK_SCALE(gtk_builder_get_object(builder, "id_mass_u"));
 	GtkScale* scale_rpp_min = GTK_SCALE(gtk_builder_get_object(builder, "id_rpp_min"));
 	GtkScale* scale_rpp_max = GTK_SCALE(gtk_builder_get_object(builder, "id_rpp_max"));
 	GtkScale* scale_deltav = GTK_SCALE(gtk_builder_get_object(builder, "id_deltav"));
@@ -340,7 +396,7 @@ int start_interface()
 	GtkButton* NextButton = GTK_BUTTON(gtk_builder_get_object(builder, "NextButton"));
 	GtkButton* LoadButton = GTK_BUTTON(gtk_builder_get_object(builder, "LoadButton"));
 	GtkButton* SaveButton = GTK_BUTTON(gtk_builder_get_object(builder, "SaveButton"));
-
+	GtkScrolledWindow* scrolledresult = GTK_SCROLLED_WINDOW(gtk_builder_get_object(builder, "scrolledresult"));
 	GtkTextView* rocketinfo = GTK_TEXT_VIEW(gtk_builder_get_object(builder, "textview_rocketinfo"));
 	GtkTextBuffer* textbuffer_rocketinfo = GTK_TEXT_BUFFER(gtk_builder_get_object(builder, "textbuffer_rocketinfo"));
 
@@ -357,6 +413,7 @@ int start_interface()
 		.help_button = help_button,
 		.MenuButton = menu_button,
 		.screen = screen,
+		.scrolledresult = scrolledresult,
 		
 		.PreviousButton = PreviousButton,
 		.NextButton = NextButton,
@@ -366,9 +423,11 @@ int start_interface()
 		.rocketinfo = rocketinfo,
 		.textbuffer_rocketinfo = textbuffer_rocketinfo,
 		.activate = 0,
+		.mass_u = mass_u,
 		.rpp_min = rpp_min,
 		.rpp_max = rpp_max,
 		.deltav = deltav,
+		.scale_mass_u = scale_mass_u,
 		.scale_rpp_min = scale_rpp_min,
 		.scale_rpp_max = scale_rpp_max,
 		.scale_deltav = scale_deltav,

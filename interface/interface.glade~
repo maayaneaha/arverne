@@ -32,19 +32,14 @@
     <property name="page-increment">0.10</property>
     <property name="page-size">0.10</property>
   </object>
-  <object class="GtkTextBuffer" id="textbuffer_rocketinfo">
-    <property name="text" translatable="yes">drainTankFTE-1
-miniFuselage
-mk3Fuselage
-xenonTank</property>
-  </object>
+  <object class="GtkTextBuffer" id="textbuffer_rocketinfo"/>
   <object class="GtkWindow" id="interface">
     <property name="can-focus">False</property>
     <child>
       <object class="GtkStack" id="window_pages">
         <property name="visible">True</property>
         <property name="can-focus">False</property>
-        <property name="transition-type">crossfade</property>
+        <property name="transition-type">slide-up</property>
         <child>
           <object class="GtkBox" id="load">
             <property name="visible">True</property>
@@ -238,7 +233,7 @@ xenonTank</property>
                   </packing>
                 </child>
                 <child>
-                  <object class="GtkScale">
+                  <object class="GtkScale" id="id_mass_u">
                     <property name="visible">True</property>
                     <property name="can-focus">True</property>
                     <property name="adjustment">masse_u</property>
@@ -393,7 +388,7 @@ xenonTank</property>
                   </packing>
                 </child>
                 <child>
-                  <object class="GtkScrolledWindow">
+                  <object class="GtkScrolledWindow" id="scrolledresult">
                     <property name="visible">True</property>
                     <property name="can-focus">True</property>
                     <property name="margin-end">25</property>
@@ -421,7 +416,6 @@ xenonTank</property>
                 <child>
                   <object class="GtkButton" id="PreviousButton">
                     <property name="label" translatable="yes">Previous</property>
-                    <property name="visible">True</property>
                     <property name="can-focus">True</property>
                     <property name="receives-default">True</property>
                   </object>
@@ -433,7 +427,6 @@ xenonTank</property>
                 <child>
                   <object class="GtkButton" id="NextButton">
                     <property name="label" translatable="yes">Next</property>
-                    <property name="visible">True</property>
                     <property name="can-focus">True</property>
                     <property name="receives-default">True</property>
                     <property name="halign">baseline</property>
