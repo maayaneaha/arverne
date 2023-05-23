@@ -1,6 +1,6 @@
 {
-	"twrmin":	2.1,
-	"twrmax":	2.1,
-	"deltav":	5053,
-	"mass_u":	5053
+	"twrmin":	2,
+	"twrmax":	2.5,
+	"deltav":	2738,
+	"mass_u":	6105
 }

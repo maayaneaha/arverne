@@ -349,18 +349,6 @@
                   </packing>
                 </child>
                 <child>
-                  <object class="GtkButton" id="RefreshButton">
-                    <property name="label" translatable="yes">Refresh</property>
-                    <property name="visible">True</property>
-                    <property name="can-focus">True</property>
-                    <property name="receives-default">True</property>
-                  </object>
-                  <packing>
-                    <property name="left-attach">1</property>
-                    <property name="top-attach">6</property>
-                  </packing>
-                </child>
-                <child>
                   <object class="GtkButton" id="menuback">
                     <property name="label" translatable="yes">Menu</property>
                     <property name="visible">True</property>
@@ -463,30 +451,6 @@
                   </packing>
                 </child>
                 <child>
-                  <object class="GtkButton" id="PreviousButton">
-                    <property name="label" translatable="yes">Previous</property>
-                    <property name="can-focus">True</property>
-                    <property name="receives-default">True</property>
-                  </object>
-                  <packing>
-                    <property name="left-attach">2</property>
-                    <property name="top-attach">6</property>
-                  </packing>
-                </child>
-                <child>
-                  <object class="GtkButton" id="NextButton">
-                    <property name="label" translatable="yes">Next</property>
-                    <property name="can-focus">True</property>
-                    <property name="receives-default">True</property>
-                    <property name="halign">baseline</property>
-                    <property name="valign">baseline</property>
-                  </object>
-                  <packing>
-                    <property name="left-attach">3</property>
-                    <property name="top-attach">6</property>
-                  </packing>
-                </child>
-                <child>
                   <object class="GtkButton" id="SaveButto">
                     <property name="label" translatable="yes">Save</property>
                     <property name="visible">True</property>
@@ -497,6 +461,15 @@
                     <property name="left-attach">3</property>
                     <property name="top-attach">7</property>
                   </packing>
+                </child>
+                <child>
+                  <placeholder/>
+                </child>
+                <child>
+                  <placeholder/>
+                </child>
+                <child>
+                  <placeholder/>
                 </child>
                 <child>
                   <placeholder/>
