@@ -363,7 +363,27 @@ void on_load_clicked(GtkButton* b, gpointer user_data)
 {
 	printf("hihi\n");
     GUI* gui = (GUI*) user_data;
-	gui->result_data = load_Datas("rocket.json");
+	cJSON* tmp = NULL;
+   	cJSON* part = json_ParseFile("rocket.json");
+		
+   tmp = cJSON_GetObjectItemCaseSensitive(part,"twrmin");
+   double twrmin = tmp->valuedouble;
+
+   tmp = cJSON_GetObjectItemCaseSensitive(part,"twrmax");
+   double twrmax = tmp->valuedouble;
+
+   tmp = cJSON_GetObjectItemCaseSensitive(part,"mass_u");
+   double mass_u = tmp->valuedouble;
+
+   tmp = cJSON_GetObjectItemCaseSensitive(part,"deltav");
+   double deltav = tmp->valuedouble;
+
+	gtk_adjustment_set_value(gui->rpp_min, twrmin);
+	gtk_adjustment_set_value(gui->rpp_max, twrmax);
+	gtk_adjustment_set_value(gui->deltav, deltav);
+	gtk_adjustment_set_value(gui->mass_u, mass_u);
+
+   	printf("%f %f %f %f\n", twrmin, twrmax, mass_u, deltav);
 	printf("loaded!\n");
 }
 
@@ -371,8 +391,44 @@ void on_save_clicked(GtkButton* b, gpointer user_data)
 {
 	printf("hihi\n");
 	GUI* gui = (GUI*) user_data;
-	generate_Datas(gui->result_data, "rocket.json");
-	printf("Saved!");
+
+	gdouble tmp_value1 = gtk_adjustment_get_value (gui->rpp_min);
+	double twrmin = (double) tmp_value1;
+	
+	tmp_value1 = gtk_adjustment_get_value (gui->rpp_max);
+	double twrmax = (double) tmp_value1;
+
+	tmp_value1 = gtk_adjustment_get_value (gui->deltav);
+	double deltav = (double) tmp_value1;
+
+	tmp_value1 = gtk_adjustment_get_value(gui->mass_u);
+	double mass_u = (double) tmp_value1;
+
+	cJSON* object = cJSON_CreateObject();
+	cJSON* tmp_value = NULL;
+
+	tmp_value = cJSON_CreateNumber(twrmin);
+	cJSON_AddItemToObject(object, "twrmin", tmp_value);
+
+	tmp_value = cJSON_CreateNumber(twrmax);
+	cJSON_AddItemToObject(object, "twrmax", tmp_value);
+
+	tmp_value = cJSON_CreateNumber(deltav);
+	cJSON_AddItemToObject(object, "deltav", tmp_value);
+
+	tmp_value = cJSON_CreateNumber(mass_u);
+	cJSON_AddItemToObject(object, "mass_u", tmp_value);
+
+	FILE* ptr = fopen("rocket.json" ,"w");
+	char* result = cJSON_Print(object);
+	if (result == NULL)
+	{
+		fclose(ptr);
+		return;
+	}
+	fprintf(ptr,"%s", result);
+	fclose(ptr);
+	printf("Saved!\n");
 }
 
 int start_interface()
